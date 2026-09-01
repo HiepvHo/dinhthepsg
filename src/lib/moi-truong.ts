@@ -3,52 +3,27 @@
  *
  * VAN DE THAT: domain dinhthepsg.com chua mua, nen ban deploy dau tien chay tren
  * *.vercel.app. Neu de Google index ban do:
- *  - canonical tro ve dinhthepsg.com (chua ton tai) -> tin hieu hong
+ *  - canonical tro ve mot domain chua ton tai -> tin hieu hong
  *  - khi mua domain that, ban vercel.app da duoc index se canh tranh voi domain
- *    that o dung nhung truy van minh nham toi (duplicate content, tu canh tranh)
+ *    that o dung nhung truy van minh nham toi (duplicate, tu canh tranh)
  *  - go mot URL da index ra khoi Google mat hang tuan
  *
- * Cach xu ly: CHI cho index khi chay dung tren DOMAIN_THAT. Moi noi khac
- * (vercel.app, preview, local) deu noindex + robots.txt chan het.
+ * MAC DINH LA KHONG CHO INDEX. Chi mo khi bien SITE_URL duoc dat TUONG MINH
+ * va bang domain that.
  *
- * Khi mua domain xong: dat bien moi truong SITE_URL=https://dinhthepsg.com
- * tren Vercel, deploy lai, site tu dong mo index. Khong phai sua code.
- */
-
-const DOMAIN_THAT = 'https://dinhthepsg.com';
-
-/**
- * PHAI dung `process.env`, KHONG dung `import.meta.env`.
+ * Vi sao doi hoi tuong minh chu khong suy ra: sai theo huong "lo cho index" rat kho
+ * sua (phai cho Google go URL). Sai theo huong "lo noindex" thi sua trong 2 phut
+ * (dat bien roi deploy lai). Mac dinh phai nga ve phia de sua.
  *
- * Vite chi expose qua `import.meta.env` nhung bien co tien to PUBLIC_ hoac duoc
- * khai bao tuong minh. Bien he thong cua Vercel (VERCEL_PROJECT_PRODUCTION_URL)
- * KHONG nam trong do -> doc bang import.meta.env se ra undefined, va logic chan
- * index se im lang khong chay. Day la SSG nen chi chay luc build, `process.env` an toan.
+ * KHI MUA DOMAIN XONG: vao Vercel dat bien moi truong
+ *   SITE_URL = https://dinhthepsg.com
+ * roi deploy lai. Site tu mo index, khong phai sua code.
+ *
+ * Logic that nam o `site-url.mjs` o goc project - dung chung voi astro.config.mjs
+ * de canonical, sitemap va robots.txt khong bao gio lech nhau.
  */
-function docEnv(ten: string): string | undefined {
-  if (typeof process === 'undefined' || !process.env) return undefined;
-  const v = process.env[ten];
-  return v && v.trim() ? v.trim() : undefined;
-}
+import { laySiteUrl, choIndex, DOMAIN_THAT } from '../../site-url.mjs';
 
-function tinhSiteUrl(): string {
-  // 1. Bien tu dat - dung cai nay khi domain that san sang
-  const tuDat = docEnv('SITE_URL') ?? docEnv('PUBLIC_SITE_URL');
-  if (tuDat) return tuDat.replace(/\/$/, '');
-
-  // 2. Dang chay tren Vercel nhung chua tro domain that
-  const vercelProd = docEnv('VERCEL_PROJECT_PRODUCTION_URL');
-  if (vercelProd) return `https://${vercelProd}`;
-  const vercelDeploy = docEnv('VERCEL_URL');
-  if (vercelDeploy) return `https://${vercelDeploy}`;
-
-  // 3. Build o may local
-  return DOMAIN_THAT;
-}
-
-export const SITE_URL = tinhSiteUrl();
-
-/** Chi cho index khi dang o dung domain that. */
-export const CHO_INDEX = SITE_URL === DOMAIN_THAT;
-
+export const SITE_URL: string = laySiteUrl();
+export const CHO_INDEX: boolean = choIndex();
 export { DOMAIN_THAT };

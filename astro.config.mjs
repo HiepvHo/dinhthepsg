@@ -1,17 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { laySiteUrl } from './site-url.mjs';
 
 // Site tinh hoan toan (SSG). Deploy: build ra thu muc dist/ roi day len VPS,
 // nginx phuc vu file tinh. Khong co Node chay thuong truc tren server.
-// Domain that chua mua -> ban deploy dau chay tren *.vercel.app.
-// Lay site tu bien moi truong de canonical va sitemap luon dung voi noi dang chay.
-// Khi mua domain xong: dat SITE_URL=https://dinhthepsg.com tren Vercel, deploy lai.
-const SITE_URL =
-  process.env.SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'https://dinhthepsg.com');
+// Site URL va quyet dinh cho index deu doc tu site-url.mjs - NGUON SU THAT DUY NHAT,
+// dung chung voi src/lib/moi-truong.ts de canonical, sitemap va robots.txt khong lech nhau.
+const SITE_URL = laySiteUrl();
 
 export default defineConfig({
   site: SITE_URL,
