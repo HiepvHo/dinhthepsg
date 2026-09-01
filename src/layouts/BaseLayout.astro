@@ -72,6 +72,14 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
 
     <link rel="sitemap" href="/sitemap-index.xml" />
 
+    {/* Favicon. Truoc day khong co the nao nen moi trang deu bi trinh duyet
+        goi /favicon.ico va an 404, con tab thi trong tron.
+        Google yeu cau icon vuong boi so cua 48px de hien tren SERP -> icon-48.png.
+        SVG dat truoc de trinh duyet moi lay ban vector. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-48.png" sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <JsonLd schema={schemaToChuc(c)} />
     <JsonLd schema={schemaWebSite(c)} />
     {schema && <JsonLd schema={schema} />}

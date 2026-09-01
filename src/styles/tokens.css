@@ -59,7 +59,12 @@
 
   --nen: var(--trang);
   --nen-trang: var(--trang);
-  --nen-nhat: var(--steel-050);     /* nen trang xen ke */
+  /* Nen xen ke. Truoc day dung steel-050 (#F4F6F8) - xam LANH, khong lien quan
+     gi toi do thuong hieu nen cac dai xen ke doc ra roi rac.
+     Doi sang tint AM lay tu chinh do #C4161C: cung goc mau, do bao hoa keo xuong
+     con ~5%. Day la cach mamaflow.vn tao su hoa hop ma user thich - trang +
+     mot mau bao hoa + tint rat nhat CUA CHINH mau do. */
+  --nen-nhat: #fbf4f2;
   --nen-do: var(--do-500);          /* dai do - top bar, dai CTA */
   --nen-toi: var(--navy-900);       /* footer - navy sau, khong phai gan-den */
 

@@ -20,7 +20,8 @@ import { Image } from 'astro:assets';
  *
  * 4. Ton trong prefers-reduced-motion: khong tu chay, chi doi khi bam cham.
  *
- * Chieu cao co dinh 534px de khong gay CLS.
+ * Chieu cao co dinh 600px de khong gay CLS. (Ho 534px - ta cao hon theo yeu cau,
+ * anh nha may can dat de doc duoc chi tiet.)
  */
 interface Anh {
   src: ImageMetadata;
@@ -77,7 +78,7 @@ const { anh, giay = 5.5 } = Astro.props;
   .bn {
     position: relative;
     width: 100%;
-    height: 534px;
+    height: 600px;
     overflow: hidden;
     background: var(--steel-100);
   }
@@ -137,12 +138,12 @@ const { anh, giay = 5.5 } = Astro.props;
   }
   @media (max-width: 980px) {
     .bn {
-      height: 320px;
+      height: 360px;
     }
   }
   @media (max-width: 560px) {
     .bn {
-      height: 220px;
+      height: 250px;
     }
     .bn__cham {
       bottom: 10px;

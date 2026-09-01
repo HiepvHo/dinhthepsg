@@ -1,0 +1,23 @@
+# =============================================================================
+# CAM NGHI KHACH HANG
+#
+# DANH SACH NAY DANG TRONG - va trang chu se AN HAN muc "Cam nghi khach hang"
+# chung nao no con trong. Do la co y: mot slider co ba cai nhan xet bia ra thi
+# vua vi pham chinh sach noi dung cua Google (fake review), vua de bi khach
+# trong nghe nhan ra.
+#
+# CACH THEM: moi khach mot muc, dien dung nhung gi ho noi.
+#
+#   - ten: Anh Tuan
+#     vaiTro: Chu thau xay dung        # hoac ten cua hang, nghe nghiep
+#     noiDung: >-
+#       Cau noi cua khach, viet nguyen van. Khoang 1-3 cau.
+#     diaDiem: Quan 12, TP.HCM         # tuy chon
+#     sanPham: Đinh chì 5 phân          # tuy chon, de biet ho mua gi
+#
+# LUU Y: KHONG dua len schema Review/AggregateRating cho toi khi co danh gia
+# that tren Google Business Profile. Loi review khong xac minh duoc la mot
+# trong nhung ly do bi go rich result nhanh nhat.
+# =============================================================================
+
+danhSach: []

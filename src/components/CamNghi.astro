@@ -1,0 +1,212 @@
+---
+import { getEntry } from 'astro:content';
+
+/**
+ * Bang truot CAM NGHI KHACH HANG.
+ *
+ * KHONG RENDER GI khi src/content/du-lieu/cam-nghi.yaml con rong. Do la co y:
+ * mot slider ba nhan xet bia ra vua vi pham chinh sach fake review cua Google,
+ * vua de bi khach trong nghe nhan ra ngay. Trong con hon gia.
+ *
+ * KY THUAT: dung scroll-snap chu khong dung engine transform nhu BannerSlider.
+ * Ly do - noi dung o day co chieu rong khong deu va nguoi dung muon LUOT bang
+ * ngon tay. Scroll-snap cho san: cuon bang ngon tay, cuon bang trackpad, ban
+ * phim Tab tu cuon toi the dang focus, va van hoat dong khi JS chua tai.
+ * JS chi them hai nut mui ten, khong phai dieu kien de dung duoc.
+ *
+ * Hieu ung "he lo the ke tiep" hoc tu mamaflow.vn: the cuoi khung khong cat
+ * dung mep ma lo mot phan, bao cho nguoi dung biet con noi dung ben phai.
+ */
+const cn = await getEntry('camNghi', 'cam-nghi');
+const ds = cn?.data.danhSach ?? [];
+---
+
+{
+  ds.length > 0 && (
+    <section class="cn" aria-labelledby="cn-dau">
+      <div class="khung">
+        <div class="hang__dau">
+          <h2 id="cn-dau">Khách hàng nói gì</h2>
+          {ds.length > 1 && (
+            <div class="cn__lai">
+              <button type="button" class="cn__nut" data-huong="-1" aria-label="Xem cảm nghĩ trước">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+              </button>
+              <button type="button" class="cn__nut" data-huong="1" aria-label="Xem cảm nghĩ tiếp theo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7" /></svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+        <ul class="cn__ray">
+          {ds.map((k) => (
+            <li class="cn__the">
+              <svg class="cn__nhay" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9.5 6c-3 1.4-4.6 3.8-4.6 7.2V18h5.3v-5.3H7.4c0-1.9.8-3.3 2.5-4.2Zm9 0c-3 1.4-4.6 3.8-4.6 7.2V18h5.3v-5.3h-2.8c0-1.9.8-3.3 2.5-4.2Z" />
+              </svg>
+              <blockquote>{k.noiDung}</blockquote>
+              <div class="cn__ai">
+                <strong>{k.ten}</strong>
+                <span>
+                  {k.vaiTro}
+                  {k.diaDiem ? ` - ${k.diaDiem}` : ''}
+                </span>
+                {k.sanPham && <em>Mua {k.sanPham}</em>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .cn {
+    padding-block: var(--k7);
+    background: var(--nen-nhat);
+  }
+  .cn__lai {
+    display: flex;
+    gap: var(--k2);
+  }
+  .cn__nut {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: var(--vien-dam-1);
+    border-radius: 50%;
+    background: var(--trang);
+    cursor: pointer;
+    transition:
+      background var(--thoi) var(--nhip),
+      border-color var(--thoi) var(--nhip);
+  }
+  .cn__nut svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--muc);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .cn__nut:hover {
+    background: var(--do-500);
+    border-color: var(--do-500);
+  }
+  .cn__nut:hover svg {
+    stroke: var(--trang);
+  }
+  .cn__nut[disabled] {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .cn__nut[disabled]:hover {
+    background: var(--trang);
+    border-color: var(--vien-dam);
+  }
+  .cn__nut[disabled]:hover svg {
+    stroke: var(--muc);
+  }
+
+  .cn__ray {
+    display: grid;
+    grid-auto-flow: column;
+    /* 31% -> the thu ba lo mot phan o mep phai, bao con noi dung ben phai */
+    grid-auto-columns: 31%;
+    gap: var(--gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 0;
+    padding-bottom: var(--k2);
+    scrollbar-width: thin;
+    overscroll-behavior-x: contain;
+  }
+  .cn__the {
+    scroll-snap-align: start;
+    display: grid;
+    align-content: start;
+    gap: var(--k3);
+    padding: var(--k5);
+    background: var(--trang);
+    border: var(--vien-mong);
+    border-radius: var(--bo);
+  }
+  .cn__nhay {
+    width: 26px;
+    height: 26px;
+    fill: var(--do-500);
+    opacity: 0.28;
+  }
+  .cn__the blockquote {
+    font-size: var(--cs-nho);
+    line-height: var(--dc-than);
+    color: var(--muc);
+  }
+  .cn__ai {
+    display: grid;
+    gap: 1px;
+    padding-top: var(--k3);
+    border-top: var(--vien-mong);
+  }
+  .cn__ai strong {
+    font-size: var(--cs-nho);
+    font-weight: var(--w-nang);
+  }
+  .cn__ai span {
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  .cn__ai em {
+    margin-top: 3px;
+    font-style: normal;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    color: var(--do-600);
+  }
+
+  @media (max-width: 980px) {
+    .cn__ray {
+      grid-auto-columns: 62%;
+    }
+  }
+  @media (max-width: 560px) {
+    .cn__ray {
+      grid-auto-columns: 85%;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.cn').forEach((cn) => {
+    const ray = cn.querySelector<HTMLElement>('.cn__ray');
+    const nut = [...cn.querySelectorAll<HTMLButtonElement>('.cn__nut')];
+    if (!ray || !nut.length) return;
+
+    const buoc = () => {
+      const a = ray.firstElementChild as HTMLElement | null;
+      // Do buoc that tu the dau thay vi doan: khoang cach hai the = rong + gap
+      return a ? a.getBoundingClientRect().width + parseFloat(getComputedStyle(ray).columnGap || '0') : 320;
+    };
+
+    const capNhat = () => {
+      const con = ray.scrollWidth - ray.clientWidth;
+      nut[0].disabled = ray.scrollLeft <= 2;
+      nut[1].disabled = ray.scrollLeft >= con - 2;
+    };
+
+    nut.forEach((n) =>
+      n.addEventListener('click', () => {
+        ray.scrollBy({ left: Number(n.dataset.huong) * buoc(), behavior: 'smooth' });
+      }),
+    );
+
+    ray.addEventListener('scroll', capNhat, { passive: true });
+    window.addEventListener('resize', capNhat);
+    capNhat();
+  });
+</script>

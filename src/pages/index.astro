@@ -4,6 +4,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { catTieuDe, catMoTa } from '../lib/seo-text';
 import BannerSlider from '../components/BannerSlider.astro';
+import LyDoChon from '../components/LyDoChon.astro';
+import DoiTac from '../components/DoiTac.astro';
+import CamNghi from '../components/CamNghi.astro';
+import TinTuc from '../components/TinTuc.astro';
 import { tenChinh, quyDoi, coGia, dinhDangGia } from '../lib/quy-cach';
 
 import anhHero from '../assets/anh/dong-bao-dinh-sai-gon.jpg';
@@ -17,24 +21,25 @@ import anhNenTrang2 from '../assets/anh/dinh-tren-nen-trang-02.jpg';
 import anhCan from '../assets/anh/can-dinh-tai-xuong.jpg';
 
 /**
- * TRANG CHU - dung theo dung cau truc thegioithepvn.com (do 01/09/2026):
+ * TRANG CHU.
  *
- *   0-97px      header
- *   97-631px    ANH FULL-BLEED cao 534px, KHONG co chu de len
- *   ~660px      4 chip 255x62px bo 6px, mau xen ke
- *   738px       intro: H1 + doan gioi thieu + anh ben canh
- *   1327px+     cac hang danh muc san pham, moi hang ~370px
- *   2876px      tin tuc
- *   3667px      footer
+ * Khung xuong lay tu thegioithepvn.com (do 01/09/2026): anh full-bleed khong
+ * chu de len, H1 nam o section intro ngay duoi hero chu khong nam tren anh.
  *
- * Vi hero KHONG co chu, H1 nam o section intro ngay duoi - dung nhu ho lam
- * ("The Gioi Thep - Cung Cap Thep Xay Dung Uy Tin" la H1 cua ho, dat o y=738).
+ * THU TU MUC (user chot 01/09/2026):
+ *   banner - ly do - gioi thieu - san pham - bang quy cach - nha may
+ *   - hop tac - cam nghi - tin tuc - CTA
  *
- * Mau: ho dung tim #572169 + vang #FFDE17 + xanh #1144EA + xanh la #07CF34.
- * Ta thay tim bang do #C4161C (mau bao bi DINH SAI GON that), giu nguyen cach
- * xen ke mau o 4 chip.
+ * NEN XEN KE nghiem ngat trang / tint am, bat dau tu trang:
+ *   ly do(trang) gioi thieu(trang, dinh lien khoi tren) san pham(nhat)
+ *   bang(trang) nha may(nhat) hop tac(trang) cam nghi(nhat) tin tuc(trang) CTA(do)
+ * Tint la #FBF4F2 - cung goc mau voi do thuong hieu, bao hoa ~5%. Truoc day
+ * dung xam lanh #F4F6F8 nen cac dai doc ra roi rac khong lien quan gi nhau.
  *
- * ANH HIEN TAI LA TAM. Anh hero can ban chup ngang ti le ~2.7:1, anh hien tai
+ * HAI MUC TU AN KHI CHUA CO DU LIEU: cam nghi (cam-nghi.yaml rong) va tin tuc
+ * (chua co bai). Trong con hon bia.
+ *
+ * ANH HIEN TAI LA TAM. Anh banner can ban chup ngang ti le ~2.4:1, anh hien tai
  * la 4:3 nen bi crop nhieu.
  */
 const ct = await getEntry('congTy', 'cong-ty');
@@ -64,14 +69,6 @@ const anhNhom: Record<string, { src: ImageMetadata; alt: string }> = {
   'day-kem-hap': { src: anhSoiThep, alt: 'Cuộn sợi thép nguyên liệu tại nhà máy' },
 };
 
-/** 4 chip duoi hero - dung mau xen ke nhu ho: brand / xanh / brand / xanh la */
-const chip = [
-  { ten: 'SẢN PHẨM TỰ SẢN XUẤT', phu: '24 quy cách, đủ thông số', mau: 'do' },
-  { ten: 'GIÁ NHÀ MÁY', phu: 'Không qua trung gian', mau: 'xanh' },
-  { ten: 'GIAO HÀNG TẬN NƠI', phu: 'TP.HCM, Long An và lân cận', mau: 'do' },
-  { ten: 'ĐẶT HÀNG DỄ DÀNG', phu: `Hotline ${c.hotline}`, mau: 'la' },
-];
-
 const tieuDe = catTieuDe('Đinh Thép Sài Gòn - Nhà máy sản xuất đinh, dây kẽm');
 const moTa = catMoTa(
   `Nhà máy sản xuất đinh thép xây dựng: đinh chì 2p đến 15p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`,
@@ -79,24 +76,13 @@ const moTa = catMoTa(
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/">
-  {/* ==== 1. BANG TRUOT ANH full-bleed, khong chu de - giong ho (8 anh) ==== */}
+  {/* ==== 1. BANG TRUOT ANH full-bleed cao 600px, khong chu de len ==== */}
   <BannerSlider anh={anhBanner} giay={5.5} />
 
-  {/* ============ 2. Bon chip 255x62 bo 6px ============ */}
-  <div class="khung">
-    <ul class="chip-hang">
-      {
-        chip.map((x) => (
-          <li class={`chip chip--${x.mau}`}>
-            <strong>{x.ten}</strong>
-            <span>{x.phu}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
+  {/* ==== 2. Ly do chon chung toi - thay cho 4 chip mau dac cu ==== */}
+  <LyDoChon soQuyCach={tongQuyCach} />
 
-  {/* ============ 3. Intro mang H1 - ho dat H1 o day chu khong o hero ====== */}
+  {/* ============ 3. Gioi thieu, mang H1 ============ */}
   <section class="gioi-thieu">
     <div class="khung gioi-thieu__trong">
       <div>
@@ -132,7 +118,7 @@ const moTa = catMoTa(
   </section>
 
   {/* ============ 4. Cac hang danh muc san pham ============ */}
-  <section class="hang">
+  <section class="hang hang--nhat">
     <div class="khung">
       <div class="hang__dau">
         <h2>Sản phẩm nhà máy sản xuất</h2>
@@ -162,7 +148,7 @@ const moTa = catMoTa(
   </section>
 
   {/* ============ 5. Bang quy cach ============ */}
-  <section class="hang hang--nhat">
+  <section class="hang">
     <div class="khung">
       <div class="hang__dau">
         <h2>Bảng quy cách đinh chì</h2>
@@ -211,7 +197,7 @@ const moTa = catMoTa(
   </section>
 
   {/* ============ 6. Nha may ============ */}
-  <section class="hang">
+  <section class="hang hang--nhat">
     <div class="khung">
       <div class="hang__dau">
         <h2>Nhà máy sản xuất</h2>
@@ -231,7 +217,16 @@ const moTa = catMoTa(
     </div>
   </section>
 
-  {/* ============ 7. CTA ============ */}
+  {/* ==== 7. Hop tac: doi tac + hang thiet bi (nen trang) ==== */}
+  <DoiTac />
+
+  {/* ==== 8. Cam nghi khach hang (nen nhat) - tu an khi chua co du lieu ==== */}
+  <CamNghi />
+
+  {/* ==== 9. Tin tuc (nen trang) - tu an khi chua co bai ==== */}
+  <TinTuc />
+
+  {/* ============ 10. CTA ============ */}
   <section class="cta">
     <div class="khung cta__trong">
       <div>
@@ -249,42 +244,8 @@ const moTa = catMoTa(
 <style>
   /* Banner nam trong components/BannerSlider.astro */
 
-  /* ---- 2. chip 255x62 bo 6px, mau xen ke ---- */
-  .chip-hang {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    margin-top: 28px;
-  }
-  .chip {
-    display: grid;
-    align-content: center;
-    gap: 2px;
-    min-height: 62px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    color: #f1f1f1;
-  }
-  .chip strong {
-    font-size: var(--cs-nho);
-    font-weight: var(--w-nang);
-    line-height: 1.2;
-  }
-  .chip span {
-    font-size: var(--cs-micro);
-    opacity: 0.92;
-  }
-  .chip--do {
-    background: var(--do-500);
-  }
-  .chip--xanh {
-    background: var(--navy-600);
-  }
-  .chip--la {
-    background: var(--xanh-500);
-  }
-
-  /* ---- 3. intro mang H1 ---- */
+  /* ---- 3. gioi thieu mang H1. Khong co vien tren: dai Ly do ngay tren da
+       co vien duoi, hai duong ke sat nhau se thanh mot duong day. ---- */
   .gioi-thieu {
     padding-block: var(--k7);
   }
@@ -331,25 +292,6 @@ const moTa = catMoTa(
   }
   .hang--nhat {
     background: var(--nen-nhat);
-  }
-  .hang__dau {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--k4);
-    flex-wrap: wrap;
-    padding-bottom: var(--k3);
-    margin-bottom: var(--k4);
-    border-bottom: 2px solid var(--do-500);
-  }
-  .hang__dau h2 {
-    font-size: var(--cs-h2);
-    text-transform: uppercase;
-  }
-  .hang__dau a {
-    font-size: var(--cs-nho);
-    font-weight: var(--w-dam);
-    white-space: nowrap;
   }
   .hang__dan {
     font-size: var(--cs-nho);
@@ -475,7 +417,6 @@ const moTa = catMoTa(
   }
 
   @media (max-width: 980px) {
-    .chip-hang,
     .the-hang,
     .nm {
       grid-template-columns: repeat(2, 1fr);
@@ -485,11 +426,6 @@ const moTa = catMoTa(
       grid-template-columns: 1fr;
     }
     .nm__y {
-      grid-template-columns: 1fr;
-    }
-  }
-  @media (max-width: 560px) {
-    .chip-hang {
       grid-template-columns: 1fr;
     }
   }

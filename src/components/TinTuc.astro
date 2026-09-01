@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+
+/**
+ * Muc tin tuc tren trang chu - lay 3 bai moi nhat.
+ *
+ * KHONG RENDER GI khi chua co bai. Trang chu de mot khoi "dang cap nhat" rong
+ * la tin hieu xau ca voi khach lan voi crawler. Trang /kien-thuc/ da co san
+ * trang thai rong tu te va van dan sang cac trang tra cuu - de viec do cho no.
+ */
+const bai = (await getCollection('baiViet', ({ data }) => !data.nhap))
+  .sort((a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf())
+  .slice(0, 3);
+
+const ngayVn = (d: Date) =>
+  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+---
+
+{
+  bai.length > 0 && (
+    <section class="tt" aria-labelledby="tt-dau">
+      <div class="khung">
+        <div class="hang__dau">
+          <h2 id="tt-dau">Tin tức và kiến thức</h2>
+          <a href="/kien-thuc/">Xem tất cả</a>
+        </div>
+        <ul class="tt__hang">
+          {bai.map((b) => (
+            <li class="tt__the">
+              <time datetime={b.data.ngayDang.toISOString().slice(0, 10)}>
+                {ngayVn(b.data.ngayDang)}
+              </time>
+              <h3>
+                <a href={`/kien-thuc/${b.id}/`}>{b.data.tieuDe}</a>
+              </h3>
+              <p>{b.data.moTa}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .tt {
+    padding-block: var(--k7);
+  }
+  .tt__hang {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap-lon);
+  }
+  .tt__the {
+    display: grid;
+    align-content: start;
+    gap: var(--k2);
+    padding-left: var(--k4);
+    border-left: 3px solid var(--do-500);
+  }
+  .tt__the time {
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    letter-spacing: var(--gc-micro);
+    color: var(--muc-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .tt__the h3 {
+    font-size: var(--cs-than);
+    line-height: var(--dc-vua);
+  }
+  .tt__the h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .tt__the h3 a:hover {
+    color: var(--do-600);
+  }
+  .tt__the p {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+
+  @media (max-width: 980px) {
+    .tt__hang {
+      grid-template-columns: 1fr;
+      gap: var(--k5);
+    }
+  }
+</style>

@@ -676,3 +676,28 @@ figcaption {
 .bo-qua:focus {
   left: 0;
 }
+
+/* --------------------------------------------------- dau muc trang chu ----
+   Tieu de section + link "xem tat ca" ben phai, gach do 2px duoi.
+   O GLOBAL chu khong scoped trong index.astro: cac component TinTuc, DoiTac,
+   CamNghi deu dung lai mau nay, ma style scoped cua Astro khong voi toi
+   markup cua component khac. */
+.hang__dau {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--k4);
+  flex-wrap: wrap;
+  padding-bottom: var(--k3);
+  margin-bottom: var(--k4);
+  border-bottom: 2px solid var(--do-500);
+}
+.hang__dau h2 {
+  font-size: var(--cs-h2);
+  text-transform: uppercase;
+}
+.hang__dau a {
+  font-size: var(--cs-nho);
+  font-weight: var(--w-dam);
+  white-space: nowrap;
+}

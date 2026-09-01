@@ -55,6 +55,10 @@ const congTy = defineCollection({
     email: z.string().email(),
     emailPhu: z.string().email(),
     thietBi: z.array(z.object({ ten: z.string(), loai: z.string(), xuatXu: z.string() })),
+    /** Logo doi tac. `anh` la ten file trong src/assets/doi-tac/ */
+    doiTac: z
+      .array(z.object({ ten: z.string(), anh: z.string() }))
+      .default([]),
     diaDiem: z.array(diaDiemSchema).min(1),
   }),
 });
@@ -154,4 +158,30 @@ const baiViet = defineCollection({
   }),
 });
 
-export const collections = { congTy, nhomSanPham, buLong, baiViet };
+/* -------------------------------------------------------------- cam nghi ---- */
+
+/**
+ * Cam nghi khach hang. Mac dinh RONG - trang chu tu an muc nay khi rong.
+ * Khong dat min(1): du an chap nhan chua co cam nghi, KHONG chap nhan cam nghi bia.
+ */
+const camNghi = defineCollection({
+  loader: async () => {
+    const d = await docYaml<{ danhSach?: unknown[] }>('src/content/du-lieu/cam-nghi.yaml');
+    return [{ id: 'cam-nghi', danhSach: d.danhSach ?? [] }];
+  },
+  schema: z.object({
+    danhSach: z
+      .array(
+        z.object({
+          ten: z.string(),
+          vaiTro: z.string(),
+          noiDung: z.string().min(20, 'Cam nghi qua ngan thi doc ra nhu chu bia'),
+          diaDiem: z.string().optional(),
+          sanPham: z.string().optional(),
+        }),
+      )
+      .default([]),
+  }),
+});
+
+export const collections = { congTy, nhomSanPham, buLong, baiViet, camNghi };

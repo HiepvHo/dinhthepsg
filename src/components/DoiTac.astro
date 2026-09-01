@@ -1,0 +1,181 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+/**
+ * Muc HOP TAC: doi tac + hang thiet bi.
+ *
+ * NGUYEN TAC VIET O DAY - doc ky truoc khi sua:
+ *
+ * 1. Chi ghi TEN va LOGO doi tac. Khong viet "nha cung cap phoi thep cua chung
+ *    toi" hay "dai ly uy quyen" vi quan he thuong mai cu the CHUA XAC THUC.
+ *    Website me chi de tieu de "DOI TAC" va ba logo - ta chep dung muc do do.
+ *
+ * 2. Thiet bi viet "cong ty la dai dien cua...", TUYET DOI khong viet
+ *    "day chuyen dinh su dung thiet bi..." - chua xac nhan thiet bi nay dung
+ *    cho day chuyen dinh hay chi cho day chuyen tole.
+ *
+ * Logo dat trong the TRANG tren nen tint am: logo Hoa Sen la JPEG nen trang,
+ * dat thang len nen mau se lo mot o vuong trang quanh no.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+/* Astro can ImageMetadata that de toi uu anh, nen phai nap qua glob
+   roi tra theo ten file ghi trong YAML. */
+const anhLogo = import.meta.glob<{ default: ImageMetadata }>('../assets/doi-tac/*.{png,jpg,jpeg,webp,svg}', {
+  eager: true,
+});
+function layLogo(ten: string) {
+  const khoa = Object.keys(anhLogo).find((k) => k.endsWith('/' + ten));
+  return khoa ? anhLogo[khoa].default : undefined;
+}
+
+const doiTac = c.doiTac.map((d) => ({ ...d, src: layLogo(d.anh) })).filter((d) => d.src);
+---
+
+<section class="ht" aria-labelledby="ht-dau">
+  <div class="khung">
+    <div class="hang__dau">
+      <h2 id="ht-dau">Đối tác và thiết bị</h2>
+    </div>
+
+    <h3 class="ht__phu-dau">Đối tác của Thép Cường Phát</h3>
+    <ul class="ht__logo">
+      {
+        doiTac.map((d) => (
+          <li>
+            <Image src={d.src!} alt={`Logo ${d.ten}`} widths={[220, 440]} sizes="190px" loading="lazy" />
+            <span class="ht__ten">{d.ten}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="ht__phu-dau ht__phu-dau--sau">Đại diện thiết bị châu Âu</h3>
+    <ul class="ht__tb">
+      {
+        c.thietBi.map((t) => (
+          <li>
+            <strong>{t.ten}</strong>
+            <em>{t.xuatXu}</em>
+            <span>{t.loai}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="ht__ghi">
+      {c.tenPhapDinh} là đại diện tại Việt Nam của các hãng thiết bị nêu trên.
+    </p>
+  </div>
+</section>
+
+<style>
+  .ht {
+    padding-block: var(--k7);
+  }
+  .ht__phu-dau {
+    font-size: var(--cs-micro);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--muc-2);
+    margin-bottom: var(--k4);
+  }
+  .ht__phu-dau--sau {
+    margin-top: var(--k7);
+  }
+
+  .ht__logo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+  .ht__logo li {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: var(--k3);
+    min-height: 148px;
+    padding: var(--k5);
+    background: var(--trang);
+    border: var(--vien-mong);
+    border-radius: var(--bo-nho);
+    box-shadow: var(--noi-nho);
+  }
+  /* Chan ca chieu cao lan chieu rong: ba logo nay ti le rat lech
+     (1:1, 1.6:1 va 4.8:1) nen neu chi chan mot chieu se co cai to gap ba cai kia. */
+  .ht__logo :global(img) {
+    max-width: 190px;
+    max-height: 64px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .ht__ten {
+    font-size: var(--cs-micro);
+    font-weight: var(--w-vua);
+    color: var(--muc-2);
+    text-align: center;
+  }
+
+  .ht__tb {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+  .ht__tb li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 2px var(--k3);
+    padding: var(--k4) var(--k5);
+    background: var(--nen-nhat);
+    border-left: 3px solid var(--do-500);
+    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
+    font-size: var(--cs-nho);
+  }
+  .ht__tb strong {
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-dau);
+  }
+  .ht__tb span {
+    grid-column: 1 / -1;
+    color: var(--muc-2);
+  }
+  .ht__tb em {
+    font-style: normal;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--do-600);
+    white-space: nowrap;
+  }
+  .ht__ghi {
+    margin-top: var(--k4);
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+
+  @media (max-width: 760px) {
+    .ht__tb {
+      grid-template-columns: 1fr;
+      gap: var(--k2);
+    }
+  }
+  @media (max-width: 560px) {
+    .ht__logo {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--k3);
+    }
+    .ht__logo li {
+      min-height: 118px;
+      padding: var(--k4);
+    }
+    .ht__logo li:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

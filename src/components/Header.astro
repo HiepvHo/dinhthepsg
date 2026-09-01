@@ -27,11 +27,27 @@ const nhom = (await getCollection('nhomSanPham')).sort((a, b) =>
 const duongDanHienTai = Astro.url.pathname;
 const dangO = (d: string) => duongDanHienTai === d || duongDanHienTai.startsWith(d + '/');
 
-const navChinh = [
-  { ten: 'Bảng giá', duongDan: '/bang-gia-dinh-thep/' },
-  { ten: 'Bảng tra quy cách', duongDan: '/bang-tra-quy-cach-dinh/' },
-  { ten: 'Nhà máy', duongDan: '/nha-may/' },
-  { ten: 'Kiến thức', duongDan: '/kien-thuc/' },
+/**
+ * Nav 5 muc theo yeu cau: Gioi thieu - San pham - Bang gia - Tin tuc - Lien he.
+ *
+ * HAI CHO NHAN KHAC URL, co chu y:
+ *  - "Gioi thieu" tro toi /nha-may/. Khong tao them /gioi-thieu/ vi se thanh
+ *    hai trang cung noi mot chuyen (thin + trung lap), va "nha may san xuat dinh"
+ *    la URL mang tu khoa, doi thanh "gioi-thieu" la vut di.
+ *  - "Tin tuc" tro toi /kien-thuc/. Nhan la tu khach quen doc, URL giu theo y dinh
+ *    tim kiem (huong dan/tra cuu) - dung cai ma noi dung that se la.
+ *
+ * "Bang tra quy cach" khong con o cap 1 nua ma nam trong tha xuong cua Bang gia,
+ * de tranh mat trang chen AI Overview do.
+ */
+const traCuu = [
+  { ten: 'Bảng giá đầy đủ quy cách', duongDan: '/bang-gia-dinh-thep/' },
+  { ten: 'Bảng tra phân - cm - mm', duongDan: '/bang-tra-quy-cach-dinh/' },
+  { ten: 'Bảng tra bu lông M3-M36', duongDan: '/bang-gia-dinh-thep/#bu-long' },
+];
+
+const navSau = [
+  { ten: 'Tin tức', duongDan: '/kien-thuc/' },
   { ten: 'Liên hệ', duongDan: '/lien-he/' },
 ];
 ---
@@ -80,6 +96,10 @@ const navChinh = [
 
     <nav id="dieu-huong" class="dieu-huong" aria-label="Điều hướng chính">
       <ul class="dieu-huong__cap1">
+        <li>
+          <a href="/nha-may/" aria-current={dangO('/nha-may/') ? 'page' : undefined}>Giới thiệu</a>
+        </li>
+
         <li class="co-mega">
           <a href="/san-pham/" aria-expanded="false" aria-haspopup="true">Sản phẩm</a>
 
@@ -107,20 +127,32 @@ const navChinh = [
                   </div>
                 ))
               }
-              <div class="mega__cot mega__cot--nhan">
-                <span class="mega__dau">Tra cứu</span>
-                <ul class="mega__ds">
-                  <li><a href="/bang-gia-dinh-thep/">Bảng giá đầy đủ quy cách</a></li>
-                  <li><a href="/bang-tra-quy-cach-dinh/">Bảng tra phân - cm - mm</a></li>
-                  <li><a href="/bang-gia-dinh-thep/#bu-long">Bảng tra bu lông M3-M36</a></li>
-                </ul>
-              </div>
             </div>
           </div>
         </li>
 
+        <li class="co-tha">
+          <a
+            href="/bang-gia-dinh-thep/"
+            aria-haspopup="true"
+            aria-current={dangO('/bang-gia-dinh-thep/') || dangO('/bang-tra-quy-cach-dinh/')
+              ? 'page'
+              : undefined}
+          >
+            Bảng giá
+            <svg class="tha__mui" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6"></path></svg>
+          </a>
+          <ul class="tha">
+            {traCuu.map((m) => (
+              <li>
+                <a href={m.duongDan}>{m.ten}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
+
         {
-          navChinh.map((m) => (
+          navSau.map((m) => (
             <li>
               <a href={m.duongDan} aria-current={dangO(m.duongDan) ? 'page' : undefined}>
                 {m.ten}
@@ -253,6 +285,63 @@ const navChinh = [
     border-bottom-color: var(--do-500);
   }
 
+  /* ---------- tha xuong nho (Bang gia) ----------
+     Cung co che hover/focus-within nhu mega, nhung neo theo muc chu khong
+     tran het chieu rong: chi ba link thi mot bang full-bleed la lang phi. */
+  .co-tha {
+    position: relative;
+  }
+  .co-tha > a {
+    gap: 4px;
+  }
+  .tha__mui {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tha {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 1;
+    min-width: 232px;
+    padding: var(--k2) 0;
+    background: var(--trang);
+    border: var(--vien-mong);
+    border-top: 0;
+    border-bottom: 3px solid var(--do-500);
+    box-shadow: var(--noi-lon);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition:
+      opacity var(--thoi) var(--nhip),
+      transform var(--thoi) var(--nhip),
+      visibility var(--thoi);
+  }
+  .co-tha:hover .tha,
+  .co-tha:focus-within .tha {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .tha a {
+    display: block;
+    padding: 9px var(--k4);
+    font-size: var(--cs-micro);
+    font-weight: var(--w-vua);
+    color: var(--muc-2);
+    text-decoration: none;
+  }
+  .tha a:hover {
+    background: var(--nen-nhat);
+    color: var(--do-500);
+  }
+
   /* ---------- mega menu ---------- */
   .mega {
     position: absolute;
@@ -277,11 +366,21 @@ const navChinh = [
     visibility: visible;
     transform: none;
   }
+  /* Da-cot (column-count) chu khong phai grid.
+     Ly do: cot "dinh chi" co 10 link con nam cot khac chi co mot dong mo ta.
+     Voi grid thi ca HANG bi keo cao bang cot dai nhat va sinh ra hai mang
+     trang lon. Column tu don cac cot cho can chieu cao. */
   .mega__trong {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--k5) var(--gap-lon);
+    column-count: 3;
+    column-gap: var(--gap-lon);
     padding-block: var(--k5);
+  }
+  .mega__cot {
+    break-inside: avoid;
+    margin-bottom: var(--k5);
+  }
+  .mega__cot:last-child {
+    margin-bottom: 0;
   }
   .mega__dau {
     display: block;
@@ -318,11 +417,6 @@ const navChinh = [
   .mega__mota {
     font-size: var(--cs-micro);
     color: var(--muc-2);
-  }
-  .mega__cot--nhan {
-    background: var(--steel-050);
-    margin: calc(var(--k5) * -1) 0;
-    padding: var(--k5) var(--k4);
   }
 
   /* ---------- nut hamburger ---------- */
@@ -390,15 +484,33 @@ const navChinh = [
       border-bottom: var(--vien-mong);
     }
     .mega__trong {
-      grid-template-columns: 1fr;
+      column-count: 1;
       padding-inline: 0;
       padding-block: var(--k4);
-      gap: var(--k4);
     }
-    .mega__cot--nhan {
-      margin: 0;
-      padding: var(--k4);
-      border-radius: var(--bo-nho);
+    .mega__cot {
+      margin-bottom: var(--k4);
+    }
+    /* Tren mobile khong co hover: tha xuong mo san, thut le de thay cap bac */
+    .tha {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      min-width: 0;
+      padding: 0 0 var(--k3) var(--k4);
+      border: 0;
+      box-shadow: none;
+      border-bottom: var(--vien-mong);
+    }
+    .tha a {
+      min-height: var(--cham);
+      display: flex;
+      align-items: center;
+      padding-inline: 0;
+    }
+    .tha__mui {
+      display: none;
     }
     .dieu-huong__cta {
       margin-top: var(--k4);

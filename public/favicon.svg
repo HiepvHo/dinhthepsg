@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Đinh Thép Sài Gòn">
+  <rect width="48" height="48" rx="9" fill="#C4161C"/>
+  <!-- Cay dinh: mu det o tren, than thuon xuong mui nhon.
+       Ve don gian toi muc doc duoc o 16px - moi chi tiet nho hon 2px se bien mat. -->
+  <rect x="11" y="9.5" width="26" height="6" rx="1.5" fill="#fff"/>
+  <path d="M20.6 15.5h6.8l-2.5 19.4a0.9 0.9 0 0 1-1.8 0Z" fill="#fff"/>
+</svg>

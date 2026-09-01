@@ -100,3 +100,17 @@ diaDiem:
     tinhThanh: TP. Cần Thơ
     hotline: "0888 343 299"
     lienQuanDenDinh: false
+
+# Doi tac - chep dung khoi "DOI TAC" tren cuongphatsteel.com.vn, user xac nhan
+# 01/09/2026 la "3 doi tac hien tai".
+#
+# CHI GHI TEN VA LOGO. Khong viet them quan he cu the (nha cung cap phoi? dai ly?)
+# vi chua xac thuc. Viet sai quan he thuong mai la rui ro that, khong phai loi chu.
+# File logo nam trong src/assets/doi-tac/, da trim vien trang de thang hang.
+doiTac:
+  - ten: Hoa Sen Group
+    anh: hoa-sen-group.jpg
+  - ten: Hòa Phát
+    anh: hoa-phat.png
+  - ten: Vina Kyoei Steel
+    anh: vina-kyoei.png
