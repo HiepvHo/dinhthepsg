@@ -84,26 +84,6 @@ const navSau = [
       <span class="hieu__phu">Nhà máy sản xuất - Cường Phát Steel</span>
     </a>
 
-    {/* Khoi hotline dat o hang trang - hoc mamaflow.vn: ho de hotline to o hang
-        logo chu khong nhet vao nav. Nav xuong dai rieng ben duoi nen hang nay
-        con cho, va so dien thoai la thu khach can nhat o trang vat tu. */}
-    <div class="lien-nhanh">
-      <a class="lien-nhanh__so" href={`tel:${c.hotlineTel}`}>
-        <svg viewBox="0 0 24 24" aria-hidden="true"
-          ><path
-            d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"
-          ></path></svg
-        >
-        <span>
-          <em>Hotline nhà máy</em>
-          <strong>{c.hotline}</strong>
-        </span>
-      </a>
-      <a class="nut nut--chinh lien-nhanh__nut" href={`https://zalo.me/${c.zalo}`} rel="noopener">
-        Nhắn Zalo
-      </a>
-    </div>
-
     <button
       class="nut-menu"
       type="button"
@@ -113,16 +93,8 @@ const navSau = [
     >
       <span></span><span></span><span></span>
     </button>
-  </div>
 
-  {/* ==== DAI NAV RIENG, full-width ====
-      mamaflow.vn do 01/09/2026: nav cua ho la mot dai rieng cao 44px nen #FFCC00
-      tran het chieu ngang, khong nam chung hang voi logo.
-      Ta lam y het cau truc do nhung dung NAVY #052859 - mau he thong da co o
-      footer. Do da chiem dai tren cung roi; do-trang-do se thanh mot cai banh
-      ba lop, con do-trang-navy thi hai mau thuong hieu neo hai dau header. */}
-  <div class="thanh-nav">
-    <nav id="dieu-huong" class="khung dieu-huong" aria-label="Điều hướng chính">
+    <nav id="dieu-huong" class="dieu-huong" aria-label="Điều hướng chính">
       <ul class="dieu-huong__cap1">
         <li>
           <a href="/nha-may/" aria-current={dangO('/nha-may/') ? 'page' : undefined}>Giới thiệu</a>
@@ -189,27 +161,21 @@ const navSau = [
           ))
         }
       </ul>
-
     </nav>
   </div>
 </header>
 
 <style>
-  /* Header ba dai: do (34px) - trang (84px) - navy (46px) = 164px.
-     KHONG dinh ca 164px vao dinh man hinh - the la an mat mot phan sau man
-     hinh moi lan cuon. Chi de lai DAI NAV 46px.
-     
-     Cach lam: sticky voi TOP AM bang chieu cao hai dai tren (34+84 = 118px).
-     Header troi len 118px roi moi dinh lai, phan con nhin thay dung bang dai nav.
-     
-     KHONG dat sticky rieng cho .thanh-nav duoc: sticky bi gioi han trong hop
-     cua THE CHA, ma cha no la .dau-trang cao 164px - cuon qua 164px la no di
-     theo luon. Da thu va do duoc: o scrollTop 1400 thi dai nav nam o y = -1282. */
+  /* Header HAI dai: do (34px) + trang mang logo va nav (76px) = 110px.
+     Dinh ca header vao dinh man hinh - 110px la muc chap nhan duoc.
+     (Truoc day tach nav thanh dai navy rieng va dinh bang top am -118px; user
+     chot dua nav ve chung hang logo nen bo cach do.) */
   .dau-trang {
     position: sticky;
-    top: -118px;
+    top: 0;
     z-index: 100;
     background: var(--trang);
+    border-bottom: var(--vien-mong);
   }
 
   /* Tang 1: dai do. Do la #C4161C - MOT do duy nhat, khac ho dung hai. */
@@ -270,61 +236,7 @@ const navSau = [
     align-items: center;
     justify-content: space-between;
     gap: var(--k5);
-    min-height: 84px;
-  }
-
-  /* ---------- khoi hotline o hang trang ---------- */
-  .lien-nhanh {
-    display: flex;
-    align-items: center;
-    gap: var(--k5);
-  }
-  .lien-nhanh__so {
-    display: flex;
-    align-items: center;
-    gap: var(--k3);
-    text-decoration: none;
-    color: inherit;
-  }
-  .lien-nhanh__so svg {
-    width: 40px;
-    height: 40px;
-    padding: 9px;
-    border-radius: 50%;
-    background: var(--do-050);
-    fill: none;
-    stroke: var(--do-500);
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .lien-nhanh__so span {
-    display: grid;
-    gap: 1px;
-    line-height: 1.2;
-  }
-  .lien-nhanh__so em {
-    font-style: normal;
-    font-size: var(--cs-micro);
-    color: var(--muc-2);
-  }
-  .lien-nhanh__so strong {
-    font-size: var(--cs-h3);
-    font-weight: var(--w-nang);
-    letter-spacing: var(--gc-dau);
-    color: var(--do-500);
-    font-variant-numeric: tabular-nums;
-  }
-  .lien-nhanh__so:hover strong {
-    color: var(--do-600);
-  }
-
-  /* ---------- dai nav navy, full-width ----------
-     position: relative de lam moc cho .mega (mega dung top: 100% cua no). */
-  .thanh-nav {
-    position: relative;
-    background: var(--navy-900);
-    box-shadow: var(--noi);
+    min-height: 76px;
   }
 
   .hieu {
@@ -354,27 +266,25 @@ const navSau = [
   .dieu-huong__cap1 {
     display: flex;
     align-items: center;
+    gap: var(--k5);
   }
-  /* Muc nav khong co khe giua ma dem trong - ca o vuong sang len khi tro chuot,
-     kieu thanh nav dac. Co khe thi vung sang bi dut quang. */
+  /* Muc nav cao het hang trang de vung bam rong, danh dau bang gach do duoi
+     chan chu khong bang o nen dac - nen dac chi hop khi nav nam tren dai mau. */
   .dieu-huong__cap1 > li > a {
     display: flex;
     align-items: center;
-    min-height: 46px;
-    padding-inline: var(--k4);
+    gap: 4px;
+    min-height: 76px;
     font-size: var(--cs-nho);
     font-weight: var(--w-dam);
-    color: var(--trang);
+    color: var(--muc);
     text-decoration: none;
-    transition: background var(--thoi) var(--nhip);
+    border-bottom: 2px solid transparent;
   }
   .dieu-huong__cap1 > li > a:hover,
   .dieu-huong__cap1 > li > a[aria-current='page'] {
-    background: var(--do-500);
-    color: var(--trang);
-  }
-  .dieu-huong__cap1 > li:first-child > a {
-    margin-left: calc(var(--k4) * -1);
+    color: var(--do-500);
+    border-bottom-color: var(--do-500);
   }
 
   /* ---------- tha xuong nho (Bang gia) ----------
@@ -435,8 +345,7 @@ const navSau = [
   }
 
   /* ---------- mega menu ---------- */
-  /* Neo theo .thanh-nav (sticky = to positioned) chu khong theo .dau-trang nua:
-     dai nav la thu con lai tren man khi cuon, mega phai xo ra ngay duoi no. */
+  /* Neo theo .dau-trang (sticky = to positioned). top: 100% = ngay duoi ca header. */
   .mega {
     position: absolute;
     left: 0;
@@ -537,57 +446,46 @@ const navSau = [
      Giu nav day du. baogiathep an han nav duoi 900px - tuc cat het internal link
      o dung thiet bi chiem phan lon traffic. */
   @media (max-width: 980px) {
-    /* Mobile dao nguoc: ca header dinh dinh man hinh (no da thap vi an bot chu),
-       con dai nav xo xuong thanh bang menu. Khoi hotline an di - da co thanh
-       goi/Zalo dinh day man hinh roi. */
-    /* Mobile: header chi cao ~127px (an khoi hotline) nen dinh CA header,
-       khong can meo top am. */
-    .dau-trang {
-      top: 0;
-    }
     .dau-trang__trong {
       min-height: 62px;
-    }
-    .lien-nhanh {
-      display: none;
     }
     .nut-menu {
       display: flex;
     }
-    .thanh-nav {
+    /* Nav xo xuong thanh bang menu tran ngang duoi header.
+       Giu NAV DAY DU - baogiathep an han nav duoi 900px, tuc cat het internal
+       link o dung thiet bi chiem phan lon traffic. */
+    .dieu-huong {
       position: absolute;
       inset: 100% 0 auto 0;
+      flex-direction: column;
+      align-items: stretch;
       background: var(--trang);
       border-bottom: var(--vien-mong);
       box-shadow: var(--noi-lon);
       max-height: 0;
+      padding: 0 20px;
       overflow: hidden auto;
-      transition: max-height var(--thoi) var(--nhip);
+      transition:
+        max-height var(--thoi) var(--nhip),
+        padding var(--thoi) var(--nhip);
     }
-    .dau-trang.mo .thanh-nav {
+    .dau-trang.mo .dieu-huong {
       max-height: calc(100vh - 100px);
-    }
-    .dieu-huong {
-      flex-direction: column;
-      align-items: stretch;
-      padding-block: var(--k3) var(--k5);
+      padding: var(--k4) 20px var(--k5);
     }
     .dieu-huong__cap1 {
       flex-direction: column;
       align-items: stretch;
+      gap: 0;
     }
     .dieu-huong__cap1 > li > a {
       min-height: var(--cham);
-      padding-inline: 0;
-      color: var(--muc);
       border-bottom: var(--vien-mong);
-    }
-    .dieu-huong__cap1 > li:first-child > a {
-      margin-left: 0;
     }
     .dieu-huong__cap1 > li > a:hover,
     .dieu-huong__cap1 > li > a[aria-current='page'] {
-      background: none;
+      border-bottom-color: var(--vien);
       color: var(--do-500);
     }
     .mega {

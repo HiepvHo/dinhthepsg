@@ -11,10 +11,10 @@ import { Image } from 'astro:assets';
  *
  * TA KHAC HO BA CHO, deu co ly do:
  *
- * 1. SLIDE RONG 62% CHU KHONG 52%, cao 560px.
+ * 1. SLIDE RONG 70% CHU KHONG 52%, cao 600px.
  *    Anh cua ho la ANH THIET KE 1200x650 (1.85:1) ve san cho khung do. Anh cua ta
  *    la ANH CHUP nha may 1280x960 (4:3). O 52% khung thanh 745x404 = 1.84:1, cat
- *    mat 28% chieu cao anh goc. O 62% duoc 893x560 = 1.59:1, chi cat 16%.
+ *    mat 28% chieu cao anh goc. O 70% duoc 998x600 = 1.66:1, cat 20%.
  *
  * 2. LAM MO HAI BEN (opacity .5). Ho khong lam vi slide cua ho la do hoa nen
  *    hong/trang, tu no lui ra sau. Anh cua ta la thep xam day chi tiet - de ba
@@ -116,12 +116,15 @@ const dauThat = lap ? 1 : 0;
 
 <style>
   .bn {
-    --rong-slide: 62%;
+    /* 70% khung. Ho 52%; ta rong hon vi anh cua ta la ANH CHUP 4:3 chu khong
+       phai do hoa 1.85:1 ve san - khung cang hep thi cat cang nhieu.
+       O 1425px: slide 998px, con 201px he lo moi ben. */
+    --rong-slide: 70%;
     --khe: 12px;
     --i: 0;
     position: relative;
     width: 100%;
-    height: 560px;
+    height: 600px;
     overflow: hidden;
     background: var(--trang);
   }
@@ -247,9 +250,9 @@ const dauThat = lap ? 1 : 0;
      phan chinh cua anh. */
   @media (max-width: 980px) {
     .bn {
-      --rong-slide: 84%;
+      --rong-slide: 88%;
       --khe: 10px;
-      height: 360px;
+      height: 380px;
     }
     .bn__lai {
       width: 36px;
