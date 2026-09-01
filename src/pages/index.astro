@@ -50,11 +50,16 @@ const nhaMay = c.diaDiem[0];
 const soNam = new Date().getFullYear() - c.namThanhLap;
 const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
 
-/** Anh cho bang truot dau trang. Ho co 8 anh, ta co 6 anh dung duoc. */
+/**
+ * Anh cho bang truot dau trang. 5 anh, deu la 1280x960 (4:3 NGANG).
+ *
+ * KHONG dua `anhDayChuyen` vao day: file do la 960x1280, tuc anh DOC. Khung
+ * banner 893x560 (1.59:1) se cat mat 53% chieu cao cua no, chi con mot lat
+ * ngang giua tam. Anh do van dung o muc Nha may, noi khung la 4:3.
+ */
 const anhBanner = [
   { src: anhHero, alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn, Đức Hòa, Long An' },
   { src: anhCongNhan, alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh' },
-  { src: anhDayChuyen, alt: 'Dây chuyền máy dập đinh đang hoạt động tại nhà máy' },
   { src: anhRaMay, alt: 'Đinh thép vừa ra khỏi máy dập, rơi xuống máng chứa' },
   { src: anhSoiThep, alt: 'Cuộn sợi thép nguyên liệu dùng để dập đinh, tập kết tại xưởng' },
   { src: anhKho, alt: 'Bao đinh thành phẩm xếp trong kho nhà máy' },

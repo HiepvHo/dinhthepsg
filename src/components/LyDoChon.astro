@@ -6,9 +6,23 @@
  * duoi banner keo het su chu y ra khoi anh nha may, va ba mau tin hieu trong
  * mot hang lam trang doc ra nhu bang dieu khien chu khong phai trang ban hang.
  *
- * Hoc tu mamaflow.vn (do 01/09/2026): icon tron + tieu de + phu, can giua,
- * KHONG co khoi mau - mau chi nam trong vong tron icon. Nhip cua ho la
- * trang + MOT mau bao hoa + tint rat nhat cua chinh mau do.
+ * HOC TU mamaflow.vn (do 01/09/2026), dai `.service-highlights` cua ho:
+ *   cao 107px, dem 20px, nam o y=642 tuc DUNG DAY BANNER - khong mot khe ho nao.
+ *   Moi muc 232px: icon trai, hai dong chu phai.
+ *   Ho boc trong owl-carousel VI 6 muc x 242px = 1452px > 1425px khung nhin,
+ *   tuc slider la CACH CHUA TRAN chu khong phai y do tham my.
+ *
+ * TA CO 4 MUC, vua thoai mai trong 1140px -> KHONG boc slider. Slider 4 muc thi
+ * hoac khong bao gio chay (JS thua), hoac tu troi va day chu nguoi ta dang doc.
+ * Thay vao do dung grid-auto-columns: minmax(240px, 1fr) + overflow-x:
+ *   4 muc  -> moi cot 285px, khong tran, dung yen
+ *   6 muc  -> 1fr chi con 190px < 240px nen cot bi ep ve 240px, tong 1440 > 1140,
+ *             tran -> tu cuon duoc
+ * Them muc thu 5 la no thanh slider, khong phai sua dong CSS nao.
+ *
+ * KHONG CO TIEU DE NHIN THAY. Dai nay la vach tin cay noi lien banner, khong
+ * phai mot section rieng; them mot dong "LY DO CHON CHUNG TOI" o giua la dung
+ * mot cai chan ngang giua banner va noi dung. Ho cung khong co tieu de.
  *
  * NOI DUNG PHAI CU THE. "Chat luong - Uy tin - Tan tam" la loai chu khong ai
  * doc; con so va dia danh thi doc duoc va cung la tu khoa.
@@ -21,30 +35,17 @@ const { soQuyCach } = Astro.props;
 const muc = [
   {
     ten: 'Tự sản xuất tại nhà máy',
-    phu: `${soQuyCach} quy cách, bán trực tiếp không qua trung gian`,
+    phu: `${soQuyCach} quy cách, không qua trung gian`,
     icon: 'nha-may',
   },
-  {
-    ten: 'Thông số công bố đủ',
-    phu: 'Chiều dài và đường kính theo phân, cm và mm',
-    icon: 'thuoc',
-  },
-  {
-    ten: 'Giao tận công trình',
-    phu: 'TP.HCM, Long An và các tỉnh lân cận',
-    icon: 'xe',
-  },
-  {
-    ten: 'Nhận đơn quy cách riêng',
-    phu: 'Nhà máy chạy theo đơn, đặt được số lượng lớn',
-    icon: 'thung',
-  },
+  { ten: 'Thông số công bố đủ', phu: 'Theo phân, cm và mm', icon: 'thuoc' },
+  { ten: 'Giao tận công trình', phu: 'TP.HCM, Long An và lân cận', icon: 'xe' },
+  { ten: 'Nhận đơn quy cách riêng', phu: 'Nhà máy chạy theo đơn', icon: 'thung' },
 ];
 ---
 
-<section class="ly-do" aria-labelledby="ly-do-dau">
+<section class="ly-do" aria-label="Lý do chọn Đinh Thép Sài Gòn">
   <div class="khung">
-    <h2 class="ly-do__dau" id="ly-do-dau">Lý do chọn chúng tôi</h2>
     <ul class="ly-do__hang">
       {
         muc.map((m) => (
@@ -88,120 +89,104 @@ const muc = [
 </section>
 
 <style>
+  /* Dinh sat day banner - day la thu tao cam giac "noi lien" ma mamaflow co.
+     Dem 18px moi ben, khong padding-block lon nhu mot section thuong. */
   .ly-do {
-    padding-block: var(--k7);
+    padding-block: 18px;
     border-bottom: var(--vien-mong);
   }
-  /* Tieu de nho, chu hoa gian - o day no la nhan cua dai chu khong phai
-     tieu de canh tranh voi H1 ngay ben duoi. */
-  .ly-do__dau {
-    text-align: center;
-    font-size: var(--cs-micro);
-    font-weight: var(--w-nang);
-    letter-spacing: var(--gc-micro);
-    text-transform: uppercase;
-    color: var(--do-500);
-    margin-bottom: var(--k6);
-  }
+
+  /* 4 muc -> moi cot 1fr (285px), khong tran, dung yen.
+     Them muc thu 5-6 -> 1fr tut duoi 240px nen cot bi ep ve 240px va tran ->
+     tu cuon duoc bang ngon tay. Khong can mot dong JS nao. */
   .ly-do__hang {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--gap-lon);
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(240px, 1fr);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
   }
+  .ly-do__hang::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Icon trai, hai dong chu phai - dung bo cuc cua ho. Xep doc can giua doc
+     ra nhu mot section san pham, khong ra vach tin cay. */
   .ly-do__muc {
+    scroll-snap-align: start;
     display: grid;
-    justify-items: center;
-    gap: 6px;
-    text-align: center;
-    padding-inline: var(--k3);
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    gap: 1px var(--k3);
+    /* Dem 16px chu khong 24px: cot rong 285px, tru icon 44 + khe 12 + dem thi
+       chu chi con ~181px va "Nhan don quy cach rieng" xuong dong, lam bon muc
+       lech duong chan nhau. 16px du cho tieu de nam gon mot dong. */
+    padding: 6px var(--k4);
   }
-  /* Duong ke doc mong giua cac cot - thay cho vien the.
-     Mat do cao hon the ma khong them mot khung nao len trang. */
   .ly-do__muc + .ly-do__muc {
     border-left: var(--vien-mong);
   }
+  .ly-do__muc:first-child {
+    padding-left: 0;
+  }
   .ly-do__vong {
+    grid-row: 1 / 3;
     display: grid;
     place-items: center;
-    width: 62px;
-    height: 62px;
-    margin-bottom: 6px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: var(--do-050);
-    transition: background var(--thoi) var(--nhip);
   }
   .ly-do__vong svg {
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
     fill: none;
     stroke: var(--do-500);
-    stroke-width: 1.6;
+    stroke-width: 1.7;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .ly-do__muc strong {
-    font-size: var(--cs-than);
+    align-self: end;
+    font-size: var(--cs-nho);
     font-weight: var(--w-dam);
-    line-height: var(--dc-vua);
+    line-height: 1.3;
   }
   .ly-do__phu {
-    font-size: var(--cs-nho);
+    align-self: start;
+    font-size: var(--cs-micro);
     color: var(--muc-2);
-    max-width: 26ch;
+    line-height: 1.35;
   }
 
   @media (max-width: 980px) {
     .ly-do__hang {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--k6) var(--gap);
-    }
-    /* Ke doc chi con giua hai cot, khong ke o dau moi hang */
-    .ly-do__muc + .ly-do__muc {
-      border-left: 0;
-    }
-    .ly-do__muc:nth-child(even) {
-      border-left: var(--vien-mong);
-    }
-  }
-  /* Duoi 560px doi sang bo cuc NGANG: icon trai, chu phai, canh trai.
-     Xep doc can-giua o day ton 846px chieu cao - tuc H1 va doan gioi thieu
-     bi day xuong qua man hinh thu hai truoc khi nguoi doc thay chu nao. */
-  @media (max-width: 560px) {
-    .ly-do {
-      padding-block: var(--k6);
-    }
-    .ly-do__dau {
-      margin-bottom: var(--k5);
-    }
-    .ly-do__hang {
-      grid-template-columns: 1fr;
-      gap: 0;
+      grid-auto-columns: minmax(232px, 1fr);
     }
     .ly-do__muc {
-      grid-template-columns: 48px 1fr;
-      justify-items: start;
-      align-items: center;
-      text-align: left;
-      gap: 2px var(--k4);
-      padding: var(--k4) 0;
+      padding-inline: var(--k3);
     }
-    .ly-do__muc:nth-child(even),
+  }
+  /* Duoi 560px xep doc lai: cuon ngang mot dai chu o man hep de bo sot muc,
+     ma bon muc nay deu la ly do mua hang nen phai thay het. */
+  @media (max-width: 560px) {
+    .ly-do {
+      padding-block: var(--k3) var(--k4);
+    }
+    .ly-do__hang {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      overflow-x: visible;
+    }
+    .ly-do__muc {
+      padding: var(--k3) 0;
+    }
     .ly-do__muc + .ly-do__muc {
       border-left: 0;
       border-top: var(--vien-mong);
-    }
-    .ly-do__vong {
-      grid-row: 1 / 3;
-      width: 48px;
-      height: 48px;
-      margin-bottom: 0;
-    }
-    .ly-do__vong svg {
-      width: 23px;
-      height: 23px;
-    }
-    .ly-do__phu {
-      max-width: none;
     }
   }
 </style>

@@ -2,26 +2,33 @@
 import { Image } from 'astro:assets';
 
 /**
- * Banner slider - dung theo do thegioithepvn.com (01/09/2026):
- *   8 anh, buoc 1425px dung bang be rong khung, overflow hidden,
- *   dich trai lien tuc khoang 250px/giay tuc ~5,7 giay mot anh,
- *   khong dung thu vien (khong slick/swiper/owl).
+ * BANNER DANG "HE LO" (peek carousel) - do theo mamaflow.vn ngay 01/09/2026.
  *
- * KHAC HO O BON DIEM, deu co ly do:
+ * SO DO HO (khung nhin 1425px):
+ *   slide rong 745px = 52% khung, khe 10px, 3 anh that + 4 ban sao de lap vong
+ *   anh nguon 1200x650, KHONG lam mo hai ben, KHONG bo goc
+ *   => nhin thay: 330px khuyet | 745px du | 330px khuyet
  *
- * 1. LCP: chi anh DAU eager + fetchpriority=high, cac anh sau lazy.
- *    Neu tai ca 8 anh cung luc thi chung tranh bang thong voi anh dau va
- *    LCP tut - day la loi thuong gap nhat cua banner slider.
+ * TA KHAC HO BA CHO, deu co ly do:
  *
- * 2. Co CHAM DIEU HUONG. Ho khong co, nghia la nguoi dung khong quay lai duoc
- *    anh vua troi qua. Cham vua la dieu khien vua cho biet con bao nhieu anh.
+ * 1. SLIDE RONG 62% CHU KHONG 52%, cao 560px.
+ *    Anh cua ho la ANH THIET KE 1200x650 (1.85:1) ve san cho khung do. Anh cua ta
+ *    la ANH CHUP nha may 1280x960 (4:3). O 52% khung thanh 745x404 = 1.84:1, cat
+ *    mat 28% chieu cao anh goc. O 62% duoc 893x560 = 1.59:1, chi cat 16%.
  *
- * 3. DUNG khi hover hoac focus. Anh troi trong luc nguoi ta dang nhin la kho chiu.
+ * 2. LAM MO HAI BEN (opacity .5). Ho khong lam vi slide cua ho la do hoa nen
+ *    hong/trang, tu no lui ra sau. Anh cua ta la thep xam day chi tiet - de ba
+ *    tam ro net ngang nhau thi mat khong biet nhin dau.
  *
- * 4. Ton trong prefers-reduced-motion: khong tu chay, chi doi khi bam cham.
+ * 3. CO CHAM DIEU HUONG. Ho chi co mui ten, tuc nguoi dung khong biet con bao
+ *    nhieu anh va khong nhay thang toi anh minh muon.
  *
- * Chieu cao co dinh 600px de khong gay CLS. (Ho 534px - ta cao hon theo yeu cau,
- * anh nha may can dat de doc duoc chi tiet.)
+ * LAP VONG: nhan ban slide cuoi dat len dau va slide dau dat xuong cuoi, chay
+ * toi ban sao roi NHAY khong hieu ung ve ban that. Khong nhan ban thi o anh dau
+ * ben trai se trong mot mang 19% - dung loi ma peek carousel nao cung mac.
+ * Ban sao khong ton byte: Astro sinh cung URL anh nen trinh duyet dung lai cache.
+ *
+ * Chieu cao co dinh de khong gay CLS.
  */
 interface Anh {
   src: ImageMetadata;
@@ -32,66 +39,120 @@ interface Props {
   giay?: number;
 }
 const { anh, giay = 5.5 } = Astro.props;
+
+/* [ban sao cuoi, ...that, ban sao dau] - chi khi co tu 2 anh tro len */
+const lap = anh.length > 1;
+const day = lap ? [anh[anh.length - 1], ...anh, anh[0]] : anh;
+const dauThat = lap ? 1 : 0;
 ---
 
 <div
   class="bn"
   data-giay={giay}
+  data-that={anh.length}
+  data-lap={lap ? '1' : '0'}
+  style={`--i: ${dauThat}`}
   role="region"
   aria-roledescription="Băng ảnh"
   aria-label="Hình ảnh nhà máy Đinh Thép Sài Gòn"
 >
   <div class="bn__ray">
     {
-      anh.map((a, i) => (
-        <div class="bn__anh" role="group" aria-roledescription="Ảnh" aria-label={`${i + 1} trên ${anh.length}`}>
-          <Image
-            src={a.src}
-            alt={a.alt}
-            widths={[900, 1440, 1920]}
-            sizes="100vw"
-            loading={i === 0 ? 'eager' : 'lazy'}
-            fetchpriority={i === 0 ? 'high' : 'auto'}
-          />
-        </div>
-      ))
+      day.map((a, i) => {
+        const banSao = lap && (i === 0 || i === day.length - 1);
+        return (
+          <div
+            class="bn__anh"
+            data-giua={i === dauThat ? '' : undefined}
+            aria-hidden={banSao ? 'true' : undefined}
+            role={banSao ? undefined : 'group'}
+            aria-roledescription={banSao ? undefined : 'Ảnh'}
+            aria-label={banSao ? undefined : `${i - dauThat + 1} trên ${anh.length}`}
+          >
+            {/* Ban sao VAN GIU alt that. Truyen chuoi rong thi Astro bo han
+                thuoc tinh alt ra khoi the img (do duoc: 2 the img khong co alt),
+                va trinh doc man hinh se doc ten file thay cho mo ta.
+                Trung lap khong thanh van de vi the bao ngoai da aria-hidden. */}
+            <Image
+              src={a.src}
+              alt={a.alt}
+              widths={[560, 900, 1200]}
+              sizes="(max-width: 560px) 90vw, (max-width: 980px) 84vw, 62vw"
+              loading={i <= dauThat + 1 ? 'eager' : 'lazy'}
+              fetchpriority={i === dauThat ? 'high' : 'auto'}
+            />
+          </div>
+        );
+      })
     }
   </div>
 
-  <div class="bn__cham" role="tablist" aria-label="Chọn ảnh">
-    {
-      anh.map((_, i) => (
-        <button
-          type="button"
-          role="tab"
-          class="bn__nut"
-          data-i={i}
-          aria-label={`Ảnh ${i + 1}`}
-          aria-selected={i === 0 ? 'true' : 'false'}
-        />
-      ))
-    }
-  </div>
+  {
+    anh.length > 1 && (
+      <Fragment>
+        <button type="button" class="bn__lai bn__lai--truoc" data-huong="-1" aria-label="Ảnh trước">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+        </button>
+        <button type="button" class="bn__lai bn__lai--sau" data-huong="1" aria-label="Ảnh tiếp theo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7" /></svg>
+        </button>
+
+        <div class="bn__cham" role="tablist" aria-label="Chọn ảnh">
+          {anh.map((_, i) => (
+            <button
+              type="button"
+              role="tab"
+              class="bn__nut"
+              data-i={i}
+              aria-label={`Ảnh ${i + 1}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+            />
+          ))}
+        </div>
+      </Fragment>
+    )
+  }
 </div>
 
 <style>
   .bn {
+    --rong-slide: 62%;
+    --khe: 12px;
+    --i: 0;
     position: relative;
     width: 100%;
-    height: 600px;
+    height: 560px;
     overflow: hidden;
-    background: var(--steel-100);
+    background: var(--trang);
   }
+
+  /* Tam giua slide thu --i: day ray sang trai sao cho tam no trung tam khung.
+     (100% - rong)/2 la le trai con lai; moi buoc la mot slide cong mot khe. */
   .bn__ray {
     display: flex;
+    gap: var(--khe);
     height: 100%;
-    transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transform: translateX(
+      calc((100% - var(--rong-slide)) / 2 - (var(--rong-slide) + var(--khe)) * var(--i))
+    );
+    transition: transform 620ms cubic-bezier(0.22, 0.61, 0.36, 1);
     will-change: transform;
   }
+  .bn__ray--nhay {
+    transition: none;
+  }
+
   .bn__anh {
     position: relative;
-    flex: 0 0 100%;
+    flex: 0 0 var(--rong-slide);
     height: 100%;
+    opacity: 0.5;
+    transition: opacity 620ms var(--nhip);
+    cursor: pointer;
+  }
+  .bn__anh[data-giua] {
+    opacity: 1;
+    cursor: default;
   }
   .bn__anh :global(img) {
     position: absolute;
@@ -101,10 +162,52 @@ const { anh, giay = 5.5 } = Astro.props;
     object-fit: cover;
   }
 
+  /* ---------- mui ten ---------- */
+  .bn__lai {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--noi);
+    cursor: pointer;
+    transition: background var(--thoi) var(--nhip);
+  }
+  .bn__lai svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: var(--muc);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .bn__lai:hover {
+    background: var(--do-500);
+  }
+  .bn__lai:hover svg {
+    stroke: var(--trang);
+  }
+  .bn__lai--truoc {
+    left: 18px;
+  }
+  .bn__lai--sau {
+    right: 18px;
+  }
+
+  /* ---------- cham ---------- */
   .bn__cham {
     position: absolute;
     left: 50%;
     bottom: 16px;
+    z-index: 2;
     transform: translateX(-50%);
     display: flex;
     gap: 8px;
@@ -120,7 +223,9 @@ const { anh, giay = 5.5 } = Astro.props;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    transition: background var(--thoi) var(--nhip), width var(--thoi) var(--nhip);
+    transition:
+      background var(--thoi) var(--nhip),
+      width var(--thoi) var(--nhip);
   }
   .bn__nut:hover {
     background: rgba(255, 255, 255, 0.85);
@@ -132,21 +237,43 @@ const { anh, giay = 5.5 } = Astro.props;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bn__ray {
+    .bn__ray,
+    .bn__anh {
       transition: none;
     }
   }
+
+  /* Duoi 980px phan he lo hep lai: man cang hep thi 19% moi ben cang an mat
+     phan chinh cua anh. */
   @media (max-width: 980px) {
     .bn {
+      --rong-slide: 84%;
+      --khe: 10px;
       height: 360px;
+    }
+    .bn__lai {
+      width: 36px;
+      height: 36px;
+    }
+    .bn__lai--truoc {
+      left: 8px;
+    }
+    .bn__lai--sau {
+      right: 8px;
     }
   }
   @media (max-width: 560px) {
     .bn {
+      --rong-slide: 90%;
+      --khe: 8px;
       height: 250px;
     }
     .bn__cham {
       bottom: 10px;
+    }
+    /* Mui ten che mat anh tren man hep - bo, chi con cham */
+    .bn__lai {
+      display: none;
     }
   }
 </style>
@@ -154,46 +281,95 @@ const { anh, giay = 5.5 } = Astro.props;
 <script>
   document.querySelectorAll<HTMLElement>('.bn').forEach((bn) => {
     const ray = bn.querySelector<HTMLElement>('.bn__ray');
-    const nut = [...bn.querySelectorAll<HTMLButtonElement>('.bn__nut')];
-    if (!ray || nut.length < 2) return;
+    if (!ray) return;
+    const o = Array.from(ray.children) as HTMLElement[];
+    const soThat = Number(bn.dataset.that) || o.length;
+    const lap = bn.dataset.lap === '1';
+    if (soThat < 2) return;
 
-    const soAnh = nut.length;
+    const nut = Array.from(bn.querySelectorAll<HTMLButtonElement>('.bn__nut'));
     const chuKy = (Number(bn.dataset.giay) || 5.5) * 1000;
     const itChuyenDong = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let i = 0;
+
+    // i chay tren DOM (co ban sao); veThat doi ve so thu tu anh that de sang cham.
+    const dau = lap ? 1 : 0;
+    let i = dau;
     let hen: number | undefined;
 
-    const den = (k: number) => {
-      i = (k + soAnh) % soAnh;
-      ray.style.transform = `translateX(-${i * 100}%)`;
-      nut.forEach((n, j) => n.setAttribute('aria-selected', String(j === i)));
+    const veThat = (k: number) => (((k - dau) % soThat) + soThat) % soThat;
+
+    const ve = () => {
+      bn.style.setProperty('--i', String(i));
+      o.forEach((e, k) => e.toggleAttribute('data-giua', k === i));
+      const t = veThat(i);
+      nut.forEach((n, k) => n.setAttribute('aria-selected', String(k === t)));
     };
 
-    const chay = () => {
-      if (itChuyenDong) return;
-      dung();
-      hen = window.setInterval(() => den(i + 1), chuKy);
+    const den = (k: number) => {
+      i = k;
+      ve();
     };
+
+    /* Chay toi ban sao thi doi hieu ung xong roi nhay khong hieu ung ve ban that.
+       Doi bang transitionend chu khong bang setTimeout de khong lech nhip khi may
+       cham hoac khi tab vua duoc mo lai. */
+    if (lap) {
+      ray.addEventListener('transitionend', (e) => {
+        if (e.propertyName !== 'transform') return;
+        let moi = i;
+        if (i === o.length - 1) moi = dau;
+        else if (i === 0) moi = o.length - 2;
+        if (moi === i) return;
+        ray.classList.add('bn__ray--nhay');
+        den(moi);
+        void ray.offsetWidth; // buoc trinh duyet ve lai truoc khi bat lai hieu ung
+        ray.classList.remove('bn__ray--nhay');
+      });
+    }
+
+    const tien = (h: number) => {
+      const k = i + h;
+      den(lap ? k : (k + soThat) % soThat);
+    };
+
     const dung = () => {
       if (hen) window.clearInterval(hen);
       hen = undefined;
     };
+    const chay = () => {
+      if (itChuyenDong) return;
+      dung();
+      hen = window.setInterval(() => tien(1), chuKy);
+    };
 
     nut.forEach((n) =>
       n.addEventListener('click', () => {
-        den(Number(n.dataset.i));
+        den(dau + Number(n.dataset.i));
+        chay();
+      }),
+    );
+    bn.querySelectorAll<HTMLButtonElement>('.bn__lai').forEach((n) =>
+      n.addEventListener('click', () => {
+        tien(Number(n.dataset.huong));
+        chay();
+      }),
+    );
+    // Bam vao anh he lo hai ben thi nhay toi no - no dang moi nguoi bam
+    o.forEach((e, k) =>
+      e.addEventListener('click', () => {
+        if (k === i) return;
+        den(k);
         chay();
       }),
     );
 
-    // Dung khi nguoi dung dang xem hoac dang dung ban phim
     bn.addEventListener('mouseenter', dung);
     bn.addEventListener('mouseleave', chay);
     bn.addEventListener('focusin', dung);
     bn.addEventListener('focusout', chay);
-    // Khong chay khi tab bi an - tiet kiem pin va tranh nhay mot loat khi quay lai
     document.addEventListener('visibilitychange', () => (document.hidden ? dung() : chay()));
 
+    ve();
     chay();
   });
 </script>
