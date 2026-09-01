@@ -1,0 +1,182 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+
+/**
+ * COT BEN TRAI cua trang danh muc san pham.
+ *
+ * Do thegioithepvn.com/thep-xay-dung/ ngay 02/09/2026: cot ben x=158 rong 255px,
+ * widget "DANH MUC SAN PHAM" co thanh tieu de tim dac + gach vang, muc dang o
+ * duoc in dam. Ho con mot widget "LOC THEO GIA" dang thanh truot.
+ *
+ * TA BO WIDGET LOC GIA: chua cong bo gia nao thi thanh truot "0d - 0d" la mot
+ * cai dieu khien khong dieu khien gi. Thay bang khoi lien he bao gia - dung cai
+ * ma khach dang can khi chua thay gia.
+ */
+interface Props {
+  /** slug nhom dang xem, de in dam muc do */
+  dangO?: string;
+}
+const { dangO } = Astro.props;
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhom = await getCollection('nhomSanPham');
+---
+
+<aside class="cot-dm">
+  <nav class="the-ben" aria-labelledby="dm-dau">
+    <h2 class="the-ben__dau" id="dm-dau">Danh mục sản phẩm</h2>
+    <ul class="the-ben__ds">
+      {
+        nhom.map((n) => (
+          <li>
+            <a
+              href={`/san-pham/${n.data.slug}/`}
+              aria-current={dangO === n.data.slug ? 'page' : undefined}
+            >
+              {n.data.ten}
+              <em>{n.data.quyCach.length}</em>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <nav class="the-ben" aria-labelledby="tc-dau">
+    <h2 class="the-ben__dau" id="tc-dau">Tra cứu</h2>
+    <ul class="the-ben__ds">
+      <li><a href="/bang-gia-dinh-thep/">Bảng giá đầy đủ quy cách</a></li>
+      <li><a href="/bang-tra-quy-cach-dinh/">Bảng tra phân - cm - mm</a></li>
+      <li><a href="/bang-gia-dinh-thep/#bu-long">Bảng tra bu lông M3-M36</a></li>
+    </ul>
+  </nav>
+
+  <div class="the-ben the-ben--lh">
+    <h2 class="the-ben__dau">Liên hệ báo giá</h2>
+    <div class="the-ben__lh">
+      <p>Gửi quy cách và số lượng, nhận báo giá trong ngày.</p>
+      <a class="the-ben__so" href={`tel:${c.hotlineTel}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"
+          ><path
+            d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"
+          ></path></svg
+        >
+        {c.hotline}
+      </a>
+      <a class="nut nut--chinh the-ben__nut" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+        Nhắn Zalo
+      </a>
+      <p class="the-ben__nm">Nhà máy: {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}</p>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .cot-dm {
+    display: grid;
+    gap: var(--k5);
+    align-content: start;
+  }
+  .the-ben {
+    border: var(--vien-mong);
+    border-radius: var(--bo-nho);
+    overflow: hidden;
+  }
+  /* Thanh tieu de dac - ho dung tim, ta dung navy cua he thong */
+  .the-ben__dau {
+    padding: 11px var(--k4);
+    background: var(--navy-900);
+    color: var(--trang);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--do-500);
+  }
+
+  .the-ben__ds a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--k3);
+    padding: 11px var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc);
+    text-decoration: none;
+    border-bottom: var(--vien-mong);
+  }
+  .the-ben__ds li:last-child a {
+    border-bottom: 0;
+  }
+  .the-ben__ds a:hover {
+    background: var(--nen-nhat);
+    color: var(--do-600);
+  }
+  .the-ben__ds a[aria-current='page'] {
+    font-weight: var(--w-nang);
+    color: var(--do-500);
+    background: var(--nen-nhat);
+    box-shadow: inset 3px 0 0 var(--do-500);
+  }
+  /* So quy cach - cho khach biet nhom nao nhieu lua chon truoc khi bam vao */
+  .the-ben__ds em {
+    flex: none;
+    min-width: 22px;
+    padding: 1px 6px;
+    border-radius: var(--bo-tron);
+    background: var(--steel-100);
+    font-style: normal;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    color: var(--muc-2);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .the-ben__ds a[aria-current='page'] em {
+    background: var(--do-500);
+    color: var(--trang);
+  }
+
+  .the-ben__lh {
+    padding: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .the-ben__so {
+    display: flex;
+    align-items: center;
+    gap: var(--k2);
+    margin-top: var(--k3);
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+    color: var(--do-500);
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .the-ben__so svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .the-ben__nut {
+    width: 100%;
+    margin-top: var(--k3);
+  }
+  .the-ben__nm {
+    margin-top: var(--k3);
+    font-size: var(--cs-micro);
+  }
+
+  /* Duoi 900px cot ben xuong duoi luoi san pham - o do no la phu tro,
+     khong dang chiem man hinh dau tien tren dien thoai. */
+  @media (max-width: 900px) {
+    .cot-dm {
+      gap: var(--k4);
+    }
+  }
+</style>

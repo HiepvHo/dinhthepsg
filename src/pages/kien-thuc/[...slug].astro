@@ -1,0 +1,255 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VunBanh from '../../components/VunBanh.astro';
+import MucLuc from '../../components/MucLuc.astro';
+import { tuyetDoi, schemaBreadcrumb } from '../../lib/schema';
+import { catTieuDe, catMoTa } from '../../lib/seo-text';
+
+/**
+ * TRANG BAI VIET.
+ *
+ * Do dayluoithep.com/luoi-thep-han/ ngay 02/09/2026 - trang kien thuc xep tot
+ * nhat trong so cac trang tham chieu:
+ *   5.427 tu | 1 H1, 6 H2, 5 H3 | 7 bang | hop muc luc "Noi Dung Chinh"
+ *   121 link noi bo NGAY TRONG BAI | schema Article + BreadcrumbList
+ *   cot noi dung rong 773px
+ *
+ * BA THU LAY TU HO:
+ *   1. Hop muc luc dat ngay sau doan mo dau.
+ *   2. Cot noi dung HEP (~740px). Chu chay het 1140px thi mot dong hon 110 ky tu,
+ *      mat kho bat dau dong tiep theo.
+ *   3. Bai dai va co bang - nhung do la viec cua noi dung, khong phai cua khung.
+ *
+ * MOT THU KHONG LAY: ho nhoi tu khoa vao tieu de
+ * ("[ Bao Gia ] Luoi thep han D4, D5, D6, D7, D8, D9, D10, D12(trai tim)2026" -
+ * 64 ky tu, dai qua muc SERP cat). Tieu de o day cat theo catTieuDe().
+ */
+export async function getStaticPaths() {
+  const bai = await getCollection('baiViet', ({ data }) => !data.nhap);
+  return bai.map((b) => ({ params: { slug: b.id }, props: { bai: b } }));
+}
+
+const { bai } = Astro.props;
+const { Content, headings } = await render(bai);
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+const duongDan = `/kien-thuc/${bai.id}/`;
+const d = bai.data;
+
+const ngayVn = (x: Date) =>
+  `${String(x.getDate()).padStart(2, '0')}/${String(x.getMonth() + 1).padStart(2, '0')}/${x.getFullYear()}`;
+
+const muc = headings.map((h) => ({ capDo: h.depth, neo: h.slug, chu: h.text }));
+
+/* Article + BreadcrumbList - dung bo schema cua ho.
+   Tac gia la TO CHUC chu khong phai mot cai ten nguoi bia ra: bai nay viet tu
+   thong so cua chinh nha may, va mot tac gia khong xac minh duoc la tin hieu
+   E-E-A-T am chu khong duong. */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: d.tieuDe,
+    description: d.moTa,
+    datePublished: d.ngayDang.toISOString(),
+    dateModified: (d.ngayCapNhat ?? d.ngayDang).toISOString(),
+    inLanguage: 'vi-VN',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': tuyetDoi(duongDan) },
+    author: { '@type': 'Organization', name: c.tenPhapDinh, url: tuyetDoi('/') },
+    publisher: { '@type': 'Organization', name: c.tenPhapDinh, url: tuyetDoi('/') },
+  },
+  schemaBreadcrumb([
+    { ten: 'Kiến thức', duongDan: '/kien-thuc/' },
+    { ten: d.tieuDe, duongDan },
+  ]),
+];
+---
+
+<BaseLayout
+  tieuDe={catTieuDe(d.tieuDe)}
+  moTa={catMoTa(d.moTa)}
+  duongDan={duongDan}
+  schema={schema}
+>
+  <VunBanh
+    muc={[{ ten: 'Kiến thức', duongDan: '/kien-thuc/' }, { ten: d.tieuDe, duongDan }]}
+  />
+
+  <article class="section bv">
+    <div class="khung bv__trong">
+      <h1>{d.tieuDe}</h1>
+
+      <p class="bv__meta">
+        <time datetime={d.ngayDang.toISOString().slice(0, 10)}>
+          Đăng {ngayVn(d.ngayDang)}
+        </time>
+        {
+          d.ngayCapNhat && (
+            <time datetime={d.ngayCapNhat.toISOString().slice(0, 10)}>
+              Cập nhật {ngayVn(d.ngayCapNhat)}
+            </time>
+          )
+        }
+        <span>Viết bởi {c.tenNhaMay}</span>
+      </p>
+
+      <p class="dan-nhap bv__mo">{d.moTa}</p>
+
+      <MucLuc muc={muc} />
+
+      <div class="bv__noi-dung">
+        <Content />
+      </div>
+
+      <aside class="bv__cta">
+        <h2>Cần tư vấn quy cách hoặc báo giá</h2>
+        <p>
+          Nội dung trên viết từ thông số của chính hàng chúng tôi làm ra. Cần chọn đúng quy
+          cách cho công việc của bạn, gọi để được tư vấn.
+        </p>
+        <div class="bv__nut">
+          <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
+            Gọi {c.hotline}
+          </a>
+          <a class="nut nut--vien nut--lon" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+            Nhắn Zalo
+          </a>
+        </div>
+      </aside>
+
+      <nav class="bv__lien-quan" aria-labelledby="lq-dau">
+        <h2 id="lq-dau">Tra cứu liên quan</h2>
+        <ul>
+          <li><a href="/bang-tra-quy-cach-dinh/">Bảng tra quy cách đinh: phân, cm và mm</a></li>
+          <li><a href="/bang-gia-dinh-thep/">Bảng giá và quy cách đầy đủ 6 nhóm</a></li>
+          <li><a href="/san-pham/">Toàn bộ sản phẩm nhà máy sản xuất</a></li>
+          <li><a href="/kien-thuc/">Các bài kiến thức khác</a></li>
+        </ul>
+      </nav>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Cot hep 740px - ho 773px. Chu chay het khung 1140 thi mot dong hon 110 ky tu
+     va mat kho bat dau dong tiep theo. */
+  .bv__trong {
+    max-width: 760px;
+  }
+  .bv h1 {
+    font-size: var(--cs-h1);
+  }
+  .bv__meta {
+    display: flex;
+    gap: var(--k4);
+    flex-wrap: wrap;
+    margin-top: var(--k3);
+    padding-bottom: var(--k4);
+    border-bottom: var(--vien-mong);
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  .bv__mo {
+    margin-top: var(--k4);
+  }
+
+  .bv__noi-dung :global(h2) {
+    font-size: var(--cs-h2);
+    margin-top: var(--k7);
+    margin-bottom: var(--k3);
+    scroll-margin-top: 70px; /* chua dai nav dinh 46px + khoang tho */
+  }
+  .bv__noi-dung :global(h3) {
+    font-size: var(--cs-h3);
+    margin-top: var(--k5);
+    margin-bottom: var(--k2);
+    scroll-margin-top: 70px;
+  }
+  .bv__noi-dung :global(p),
+  .bv__noi-dung :global(ul),
+  .bv__noi-dung :global(ol) {
+    margin-bottom: var(--k4);
+  }
+  .bv__noi-dung :global(ul),
+  .bv__noi-dung :global(ol) {
+    padding-left: var(--k5);
+  }
+  .bv__noi-dung :global(li) {
+    margin-bottom: 6px;
+    list-style: disc;
+  }
+  .bv__noi-dung :global(ol li) {
+    list-style: decimal;
+  }
+  .bv__noi-dung :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--bo-nho);
+  }
+  /* Bang trong bai phai cuon rieng, khong duoc lam trang cuon ngang */
+  .bv__noi-dung :global(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin-bottom: var(--k5);
+    font-size: var(--cs-nho);
+  }
+  .bv__noi-dung :global(th),
+  .bv__noi-dung :global(td) {
+    padding: 9px var(--k3);
+    border: var(--vien-mong);
+    text-align: left;
+  }
+  .bv__noi-dung :global(th) {
+    background: var(--navy-900);
+    color: var(--trang);
+    font-weight: var(--w-dam);
+  }
+  .bv__noi-dung :global(blockquote) {
+    padding: var(--k3) var(--k4);
+    margin-bottom: var(--k4);
+    border-left: 3px solid var(--do-500);
+    background: var(--nen-nhat);
+    color: var(--muc-2);
+  }
+
+  .bv__cta {
+    margin-top: var(--k8);
+    padding: var(--k5);
+    background: var(--nen-nhat);
+    border-left: 3px solid var(--do-500);
+    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
+  }
+  .bv__cta h2 {
+    font-size: var(--cs-h3);
+    margin-bottom: var(--k2);
+  }
+  .bv__cta p {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .bv__nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k4);
+  }
+
+  .bv__lien-quan {
+    margin-top: var(--k7);
+    padding-top: var(--k5);
+    border-top: var(--vien-mong);
+  }
+  .bv__lien-quan h2 {
+    font-size: var(--cs-h3);
+    margin-bottom: var(--k3);
+  }
+  .bv__lien-quan li {
+    padding: 6px 0;
+    font-size: var(--cs-nho);
+  }
+</style>

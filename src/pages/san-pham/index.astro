@@ -3,21 +3,46 @@ import { getCollection, getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VunBanh from '../../components/VunBanh.astro';
-import JsonLd from '../../components/JsonLd.astro';
+import CotDanhMuc from '../../components/CotDanhMuc.astro';
 import { tuyetDoi } from '../../lib/schema';
-import anhDinh from '../../assets/anh/dinh-tren-nen-trang-01.jpg';
+import { anhCuaNhom } from '../../lib/anh-nhom';
 import { catTieuDe, catMoTa } from '../../lib/seo-text';
 
+/**
+ * TRANG DANH MUC SAN PHAM.
+ *
+ * Do thegioithepvn.com/thep-xay-dung/ ngay 02/09/2026 (khung nhin 1425):
+ *   cot ben  x=158 rong 255   |  luoi san pham x=433 rong 844
+ *   the 211x343, ANH VUONG 192x192, thu tu: anh - ten - sao - khoang gia
+ *   phia tren luoi: 4 doan gioi thieu, dong "Showing all 10 results" + o sap xep
+ *
+ * TA KHAC HO BON CHO:
+ *
+ * 1. LUOI 3 COT chu khong 4. Ho co 10 san pham chi mang ten thuong hieu
+ *    ("Thep thanh van Pomina"); the cua ta con mang mo ta va ten goi khac nen
+ *    can be ngang. 6 nhom chia 3 cot ra dung hai hang.
+ *
+ * 2. KHONG CO SAO DANH GIA. Chua co danh gia that nao - bia sao la vi pham
+ *    chinh sach fake review.
+ *
+ * 3. KHONG CO O SAP XEP. Sap xep 6 muc la mot dieu khien khong giai quyet van de
+ *    gi; no chi co ich khi danh sach dai qua mot man hinh.
+ *
+ * 4. GIU DOAN GIOI THIEU O TREN LUOI. Day la cho ho lam DUNG ma nhieu trang
+ *    danh muc bo qua: bon doan van truoc luoi la thu duy nhat lam trang nay khac
+ *    mot trang ket qua loc, va la thu Google doc duoc.
+ */
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhom = await getCollection('nhomSanPham');
 const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
+const soNam = new Date().getFullYear() - c.namThanhLap;
 
 const tieuDe = catTieuDe('Sản phẩm đinh và vật tư liên kết - Đinh Thép SG');
-const moTa = catMoTa(`${nhom.length} nhóm, ${tong} quy cách: đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít, dây kẽm hấp. Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`);
+const moTa = catMoTa(
+  `${nhom.length} nhóm, ${tong} quy cách: đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít, dây kẽm hấp. Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`,
+);
 
-// ItemList cho trang danh muc - noi voi Google day la trang tap hop,
-// khong phai mot san pham don le.
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
@@ -35,94 +60,249 @@ const schema = {
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/san-pham/" schema={schema}>
   <VunBanh muc={[{ ten: 'Sản phẩm', duongDan: '/san-pham/' }]} />
 
-  <section class="section">
-    <div class="khung">
-      <h1>Sản phẩm</h1>
-      <p class="dan-nhap sp__mo">
-        {nhom.length} nhóm, tổng {tong} quy cách. Mỗi nhóm công bố đầy đủ mã, chiều dài và
-        đường kính thân - không phải ảnh chụp bảng.
-      </p>
+  <div class="section">
+    <div class="khung dm">
+      <CotDanhMuc />
 
-      <div class="sp__anh">
-        <figure class="khung-anh khung-anh--16-10">
-          <Image
-            src={anhDinh}
-            alt="Đinh thép do nhà máy Đinh Thép Sài Gòn sản xuất, chụp tại xưởng"
-            widths={[600, 1000, 1400]}
-            sizes="(max-width: 900px) 92vw, 1100px"
-            loading="eager"
-          />
-        </figure>
+      <div class="dm__chinh">
+        <h1>Sản phẩm</h1>
+
+        <div class="dm__mo">
+          <p>
+            <strong>{c.tenPhapDinhHoa}</strong> sản xuất trực tiếp {tong} quy cách đinh và vật
+            tư liên kết tại nhà máy {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}. Hàng
+            bán ra là hàng chúng tôi làm ra, không nhập lại của đơn vị khác.
+          </p>
+          <p>
+            {nhom.length} nhóm gồm: đinh chì thân trơn dùng đóng cốp pha và đóng gỗ, đinh thép
+            trắng và đinh thép vàng khác nhau ở xử lý bề mặt, đinh dù mũ rộng dùng lợp tôn,
+            đinh vít bắt bằng máy, và dây kẽm hấp dùng buộc thép.
+          </p>
+          <p>
+            Mã quy cách trên bao bì ghi theo <strong>phân</strong>. Trong ngành,
+            1 phân = 1cm = 10mm, nên mỗi trang sản phẩm đều quy đổi sẵn cả bốn cách gọi -
+            khách hỏi "đinh 5p", "đinh 5 phân", "đinh 5cm" hay "đinh 50mm" đều ra cùng một mã.
+          </p>
+          <p>
+            Đặt hàng gọi <a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>. Nhận đơn số lượng lớn
+            và quy cách riêng, nhà máy chạy theo đơn. Giao tận công trình khu vực TP.HCM,
+            Long An và các tỉnh lân cận. Pháp nhân rõ ràng, MST {c.maSoThue}, thành lập
+            {' '}{c.namThanhLap} - {soNam} năm trong ngành vật tư kim khí.
+          </p>
+        </div>
+
+        <p class="dm__dem">
+          {nhom.length} nhóm sản phẩm, tổng {tong} quy cách
+        </p>
+
+        <ul class="dm__luoi">
+          {
+            nhom.map((n) => {
+              const a = anhCuaNhom(n.id);
+              return (
+                <li>
+                  <a class="the-sp2" href={`/san-pham/${n.data.slug}/`}>
+                    <span class="the-sp2__anh">
+                      <Image
+                        src={a.src}
+                        alt={a.alt}
+                        widths={[260, 520]}
+                        sizes="(max-width: 900px) 46vw, 260px"
+                        loading="lazy"
+                      />
+                    </span>
+                    <span class="the-sp2__ten">{n.data.ten}</span>
+                    <span class="the-sp2__mo">{n.data.moTaNgan}</span>
+                    <span class="the-sp2__day">
+                      <em>{n.data.quyCach.length} quy cách</em>
+                      <b>Gọi để báo giá</b>
+                    </span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <p class="dm__them">
+          Xem toàn bộ thông số trong một bảng duy nhất:
+          {' '}<a href="/bang-gia-dinh-thep/">bảng quy cách đầy đủ</a>. Cần tra quy đổi phân
+          sang cm và mm: <a href="/bang-tra-quy-cach-dinh/">bảng tra quy cách</a>.
+        </p>
       </div>
-
-      <div class="luoi luoi--3 sp__luoi">
-        {
-          nhom.map((n) => (
-            <a class="the the--bam sp__the" href={`/san-pham/${n.data.slug}/`}>
-              <h2>{n.data.ten}</h2>
-              <p class="sp__the-mo">{n.data.moTaNgan}</p>
-              <div class="sp__the-day">
-                <span class="huy-hieu huy-hieu--thep">{n.data.quyCach.length} quy cách</span>
-                {n.data.tachTrangQuyCach && <span class="huy-hieu">có trang từng quy cách</span>}
-              </div>
-              {
-                n.data.tenGoiKhac.length > 0 && (
-                  <p class="sp__the-khac">Còn gọi: {n.data.tenGoiKhac.join(', ')}</p>
-                )
-              }
-            </a>
-          ))
-        }
-      </div>
-
-      <p class="sp__them">
-        Xem toàn bộ thông số trong một bảng duy nhất:
-        {' '}<a href="/bang-gia-dinh-thep/">bảng quy cách đầy đủ</a>. Cần tra quy đổi phân sang
-        cm và mm: <a href="/bang-tra-quy-cach-dinh/">bảng tra quy cách</a>.
-      </p>
     </div>
-  </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .sp__mo {
-    margin-top: var(--k4);
+  /* Ho: 255 cot ben + 844 noi dung. Khung ta 1140 -> 255 + 32 + 853. */
+  .dm {
+    display: grid;
+    grid-template-columns: 255px 1fr;
+    gap: var(--k6);
+    align-items: start;
   }
-  .sp__anh {
-    margin-top: var(--k6);
+  .dm > * {
+    min-width: 0;
   }
-  .sp__luoi {
-    margin-top: var(--k7);
-  }
-  .sp__the {
+
+  .dm__mo {
     display: grid;
     gap: var(--k3);
-    align-content: start;
-    text-decoration: none;
-    color: inherit;
-  }
-  .sp__the h2 {
-    font-size: var(--cs-h3);
-    font-weight: var(--w-nang);
-  }
-  .sp__the-mo {
-    font-size: var(--cs-nho);
+    max-width: var(--do-doc);
+    margin-top: var(--k4);
     color: var(--muc-2);
   }
-  .sp__the-day {
+  .dm__mo strong {
+    color: var(--muc);
+  }
+
+  /* Dong dem - vi tri cua "Showing all 10 results" ben ho */
+  .dm__dem {
+    margin-top: var(--k6);
+    padding-bottom: var(--k3);
+    border-bottom: 2px solid var(--do-500);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-dam);
+    text-transform: uppercase;
+    letter-spacing: var(--gc-micro);
+  }
+
+  .dm__luoi {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+    margin-top: var(--k5);
+  }
+  .the-sp2 {
+    display: grid;
+    align-content: start;
+    gap: var(--k2);
+    height: 100%;
+    padding-bottom: var(--k4);
+    text-decoration: none;
+    color: inherit;
+    border: var(--vien-mong);
+    border-radius: var(--bo-nho);
+    overflow: hidden;
+    transition: border-color var(--thoi) var(--nhip), box-shadow var(--thoi) var(--nhip);
+  }
+  .the-sp2:hover {
+    border-color: var(--do-500);
+    box-shadow: var(--noi);
+  }
+  .the-sp2__anh {
+    position: relative;
+    display: block;
+    /* Anh VUONG o day - giong ho. The trong luoi thi vuong xep hang deu hon 4:3,
+       va o 260px thi cat 4:3 sang vuong khong mat chi tiet dang ke. */
+    aspect-ratio: 1 / 1;
+    margin-bottom: var(--k2);
+    background: var(--nen-nhat);
+    border-bottom: var(--vien-mong);
+  }
+  .the-sp2__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--thoi) var(--nhip);
+  }
+  .the-sp2:hover .the-sp2__anh :global(img) {
+    transform: scale(1.04);
+  }
+  .the-sp2__ten {
+    padding-inline: var(--k4);
+    font-size: var(--cs-than);
+    font-weight: var(--w-dam);
+    line-height: var(--dc-vua);
+  }
+  .the-sp2:hover .the-sp2__ten {
+    color: var(--do-600);
+  }
+  .the-sp2__mo {
+    padding-inline: var(--k4);
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+    line-height: 1.45;
+  }
+  .the-sp2__day {
     display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     gap: var(--k2);
     flex-wrap: wrap;
+    padding: var(--k2) var(--k4) 0;
+    margin-top: auto;
   }
-  .sp__the-khac {
+  .the-sp2__day em {
+    font-style: normal;
     font-size: var(--cs-micro);
-    color: var(--muc-3);
+    font-weight: var(--w-dam);
+    color: var(--muc-2);
   }
-  .sp__them {
+  /* Cho gia - khi co gia that thi thay chu nay bang so, khong doi bo cuc */
+  .the-sp2__day b {
+    font-size: var(--cs-nho);
+    font-weight: var(--w-nang);
+    color: var(--do-500);
+  }
+
+  .dm__them {
     margin-top: var(--k7);
     padding-top: var(--k5);
     border-top: var(--vien-mong);
     font-size: var(--cs-nho);
     color: var(--muc-2);
+  }
+
+  @media (max-width: 900px) {
+    .dm {
+      grid-template-columns: 1fr;
+      gap: var(--k6);
+    }
+    /* Cot ben xuong DUOI luoi tren mobile: no la phu tro, khong dang chiem
+       man hinh dau tien. */
+    .dm > :global(.cot-dm) {
+      order: 2;
+    }
+    .dm__luoi {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  /* Duoi 520px the doi sang BO CUC NGANG: anh trai 104px, chu phai.
+     Mot cot doc voi anh vuong full-width thi moi the cao ~490px, sau the la
+     2935px - do duoc. Bo cuc ngang xuong con ~120px moi the. */
+  @media (max-width: 520px) {
+    .dm__luoi {
+      grid-template-columns: 1fr;
+      gap: var(--k3);
+    }
+    .the-sp2 {
+      grid-template-columns: 104px 1fr;
+      grid-template-rows: auto auto auto;
+      align-content: stretch;
+      gap: 2px var(--k3);
+      padding: 0 var(--k3) var(--k3) 0;
+    }
+    .the-sp2__anh {
+      grid-row: 1 / 4;
+      align-self: stretch;
+      aspect-ratio: auto;
+      min-height: 104px;
+      margin-bottom: 0;
+      border-bottom: 0;
+      border-right: var(--vien-mong);
+    }
+    .the-sp2__ten {
+      padding: var(--k3) 0 0;
+    }
+    .the-sp2__mo {
+      padding: 0;
+    }
+    .the-sp2__day {
+      padding: var(--k2) 0 0;
+    }
   }
 </style>

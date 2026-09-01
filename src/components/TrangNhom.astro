@@ -2,7 +2,9 @@
 import { getEntry } from 'astro:content';
 import VunBanh from './VunBanh.astro';
 import JsonLd from './JsonLd.astro';
+import DauSanPham from './DauSanPham.astro';
 import { schemaNhomSanPham } from '../lib/schema';
+import { anhCuaNhom } from '../lib/anh-nhom';
 import { tenChinh, quyDoi, coGia, dinhDangGia, type QuyCach } from '../lib/quy-cach';
 
 /**
@@ -31,6 +33,25 @@ const duongDan = `/san-pham/${slug}/`;
 const coDuongKinh = quyCach.some((q) => q.duongKinhMm !== undefined);
 const coPhan = quyCach.some((q) => q.phan !== undefined);
 
+/* Thong so tom tat cho khoi dau trang - cac con so khach can de quyet dinh mua,
+   khong phai toan bo bang. Bang day du van o ngay duoi. */
+const anh = anhCuaNhom(slug);
+const dai = quyCach.map((q) => q.daiMm).filter((n) => n > 0);
+const dk = quyCach.map((q) => q.duongKinhMm).filter((n): n is number => n !== undefined);
+const phan = quyCach.map((q) => q.phan).filter((n): n is number => n !== undefined);
+const khoang = (a: number[], dv: string) =>
+  a.length === 0 ? null : a.length === 1 ? `${a[0]} ${dv}` : `${Math.min(...a)} - ${Math.max(...a)} ${dv}`;
+
+const thongSo = [
+  { nhan: 'Số quy cách', giaTri: `${quyCach.length} quy cách` },
+  ...(khoang(dai, 'mm') ? [{ nhan: 'Chiều dài', giaTri: khoang(dai, 'mm')! }] : []),
+  ...(khoang(dk, 'mm') ? [{ nhan: 'Đường kính thân', giaTri: khoang(dk, 'mm')! }] : []),
+  ...(phan.length > 1
+    ? [{ nhan: 'Quy đổi', giaTri: `${Math.min(...phan)} phân đến ${Math.max(...phan)} phân` }]
+    : []),
+  { nhan: 'Xuất xứ', giaTri: `Nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}` },
+];
+
 const tieuDe = `${ten} - ${quyCach.length} quy cách, thông số đầy đủ | Đinh Thép Sài Gòn`;
 const moTa = `${ten}: ${quyCach.length} quy cách${coPhan ? ` từ ${Math.min(...quyCach.filter((q) => q.phan).map((q) => q.phan!))} phân` : ''}. ${moTaNgan} Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`;
 
@@ -52,16 +73,14 @@ const schema = schemaNhomSanPham({
 
 <article class="section nhom">
   <div class="khung">
-    <h1>{ten}</h1>
-    <p class="dan-nhap nhom__mo">{moTaNgan}</p>
-
-    {
-      tenGoiKhac.length > 0 && (
-        <p class="nhom__goi-khac">
-          Còn được gọi là: {tenGoiKhac.join(', ')}.
-        </p>
-      )
-    }
+    <DauSanPham
+      ten={ten}
+      anh={anh.src}
+      alt={anh.alt}
+      moTa={moTaNgan}
+      thongSo={thongSo}
+      ghiChu={tenGoiKhac.length > 0 ? `Còn được gọi là: ${tenGoiKhac.join(', ')}.` : undefined}
+    />
 
     <h2 id="quy-cach">Bảng quy cách {ten}</h2>
     <p class="nhom__dan-bang">

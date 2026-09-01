@@ -1,0 +1,144 @@
+---
+/**
+ * MUC LUC BAI VIET - hop "Noi Dung Chinh".
+ *
+ * Do dayluoithep.com/luoi-thep-han/ ngay 02/09/2026:
+ *   hop rong 543px trong cot noi dung 773px (70%), nen #F9F9F9,
+ *   vien 1px #AAAAAA, bo goc 4px, dem 10px 20px 10px 10px,
+ *   tieu de "Noi Dung Chinh", danh sach danh so, cap 2 thut vao,
+ *   co nut thu gon. Bai cua ho 5.427 tu, 1 H1 / 6 H2 / 5 H3.
+ *
+ * TA KHAC HO HAI CHO:
+ *
+ * 1. DUNG <details> CHU KHONG PHAI JS. Ho dung plugin ez-toc voi mot nut
+ *    JavaScript. <details>/<summary> cho dung hanh vi do san: thu gon duoc, di
+ *    duoc bang ban phim, va van mo duoc khi JS chua tai. Bot mot phu thuoc.
+ *
+ * 2. MO SAN (thuoc tinh open). Muc luc thu gon san thi phan lon nguoi doc khong
+ *    bao gio bam mo, va cac link ben trong mat gia tri dieu huong.
+ *
+ * Muc luc chi hien khi co tu 3 muc tro len - hai muc thi no chi la mot cai hop
+ * chiem cho.
+ */
+export interface MucLucMuc {
+  /** Muc do the: 2 = H2, 3 = H3 */
+  capDo: number;
+  /** id cua the tieu de, de neo toi */
+  neo: string;
+  chu: string;
+}
+interface Props {
+  muc: MucLucMuc[];
+  dau?: string;
+}
+const { muc, dau = 'Nội dung chính' } = Astro.props;
+
+/* Chi lay H2 va H3. H4 tro xuong dua vao lam muc luc dai hon phan noi dung. */
+const loc = muc.filter((m) => m.capDo === 2 || m.capDo === 3);
+---
+
+{
+  loc.length >= 3 && (
+    <details class="ml" open>
+      <summary class="ml__dau">{dau}</summary>
+      <ol class="ml__ds">
+        {loc.map((m) => (
+          <li class={m.capDo === 3 ? 'ml__muc ml__muc--con' : 'ml__muc'}>
+            <a href={`#${m.neo}`}>{m.chu}</a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  )
+}
+
+<style>
+  .ml {
+    max-width: 560px;
+    margin-block: var(--k6);
+    padding: var(--k3) var(--k4) var(--k4);
+    background: var(--nen-nhat);
+    border: var(--vien-dam-1);
+    border-radius: var(--bo-nho);
+    font-size: var(--cs-nho);
+  }
+  .ml__dau {
+    display: flex;
+    align-items: center;
+    gap: var(--k2);
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-dau);
+    cursor: pointer;
+    list-style: none;
+  }
+  /* Bo mui ten mac dinh cua trinh duyet roi tu ve, de xoay duoc theo trang thai */
+  .ml__dau::-webkit-details-marker {
+    display: none;
+  }
+  .ml__dau::before {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--do-500);
+    border-bottom: 2px solid var(--do-500);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform var(--thoi) var(--nhip);
+  }
+  .ml:not([open]) .ml__dau::before {
+    transform: rotate(-45deg) translate(-2px, 2px);
+  }
+
+  /* Danh so tu dong: muc luc danh so doc nhanh hon muc luc cham dau dong,
+     va so con cho biet bai dai bao nhieu phan. */
+  /* HAI bo dem chu khong mot: muc con phai la 1.1, 1.2 chu khong duoc an so
+     chung day voi muc cha. Danh sach o day phang (mot the ol, phan biet bang
+     class) nen dem bang counter thay vi long ol trong ol. */
+  .ml__ds {
+    counter-reset: ml mlc;
+    margin-top: var(--k3);
+    padding-top: var(--k3);
+    border-top: var(--vien-mong);
+  }
+  .ml__muc {
+    display: flex;
+    gap: var(--k2);
+    padding: 5px 0;
+    line-height: var(--dc-vua);
+  }
+  .ml__muc:not(.ml__muc--con) {
+    counter-increment: ml;
+    counter-reset: mlc;
+  }
+  .ml__muc--con {
+    counter-increment: mlc;
+    padding-left: var(--k5);
+    font-size: var(--cs-micro);
+  }
+  .ml__muc::before {
+    flex: none;
+    min-width: 18px;
+    color: var(--muc-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .ml__muc:not(.ml__muc--con)::before {
+    content: counter(ml) '.';
+  }
+  .ml__muc--con::before {
+    min-width: 26px;
+    content: counter(ml) '.' counter(mlc);
+  }
+  .ml__muc a {
+    color: var(--lien-ket);
+    text-decoration: none;
+  }
+  .ml__muc a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 560px) {
+    .ml {
+      max-width: none;
+    }
+  }
+</style>

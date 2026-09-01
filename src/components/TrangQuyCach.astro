@@ -2,7 +2,9 @@
 import { getEntry } from 'astro:content';
 import VunBanh from './VunBanh.astro';
 import JsonLd from './JsonLd.astro';
+import DauSanPham from './DauSanPham.astro';
 import { schemaSanPham } from '../lib/schema';
+import { anhCuaNhom } from '../lib/anh-nhom';
 import { tenChinh, nhan, quyDoi, coGia, dinhDangGia, lienKe, type QuyCach } from '../lib/quy-cach';
 
 /**
@@ -52,6 +54,20 @@ const cauMoDau = [
 const tieuDe = `${ten}${qd ? ` (${qc.daiMm}mm)` : ''} - Quy cách, thông số, giá | Đinh Thép Sài Gòn`;
 const moTa = `${ten}${qd ? `: ${qd}` : ''}${qc.duongKinhMm ? `, đường kính thân ${qc.duongKinhMm}mm` : ''}. Sản xuất trực tiếp tại nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}. Gọi ${c.hotline} để báo giá.`;
 
+/* Thong so tom tat cho khoi dau trang. Bang `dac-ta` ngay duoi van giu day du
+   (dung sai, ghi chu...) - giong ho: cot phai co danh sach gach dau dong ngan,
+   ben duoi van co bang chi tiet. */
+const anh = anhCuaNhom(nhomSlug);
+const thongSo = [
+  { nhan: 'Mã quy cách', giaTri: qc.ma },
+  { nhan: 'Chiều dài', giaTri: `${qc.daiMm} mm` },
+  ...(qc.duongKinhMm !== undefined
+    ? [{ nhan: 'Đường kính thân', giaTri: `${qc.duongKinhMm} mm` }]
+    : []),
+  ...(qd ? [{ nhan: 'Quy đổi', giaTri: qd }] : []),
+  { nhan: 'Xuất xứ', giaTri: `Nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}` },
+];
+
 const schema = schemaSanPham({
   tenDayDu: ten,
   moTa,
@@ -71,9 +87,19 @@ const schema = schemaSanPham({
 <JsonLd schema={schema} />
 
 <article class="section qc">
+  <div class="khung">
+    <DauSanPham
+      ten={qd ? `${ten} - ${qc.daiMm}mm` : ten}
+      anh={anh.src}
+      alt={`${ten} do nhà máy ${c.tenThuongHieu} sản xuất`}
+      moTa={nhomMoTa}
+      thongSo={thongSo}
+      ghiChu={goiKhac.length > 0 ? `Còn được gọi là: ${goiKhac.join(', ')}.` : undefined}
+    />
+  </div>
+
   <div class="khung luoi luoi--chinh-phu">
     <div>
-      <h1>{ten}{qd && <span class="qc__mm"> - {qc.daiMm}mm</span>}</h1>
 
       {/* Doan mo dau tra loi ngay cau hoi chinh. Day la doan AI Overview
           co kha nang trich nhat, nen dat dinh nghia + quy doi ngay cau dau.

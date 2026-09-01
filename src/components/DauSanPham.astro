@@ -1,0 +1,220 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+/**
+ * KHOI DAU TRANG SAN PHAM - anh trai, thong tin phai.
+ *
+ * Do thegioithepvn.com/thep-cuon-viet-nhat/ ngay 02/09/2026 (khung nhin 1425):
+ *   anh    x=158  730x730 (VUONG)
+ *   cot phai x=903  rong 380, cao 739, khe 15px
+ *   thu tu cot phai: breadcrumb - H1 - gach - sao danh gia - gia - danh sach
+ *     gach dau dong thong so - DONG DO "VUI LONG LIEN HE ... DE DUOC BAO GIA
+ *     MOI NHAT" - chon bien the - nut tim "Gia canh tranh: 0914 685 777"
+ *     (350x52, nen #572169, chu #FFDE17) - nut chia se mang xa hoi
+ *
+ * TA KHAC HO BA CHO:
+ *
+ * 1. ANH 4:3 CHU KHONG VUONG. Anh nha may cua ta la 1280x960, tuc dung 4:3.
+ *    Ep vuong la cat mat 25% be ngang cho khong duoc gi. Ho vuong duoc vi anh
+ *    san pham cua ho chup studio vuong san.
+ *
+ * 2. KHONG CO SAO DANH GIA. Ho co "5.00 tren 5 dua tren 1 danh gia". Ta chua co
+ *    danh gia that nao; bia sao la vi pham chinh sach fake review cua Google va
+ *    de bi go rich result.
+ *
+ * 3. KHONG CO GIO HANG. Ho co nut "Them vao gio hang" ben canh nut goi dien -
+ *    hai loi keu goi canh nhau thi loang. Mo hinh cua ta chot don qua dien thoai
+ *    va Zalo nen chi de dung hai nut do.
+ *
+ * Dong nhac bao gia mau DO thi giu nguyen: no vua la loi keu goi, vua la loi
+ * canh bao gia co the thay doi - dung cho nganh vat tu len xuong theo ngay.
+ */
+export interface ThongSo {
+  nhan: string;
+  giaTri: string;
+}
+interface Props {
+  ten: string;
+  anh: ImageMetadata;
+  alt: string;
+  moTa: string;
+  thongSo: ThongSo[];
+  /** Chuoi gia da dinh dang. Bo trong = chua co gia, hien "gọi để báo giá" */
+  gia?: string;
+  /** Ghi chu nho duoi danh sach thong so, vi du cach goi khac */
+  ghiChu?: string;
+}
+const { ten, anh, alt, moTa, thongSo, gia, ghiChu } = Astro.props;
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+---
+
+<div class="sp-dau">
+  <figure class="sp-dau__anh">
+    <Image
+      src={anh}
+      alt={alt}
+      widths={[420, 760, 1120]}
+      sizes="(max-width: 900px) 92vw, 730px"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </figure>
+
+  <div class="sp-dau__tt">
+    <h1>{ten}</h1>
+    <p class="sp-dau__mo">{moTa}</p>
+
+    <div class="sp-dau__gia">
+      {gia ? <strong>{gia}</strong> : <strong class="sp-dau__gia--chua">Gọi để báo giá</strong>}
+    </div>
+
+    <ul class="sp-dau__ts">
+      {
+        thongSo.map((t) => (
+          <li>
+            <span>{t.nhan}</span>
+            <strong>{t.giaTri}</strong>
+          </li>
+        ))
+      }
+    </ul>
+
+    {ghiChu && <p class="sp-dau__ghi">{ghiChu}</p>}
+
+    <p class="sp-dau__nhac">
+      Giá vật tư thay đổi theo ngày. Gọi {c.hotline} để nhận báo giá mới nhất.
+    </p>
+
+    <div class="sp-dau__nut">
+      <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
+        Gọi báo giá {c.hotline}
+      </a>
+      <a class="nut nut--vien nut--lon" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+        Nhắn Zalo
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Ho: 730 anh + 15 khe + 380 cot phai. Khung cua ta 1140 nen 736 + 24 + 380. */
+  .sp-dau {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: var(--gap);
+    /* stretch (mac dinh) chu KHONG start: cot phai cao ~705px con anh 4:3 chi
+       522px, de start thi hut mot mang trang 180px duoi anh. Voi stretch, chieu
+       cao anh thanh dinh nen aspect-ratio nhuong cho no va anh phu kin hang. */
+    align-items: stretch;
+    margin-bottom: var(--k7);
+  }
+  .sp-dau > * {
+    min-width: 0;
+  }
+
+  .sp-dau__anh {
+    position: relative;
+    margin: 0;
+    /* KHONG dat aspect-ratio o day. Da thu `aspect-ratio: 4/3 + min-height: 100%`
+       va do duoc no hong: min-height an ra 726px, aspect-ratio nhan nguoc thanh
+       rong 968px, vuot han cot 1fr (968 + 24 + 380 = 1372 > khung 1140).
+       Duoi align-items: stretch, hinh tu cao bang hang roi; chi can mot san
+       chieu cao de khi cot phai ngan thi anh khong xep xuong det. */
+    min-height: 460px;
+    overflow: hidden;
+    border: var(--vien-mong);
+    border-radius: var(--bo-nho);
+    background: var(--nen-nhat);
+  }
+  .sp-dau__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sp-dau__tt h1 {
+    font-size: var(--cs-h1);
+    margin-bottom: var(--k3);
+  }
+  .sp-dau__mo {
+    color: var(--muc-2);
+    margin-bottom: var(--k4);
+  }
+
+  .sp-dau__gia {
+    padding-bottom: var(--k4);
+    margin-bottom: var(--k4);
+    border-bottom: var(--vien-mong);
+  }
+  .sp-dau__gia strong {
+    font-size: var(--cs-h2);
+    font-weight: var(--w-nang);
+    color: var(--do-500);
+    letter-spacing: var(--gc-dau);
+  }
+  /* Chua co gia thi khong to va do nhu gia that - do la noi doi thi giac */
+  .sp-dau__gia--chua {
+    font-size: var(--cs-lead) !important;
+    font-weight: var(--w-dam) !important;
+    color: var(--muc-2) !important;
+  }
+
+  .sp-dau__ts {
+    display: grid;
+    gap: 0;
+  }
+  .sp-dau__ts li {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    gap: var(--k3);
+    padding: 9px 0;
+    font-size: var(--cs-nho);
+    border-bottom: 1px dashed var(--vien);
+  }
+  .sp-dau__ts span {
+    color: var(--muc-2);
+  }
+  .sp-dau__ts strong {
+    font-weight: var(--w-dam);
+  }
+
+  .sp-dau__ghi {
+    margin-top: var(--k3);
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+
+  /* Dong nhac mau do - chep tu ho, ho dat mau rgb(255,0,0).
+     Ta dung do thuong hieu #C4161C chu khong do thuan: do thuan tren nen trang
+     bi rung vien o man hinh thuong. */
+  .sp-dau__nhac {
+    margin-top: var(--k5);
+    padding: 11px var(--k4);
+    border-left: 3px solid var(--do-500);
+    background: var(--do-050);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-vua);
+    color: var(--do-700);
+  }
+
+  .sp-dau__nut {
+    display: grid;
+    gap: var(--k3);
+    margin-top: var(--k4);
+  }
+
+  @media (max-width: 900px) {
+    .sp-dau {
+      grid-template-columns: 1fr;
+      gap: var(--k5);
+    }
+    .sp-dau__ts li {
+      grid-template-columns: 118px 1fr;
+    }
+  }
+</style>
