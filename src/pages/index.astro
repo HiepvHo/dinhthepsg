@@ -1,0 +1,344 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { tenChinh, quyDoi, coGia, dinhDangGia } from '../lib/quy-cach';
+import { catTieuDe, catMoTa } from '../lib/seo-text';
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+const nhom = await getCollection('nhomSanPham');
+const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
+const soNam = new Date().getFullYear() - c.namThanhLap;
+const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
+
+const tieuDe = catTieuDe('Đinh Thép Sài Gòn - Nhà máy sản xuất đinh, dây kẽm');
+const moTa = catMoTa(`Nhà máy sản xuất đinh thép xây dựng: đinh chì 2p đến 15p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`);
+---
+
+<BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/">
+  {/* ------------------------------------------------------------- hero --- */}
+  <section class="hero">
+    <div class="khung hero__trong">
+      <div>
+        <span class="nhan-tren">Nhà sản xuất trực tiếp từ {c.namThanhLap}</span>
+        <h1 class="hero__h1">
+          Đinh thép xây dựng, <span class="hero__nhan">bán thẳng từ nhà máy</span>
+        </h1>
+        <p class="dan-nhap hero__phu">
+          {tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít
+          và dây kẽm. Quy cách công bố đầy đủ theo phân, cm và mm - không phải ảnh chụp bảng.
+        </p>
+        <div class="hero__nut">
+          <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
+            Gọi báo giá {c.hotline}
+          </a>
+          <a class="nut nut--vien nut--lon" href="/bang-gia-dinh-thep/">Xem bảng quy cách</a>
+        </div>
+        <p class="hero__ghi-chu">
+          Nhà máy tại {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}. Giao hàng TP.HCM,
+          Long An và các tỉnh lân cận.
+        </p>
+      </div>
+
+      <div class="hero__anh">
+        {/* Cho anh: dan hang cac quy cach tren cung mot cay thuoc.
+            Chua co anh nay - xem ANH-DA-CO.md muc 4. */}
+        <div class="cho-anh">
+          <span>Ảnh dàn hàng quy cách theo thước</span>
+          <small>chưa có, cần chụp tại xưởng</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* --------------------------------------------------------- bao chung --- */}
+  <section class="section section--nhat">
+    <div class="khung">
+      <div class="dai-so">
+        <div>
+          <span class="so-lieu__n so">{soNam}</span>
+          <span class="so-lieu__nhan">năm sản xuất và phân phối vật tư kim khí</span>
+        </div>
+        <div>
+          <span class="so-lieu__n so">{tongQuyCach}</span>
+          <span class="so-lieu__nhan">quy cách đinh công bố đầy đủ thông số</span>
+        </div>
+        <div>
+          <span class="so-lieu__n so">{c.diaDiem.length}</span>
+          <span class="so-lieu__nhan">nhà máy, chi nhánh và kho tại miền Nam</span>
+        </div>
+        <div>
+          <span class="so-lieu__n so">3</span>
+          <span class="so-lieu__nhan">hãng thiết bị châu Âu công ty làm đại diện</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ------------------------------------------------------ nhom san pham -- */}
+  <section class="section">
+    <div class="khung">
+      <div class="dau-muc">
+        <span class="nhan-tren">Sản phẩm</span>
+        <h2>Các nhóm đinh và vật tư liên kết</h2>
+        <p class="dan-nhap">
+          Mỗi nhóm công bố đầy đủ mã quy cách, chiều dài và đường kính thân.
+        </p>
+      </div>
+
+      <div class="luoi luoi--3">
+        {
+          nhom.map((n) => (
+            <a class="the the--bam nhom-the" href={`/san-pham/${n.data.slug}/`}>
+              <h3>{n.data.ten}</h3>
+              <p class="nhom-the__mo-ta">{n.data.moTaNgan}</p>
+              <div class="nhom-the__day">
+                <span class="huy-hieu huy-hieu--thep">{n.data.quyCach.length} quy cách</span>
+                {n.data.tenGoiKhac.length > 0 && (
+                  <span class="nhom-the__khac">còn gọi: {n.data.tenGoiKhac[0]}</span>
+                )}
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ============ BANG QUY CACH - vu khi chinh cua site ============
+      baogiathep.net khoa toan bo bang tra trong anh JPEG. Bang cua ta la HTML that:
+      Google doc duoc so, AI trich duoc, nguoi dung Ctrl+F duoc, dien thoai cuon duoc. */}
+  <section class="section section--nhat">
+    <div class="khung">
+      <div class="dau-muc">
+        <span class="nhan-tren">Bảng quy cách</span>
+        <h2>Đinh chì - {dinhChi.data.quyCach.length} quy cách từ 2 phân đến 15 phân</h2>
+        <p class="dan-nhap">
+          Trong ngành, mã <strong>F</strong> trên bao bì đọc là <strong>phân</strong>, và
+          1 phân = 1cm = 10mm. Bảng dưới quy đổi sẵn cả bốn cách gọi.
+        </p>
+      </div>
+
+      <div class="bang-cuon">
+        <table class="bang">
+          <caption>Quy cách đinh chì do {c.tenThuongHieu} sản xuất</caption>
+          <thead>
+            <tr>
+              <th scope="col">Quy cách</th>
+              <th scope="col">Mã</th>
+              <th scope="col" class="so">Chiều dài</th>
+              <th scope="col" class="so">Đường kính thân</th>
+              <th scope="col">Cách gọi khác</th>
+              <th scope="col">Giá</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              dinhChi.data.quyCach.map((q) => (
+                <tr>
+                  <td>
+                    <a href={`/san-pham/${q.slug}/`}>{tenChinh(dinhChi.data.ten, q)}</a>
+                  </td>
+                  <td>{q.ma}</td>
+                  <td class="so">{q.daiMm} mm</td>
+                  <td class="so">{q.duongKinhMm ? `${q.duongKinhMm} mm` : '-'}</td>
+                  <td>{quyDoi(q) ?? '-'}</td>
+                  <td>
+                    {coGia(q) ? (
+                      <span class="bang__gia">{dinhDangGia(q)}</span>
+                    ) : (
+                      <span class="bang__chua-co">gọi để báo giá</span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="bang-ghi-chu">
+        Thông số theo catalogue nhà máy. Đường kính thân có dung sai theo lô sản xuất -
+        cần số chính xác cho công trình, gọi {c.hotline} để nhận thông số theo lô.
+      </p>
+    </div>
+  </section>
+
+  {/* -------------------------------------------------- vi sao nha may ----- */}
+  <section class="section">
+    <div class="khung luoi luoi--chinh-phu">
+      <div>
+        <div class="dau-muc">
+          <span class="nhan-tren">Mua thẳng từ nơi sản xuất</span>
+          <h2>Vì sao nên mua đinh từ nhà máy</h2>
+        </div>
+        <ul class="danh-sach-tick">
+          <li>
+            <span class="tick" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17 20 6.5"/></svg>
+            </span>
+            <span>
+              <strong>Thông số là của chính hàng chúng tôi làm ra.</strong> Không phải số chép
+              lại từ nơi khác, nên đúng với cây đinh bạn nhận.
+            </span>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17 20 6.5"/></svg>
+            </span>
+            <span>
+              <strong>Đặt được số lượng lớn và quy cách riêng.</strong> Nhà máy chạy theo đơn,
+              không phụ thuộc tồn kho của đại lý.
+            </span>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17 20 6.5"/></svg>
+            </span>
+            <span>
+              <strong>Doanh nghiệp có pháp nhân rõ ràng.</strong> {c.tenPhapDinh},
+              MST {c.maSoThue}, thành lập {c.namThanhLap}.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <aside class="hop-gia">
+        <strong>Cần báo giá theo tấn?</strong>
+        <p>
+          Đơn công trình và đại lý lấy sỉ gọi trực tiếp nhà máy để có giá theo khối lượng.
+        </p>
+        <a class="nut nut--chinh nut--khoi" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+        <a class="nut nut--vien nut--khoi" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+          Nhắn Zalo
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  {/* ------------------------------------------------------------ dai CTA -- */}
+  <section class="section section--do">
+    <div class="khung cta">
+      <div>
+        <h2>Gửi quy cách và số lượng, nhận báo giá trong ngày</h2>
+        <p class="dan-nhap">
+          Nói rõ loại đinh, quy cách theo phân hoặc mm, và số lượng theo kg hoặc bao.
+        </p>
+      </div>
+      <div class="cta__nut">
+        <a class="nut nut--tren-do nut--lon" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+        <a class="nut nut--lon cta__zalo" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+          Nhắn Zalo
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--k8) var(--k7);
+    border-bottom: var(--vien-mong);
+  }
+  .hero__trong {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--gap-lon);
+    align-items: center;
+  }
+  .hero__trong > * {
+    min-width: 0;
+  }
+  .hero__h1 {
+    font-size: var(--cs-display);
+    margin-top: var(--k3);
+  }
+  .hero__nhan {
+    color: var(--do-500);
+  }
+  .hero__phu {
+    margin-top: var(--k4);
+  }
+  .hero__nut {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--k3);
+    margin-top: var(--k6);
+  }
+  .hero__ghi-chu {
+    margin-top: var(--k4);
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  .cho-anh {
+    display: grid;
+    gap: 4px;
+    place-content: center;
+    text-align: center;
+    aspect-ratio: 4 / 3;
+    border: 1.5px dashed var(--steel-200);
+    border-radius: var(--bo);
+    background: var(--steel-050);
+    color: var(--muc-2);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-dam);
+  }
+  .cho-anh small {
+    font-weight: var(--w-thuong);
+    color: var(--muc-3);
+  }
+
+  .nhom-the {
+    display: grid;
+    gap: var(--k3);
+    align-content: start;
+    text-decoration: none;
+    color: inherit;
+  }
+  .nhom-the__mo-ta {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .nhom-the__day {
+    display: flex;
+    align-items: center;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k2);
+  }
+  .nhom-the__khac {
+    font-size: var(--cs-micro);
+    color: var(--muc-3);
+  }
+
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-lon);
+    flex-wrap: wrap;
+  }
+  .cta__nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+  }
+  .cta__zalo {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: var(--trang);
+  }
+  .cta__zalo:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--trang);
+  }
+
+  @media (max-width: 900px) {
+    .hero {
+      padding-block: var(--k6) var(--k5);
+    }
+    .hero__trong {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

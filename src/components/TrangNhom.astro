@@ -1,0 +1,195 @@
+---
+import { getEntry } from 'astro:content';
+import VunBanh from './VunBanh.astro';
+import JsonLd from './JsonLd.astro';
+import { schemaNhomSanPham } from '../lib/schema';
+import { tenChinh, quyDoi, coGia, dinhDangGia, type QuyCach } from '../lib/quy-cach';
+
+/**
+ * Trang NHOM san pham.
+ *
+ * Dung ProductGroup + hasVariant (type dang ACTIVE theo skill seo-schema).
+ * Muc dich: noi ro voi Google rang cac trang quy cach la BIEN THE cua cung mot
+ * san pham chu khong phai nhieu san pham trung lap - chong cannibalization
+ * o cap schema, khong chi bang canonical.
+ */
+interface Props {
+  ten: string;
+  slug: string;
+  moTaNgan: string;
+  tenGoiKhac: string[];
+  quyCach: QuyCach[];
+  tachTrangQuyCach: boolean;
+  canXacNhan?: string;
+}
+const { ten, slug, moTaNgan, tenGoiKhac, quyCach, tachTrangQuyCach, canXacNhan } = Astro.props;
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+const duongDan = `/san-pham/${slug}/`;
+const coDuongKinh = quyCach.some((q) => q.duongKinhMm !== undefined);
+const coPhan = quyCach.some((q) => q.phan !== undefined);
+
+const tieuDe = `${ten} - ${quyCach.length} quy cách, thông số đầy đủ | Đinh Thép Sài Gòn`;
+const moTa = `${ten}: ${quyCach.length} quy cách${coPhan ? ` từ ${Math.min(...quyCach.filter((q) => q.phan).map((q) => q.phan!))} phân` : ''}. ${moTaNgan} Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`;
+
+const schema = schemaNhomSanPham({
+  ten,
+  moTa: moTaNgan,
+  duongDan,
+  thuongHieu: c.tenThuongHieu,
+  bienThe: quyCach.map((q) => ({
+    ten: tenChinh(ten, q),
+    duongDan: `/san-pham/${q.slug}/`,
+    qc: q,
+  })),
+});
+---
+
+<VunBanh muc={[{ ten: 'Sản phẩm', duongDan: '/san-pham/' }, { ten, duongDan }]} />
+<JsonLd schema={schema} />
+
+<article class="section nhom">
+  <div class="khung">
+    <h1>{ten}</h1>
+    <p class="dan-nhap nhom__mo">{moTaNgan}</p>
+
+    {
+      tenGoiKhac.length > 0 && (
+        <p class="nhom__goi-khac">
+          Còn được gọi là: {tenGoiKhac.join(', ')}.
+        </p>
+      )
+    }
+
+    <h2 id="quy-cach">Bảng quy cách {ten}</h2>
+    <p class="nhom__dan-bang">
+      {
+        coPhan
+          ? 'Mã trên bao bì ghi theo phân. Trong ngành, 1 phân = 1cm = 10mm, nên bảng dưới quy đổi sẵn cả bốn cách gọi.'
+          : 'Mã quy cách theo catalogue nhà máy.'
+      }
+    </p>
+
+    <div class="bang-cuon">
+      <table class="bang">
+        <caption>Quy cách {ten} - {c.tenThuongHieu}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Quy cách</th>
+            <th scope="col">Mã</th>
+            <th scope="col" class="so">Chiều dài</th>
+            {coDuongKinh && <th scope="col" class="so">Đường kính thân</th>}
+            {coPhan && <th scope="col">Quy đổi</th>}
+            <th scope="col">Giá</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            quyCach.map((q) => (
+              <tr>
+                <td>
+                  {tachTrangQuyCach ? (
+                    <a href={`/san-pham/${q.slug}/`}>{tenChinh(ten, q)}</a>
+                  ) : (
+                    tenChinh(ten, q)
+                  )}
+                </td>
+                <td>{q.ma}</td>
+                <td class="so">{q.daiMm > 0 ? `${q.daiMm} mm` : '-'}</td>
+                {coDuongKinh && (
+                  <td class="so">{q.duongKinhMm !== undefined ? `${q.duongKinhMm} mm` : '-'}</td>
+                )}
+                {coPhan && <td>{quyDoi(q) ?? '-'}</td>}
+                <td>
+                  {coGia(q) ? (
+                    <span class="bang__gia">{dinhDangGia(q)}</span>
+                  ) : (
+                    <span class="bang__chua-co">gọi để báo giá</span>
+                  )}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="bang-ghi-chu">
+      Thông số theo catalogue nhà máy {c.tenNhaMay}. Đường kính thân có dung sai theo lô -
+      cần thông số chính xác cho công trình, gọi <a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>.
+    </p>
+
+    {
+      canXacNhan && (
+        <p class="nhom__can-xac-nhan">
+          <strong>Đang đối chiếu lại với nhà máy:</strong> {canXacNhan}
+        </p>
+      )
+    }
+
+    <div class="nhom__cta">
+      <div>
+        <h2>Đặt {ten.toLowerCase()} trực tiếp từ nhà máy</h2>
+        <p class="dan-nhap">
+          Cho biết quy cách và số lượng theo kg hoặc bao, đội ngũ báo giá trong ngày.
+        </p>
+      </div>
+      <div class="nhom__cta-nut">
+        <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+        <a class="nut nut--vien nut--lon" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+          Nhắn Zalo
+        </a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .nhom h1 {
+    font-size: var(--cs-h1);
+  }
+  .nhom__mo {
+    margin-top: var(--k4);
+  }
+  .nhom__goi-khac {
+    margin-top: var(--k3);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .nhom h2 {
+    margin-top: var(--k7);
+    margin-bottom: var(--k3);
+    scroll-margin-top: 110px;
+  }
+  .nhom__dan-bang {
+    margin-bottom: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+    max-width: var(--do-doc);
+  }
+  .nhom__can-xac-nhan {
+    margin-top: var(--k4);
+    padding: var(--k4);
+    border-left: 3px solid var(--do-500);
+    background: var(--do-050);
+    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
+    font-size: var(--cs-nho);
+  }
+  .nhom__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-lon);
+    flex-wrap: wrap;
+    margin-top: var(--k8);
+    padding-top: var(--k6);
+    border-top: var(--vien-mong);
+  }
+  .nhom__cta-nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+  }
+</style>

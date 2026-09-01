@@ -1,0 +1,175 @@
+/* ============================================================================
+   DESIGN TOKENS - dinhthepsg.com
+
+   Nguon: do computed styles cua baogiathep.net ngay 01/09/2026 bang browser that,
+   ghi trong `MO-XE-DOI-THU-2026-09-01.md`. Giu cau truc va mat do cua ho,
+   sua 4 loi do duoc.
+
+   | Thuoc tinh   | baogiathep do duoc              | Ta                          |
+   |--------------|---------------------------------|-----------------------------|
+   | Font         | Roboto + Roboto Condensed (2)   | Be Vietnam Pro (1)          |
+   | Co chu lon nhat | 25.6px (than bai 16px = 1.6x)| 44px (than 16.5px = 2.7x)   |
+   | Do           | #C4161C VA #FF0000 (hai do)     | mot do #C4161C              |
+   | Bo goc       | 7 gia tri (5,10,12,15,20,25,999)| 3 gia tri (6,10,999)        |
+   | Chu phu      | xam rgba(102,102,102,.85)       | steel #55606B (co sac)      |
+   | Container    | 1140px                          | 1140px (giu nguyen)         |
+
+   Vi sao doi font: Be Vietnam Pro duoc ve rieng cho tieng Viet nen dau thanh chong
+   khong dung nhau, va co dai weight 500-800 du de tao phan cap tieu de that -
+   dung cai loi ma Roboto 400/700 cua ho dang mac.
+   ============================================================================ */
+
+:root {
+  /* ---------- mau: HAI HE, khong phai bon nhu ho ---------- */
+
+  /* Do thuong hieu. Lay tu bao bi "DINH SAI GON" va trung voi do cua baogiathep. */
+  --do-500: #c4161c;
+  --do-600: #a51218;
+  --do-700: #7f0e13;
+  --do-050: #fbeded;
+
+  /* Steel: mau cua chinh san pham (thep ma kem trong anh nha may).
+     Day la he thay cho xam vo huong - chu phu van mang sac cong nghiep. */
+  --steel-900: #16191c;
+  --steel-700: #333b43;
+  --steel-500: #55606b;
+  --steel-300: #98a2ab;
+  --steel-200: #c8cfd5;
+  --steel-100: #e4e8eb;
+  --steel-050: #f4f6f8;
+  --trang: #ffffff;
+
+  /* Mot mau tin hieu duy nhat, chi dung cho trang thai "con hang" */
+  --xanh-500: #1a7f4b;
+
+  /* ---------- ngu nghia ---------- */
+  --muc: var(--steel-900);          /* chu chinh */
+  --muc-2: var(--steel-500);        /* chu phu - CO SAC, khong phai xam */
+  --muc-3: var(--steel-300);        /* chu mo, placeholder */
+  --muc-nghich: var(--trang);       /* chu tren nen toi */
+  --muc-nghich-2: #b9c2ca;
+
+  --nen: var(--trang);
+  --nen-trang: var(--trang);
+  --nen-nhat: var(--steel-050);     /* nen trang xen ke */
+  --nen-do: var(--do-500);          /* dai do - top bar, dai CTA */
+  --nen-toi: var(--steel-900);      /* footer */
+
+  --vien: var(--steel-100);
+  --vien-dam: var(--steel-200);
+  --vien-nghich: rgba(255, 255, 255, 0.16);
+
+  --thuong-hieu: var(--do-500);
+  --hanh-dong: var(--do-500);        /* nut CTA chinh */
+  --hanh-dong-nhan: var(--do-600);
+  --hanh-dong-muc: var(--trang);
+  --lien-ket: var(--do-600);
+  --lien-ket-hover: var(--do-700);
+  --focus: var(--do-500);
+
+  /* ---------- chu ----------
+     Mot ho font duy nhat. Phan biet bang weight va co, khong ghep font. */
+  --font: "Be Vietnam Pro", "Segoe UI", Tahoma, sans-serif;
+
+  --w-thuong: 500;   /* than bai - KHONG dung 400, chu bi nhat tren nen trang */
+  --w-vua: 600;
+  --w-dam: 700;
+  --w-nang: 800;
+
+  /* Thang chu nhay bac that. Ty le 44/16.5 = 2.7 lan, so voi 1.6 lan cua ho. */
+  --cs-display: 44px;
+  --cs-h1: 34px;
+  --cs-h2: 26px;
+  --cs-h3: 19px;
+  --cs-lead: 18px;
+  --cs-than: 16.5px;
+  --cs-nho: 14.5px;
+  --cs-micro: 12.5px;
+  --cs-so: 40px;      /* so lieu lon */
+
+  --dc-chat: 1.15;    /* tieu de lon */
+  --dc-dau: 1.22;
+  --dc-vua: 1.4;
+  --dc-than: 1.65;    /* than bai - mat do cong nghiep nhung van doc duoc */
+
+  --gc-display: -0.02em;
+  --gc-dau: -0.015em;
+  --gc-than: 0;
+  --gc-micro: 0.06em;
+
+  /* ---------- hinh khoi: BA gia tri, khong phai bay ---------- */
+  --bo-nho: 6px;
+  --bo: 10px;
+  --bo-tron: 999px;
+
+  --vien-mong: 1px solid var(--vien);
+  --vien-dam-1: 1.5px solid var(--vien-dam);
+
+  /* Shadow nhuom mau thuong hieu chu khong phai den vo huong.
+     Ho dung rgba(0,0,0,.15) 1px 1px 15px - den thuan, doc ra "xam ban". */
+  --noi-nho: 0 1px 4px rgba(22, 25, 28, 0.06);
+  --noi: 0 2px 10px rgba(22, 25, 28, 0.08);
+  --noi-lon: 0 6px 24px rgba(22, 25, 28, 0.1);
+  --noi-do: 0 2px 10px rgba(196, 22, 28, 0.18);
+
+  --vong-focus: 3px solid var(--focus);
+  --le-focus: 2px;
+
+  /* ---------- khoang cach ---------- */
+  --k1: 4px;
+  --k2: 8px;
+  --k3: 12px;
+  --k4: 16px;
+  --k5: 24px;
+  --k6: 32px;
+  --k7: 48px;
+  --k8: 64px;
+  --k9: 96px;
+
+  /* Section thap hon web thong thuong: nganh vat tu can MAT DO,
+     khoang trang rong kieu SaaS lam trang trong rong va thieu tin cay. */
+  --section-y: 72px;
+  --gap: 24px;
+  --gap-lon: 40px;
+
+  --khung: 1140px;      /* do duoc tu baogiathep, giu nguyen */
+  --khung-rong: 1320px;
+  --do-doc: 68ch;
+  --cham: 44px;         /* vung cham toi thieu tren mobile */
+
+  /* ---------- chuyen dong: nhanh, khong hieu ung ---------- */
+  --thoi: 120ms;
+  --nhip: ease-out;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --cs-display: 36px;
+    --cs-h1: 28px;
+    --cs-h2: 23px;
+    --cs-so: 34px;
+    --section-y: 56px;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --cs-display: 30px;
+    --cs-h1: 26px;
+    --cs-h2: 21px;
+    --cs-h3: 17.5px;
+    --cs-lead: 16.5px;
+    --cs-than: 16px;
+    --cs-nho: 14px;
+    --cs-so: 28px;
+    --section-y: 44px;
+    --gap: 16px;
+    --gap-lon: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --thoi: 0ms;
+  }
+}

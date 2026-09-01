@@ -1,0 +1,128 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VunBanh from '../../components/VunBanh.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { tuyetDoi } from '../../lib/schema';
+import anhDinh from '../../assets/anh/dinh-tren-nen-trang-01.jpg';
+import { catTieuDe, catMoTa } from '../../lib/seo-text';
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhom = await getCollection('nhomSanPham');
+const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
+
+const tieuDe = catTieuDe('Sản phẩm đinh và vật tư liên kết - Đinh Thép SG');
+const moTa = catMoTa(`${nhom.length} nhóm, ${tong} quy cách: đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít, dây kẽm hấp. Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`);
+
+// ItemList cho trang danh muc - noi voi Google day la trang tap hop,
+// khong phai mot san pham don le.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Sản phẩm đinh và vật tư liên kết',
+  numberOfItems: nhom.length,
+  itemListElement: nhom.map((n, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: n.data.ten,
+    url: tuyetDoi(`/san-pham/${n.data.slug}/`),
+  })),
+};
+---
+
+<BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/san-pham/" schema={schema}>
+  <VunBanh muc={[{ ten: 'Sản phẩm', duongDan: '/san-pham/' }]} />
+
+  <section class="section">
+    <div class="khung">
+      <h1>Sản phẩm</h1>
+      <p class="dan-nhap sp__mo">
+        {nhom.length} nhóm, tổng {tong} quy cách. Mỗi nhóm công bố đầy đủ mã, chiều dài và
+        đường kính thân - không phải ảnh chụp bảng.
+      </p>
+
+      <div class="sp__anh">
+        <figure class="khung-anh khung-anh--16-10">
+          <Image
+            src={anhDinh}
+            alt="Đinh thép do nhà máy Đinh Thép Sài Gòn sản xuất, chụp tại xưởng"
+            widths={[600, 1000, 1400]}
+            sizes="(max-width: 900px) 92vw, 1100px"
+            loading="eager"
+          />
+        </figure>
+      </div>
+
+      <div class="luoi luoi--3 sp__luoi">
+        {
+          nhom.map((n) => (
+            <a class="the the--bam sp__the" href={`/san-pham/${n.data.slug}/`}>
+              <h2>{n.data.ten}</h2>
+              <p class="sp__the-mo">{n.data.moTaNgan}</p>
+              <div class="sp__the-day">
+                <span class="huy-hieu huy-hieu--thep">{n.data.quyCach.length} quy cách</span>
+                {n.data.tachTrangQuyCach && <span class="huy-hieu">có trang từng quy cách</span>}
+              </div>
+              {
+                n.data.tenGoiKhac.length > 0 && (
+                  <p class="sp__the-khac">Còn gọi: {n.data.tenGoiKhac.join(', ')}</p>
+                )
+              }
+            </a>
+          ))
+        }
+      </div>
+
+      <p class="sp__them">
+        Xem toàn bộ thông số trong một bảng duy nhất:
+        {' '}<a href="/bang-gia-dinh-thep/">bảng quy cách đầy đủ</a>. Cần tra quy đổi phân sang
+        cm và mm: <a href="/bang-tra-quy-cach-dinh/">bảng tra quy cách</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sp__mo {
+    margin-top: var(--k4);
+  }
+  .sp__anh {
+    margin-top: var(--k6);
+  }
+  .sp__luoi {
+    margin-top: var(--k7);
+  }
+  .sp__the {
+    display: grid;
+    gap: var(--k3);
+    align-content: start;
+    text-decoration: none;
+    color: inherit;
+  }
+  .sp__the h2 {
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+  }
+  .sp__the-mo {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .sp__the-day {
+    display: flex;
+    gap: var(--k2);
+    flex-wrap: wrap;
+  }
+  .sp__the-khac {
+    font-size: var(--cs-micro);
+    color: var(--muc-3);
+  }
+  .sp__them {
+    margin-top: var(--k7);
+    padding-top: var(--k5);
+    border-top: var(--vien-mong);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+</style>

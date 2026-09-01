@@ -1,0 +1,16 @@
+---
+/**
+ * In JSON-LD vao HTML server-render.
+ *
+ * QUAN TRONG: theo huong dan JS SEO thang 12/2025 cua Google, JSON-LD chen bang
+ * JavaScript co the bi xu ly TRE - dac biet voi Product va Offer. Component nay
+ * in thang vao HTML luc build nen khong dinh van de do.
+ */
+interface Props {
+  schema: Record<string, unknown> | Record<string, unknown>[];
+}
+const { schema } = Astro.props;
+const noiDung = JSON.stringify(schema);
+---
+
+<script type="application/ld+json" set:html={noiDung} is:inline />

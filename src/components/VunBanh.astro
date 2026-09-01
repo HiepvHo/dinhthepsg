@@ -1,0 +1,38 @@
+---
+import JsonLd from './JsonLd.astro';
+import { schemaBreadcrumb } from '../lib/schema';
+
+/**
+ * Breadcrumb + BreadcrumbList schema.
+ *
+ * Ca trungnamcons.vn lan baogiathep.net deu KHONG co BreadcrumbList schema
+ * (do truc tiep 24/08 va 01/09/2026) - trungnamcons chi co breadcrumb dang text tho.
+ * Day la khe ho de an: breadcrumb hien tren SERP thay cho URL day dac,
+ * va giup Google hieu cay phan cap.
+ */
+export type Muc = { ten: string; duongDan: string };
+
+interface Props {
+  muc: Muc[];
+}
+const { muc } = Astro.props;
+
+// Luon co Trang chu o dau
+const dayDu: Muc[] = [{ ten: 'Trang chủ', duongDan: '/' }, ...muc];
+---
+
+<nav aria-label="Đường dẫn">
+  <ol class="vun-banh khung">
+    {
+      dayDu.map((m, i) =>
+        i === dayDu.length - 1 ? (
+          <li aria-current="page">{m.ten}</li>
+        ) : (
+          <li><a href={m.duongDan}>{m.ten}</a></li>
+        ),
+      )
+    }
+  </ol>
+</nav>
+
+<JsonLd schema={schemaBreadcrumb(dayDu)} />

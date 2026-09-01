@@ -1,0 +1,196 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VunBanh from '../components/VunBanh.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { schemaDiaDiem } from '../lib/schema';
+import { catTieuDe, catMoTa } from '../lib/seo-text';
+
+/**
+ * Trang lien he.
+ *
+ * LocalBusiness schema CHI cho 2 dia diem lien quan den dinh (nha may Long An
+ * va van phong chinh Quan 5). Bon xuong can tole van liet ke de the hien quy mo
+ * nhung KHONG dua vao schema - chung khong ban dinh, dua vao chi lam nhieu
+ * tin hieu dia phuong.
+ *
+ * NAP o day phai giong HET footer va Google Business Profile.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const dinh = c.diaDiem.filter((d) => d.lienQuanDenDinh);
+const khac = c.diaDiem.filter((d) => !d.lienQuanDenDinh);
+
+function diaChiDayDu(d: (typeof c.diaDiem)[number]) {
+  return [d.diaChi, d.phuong, d.quanHuyen, d.tinhThanh].filter(Boolean).join(', ');
+}
+function telHref(s: string) {
+  return 'tel:' + s.replace(/[^0-9+]/g, '');
+}
+
+const tieuDe = catTieuDe('Liên hệ mua đinh thép - Đinh Thép Sài Gòn');
+const moTa = catMoTa(`Mua đinh thép trực tiếp từ nhà máy: hotline ${c.hotline}, Zalo, hoặc đến nhà máy ${dinh[0].quanHuyen}, ${dinh[0].tinhThanh}. MST ${c.maSoThue}.`);
+---
+
+<BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/lien-he/">
+  {dinh.map((d) => <JsonLd schema={schemaDiaDiem(c, d)} />)}
+
+  <VunBanh muc={[{ ten: 'Liên hệ', duongDan: '/lien-he/' }]} />
+
+  <article class="section lh">
+    <div class="khung">
+      <h1>Liên hệ mua đinh thép</h1>
+      <p class="dan-nhap lh__mo">
+        Cách nhanh nhất là gọi hotline nhà máy hoặc nhắn Zalo. Cho biết loại đinh,
+        quy cách theo phân hoặc mm, và số lượng theo kg hoặc bao - đội ngũ báo giá trong ngày.
+      </p>
+
+      <div class="lh__nhanh">
+        <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
+          Gọi {c.hotline}
+        </a>
+        <a class="nut nut--vien nut--lon" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+          Nhắn Zalo {c.hotline}
+        </a>
+        <a class="nut nut--vien nut--lon" href={`mailto:${c.email}`}>
+          Gửi email
+        </a>
+      </div>
+
+      <h2 id="mua-dinh">Nơi liên hệ mua đinh</h2>
+      <div class="luoi luoi--2 lh__luoi">
+        {
+          dinh.map((d) => (
+            <div class="the the--noi lh__the">
+              <span class="huy-hieu">{d.vaiTro}</span>
+              <h3>{d.ten}</h3>
+              <dl class="dac-ta">
+                <div class="dac-ta__hang">
+                  <dt>Địa chỉ</dt>
+                  <dd>{diaChiDayDu(d)}</dd>
+                </div>
+                {d.hotline && (
+                  <div class="dac-ta__hang">
+                    <dt>Hotline</dt>
+                    <dd><a href={telHref(d.hotline)}>{d.hotline}</a></dd>
+                  </div>
+                )}
+                {d.dienThoai && (
+                  <div class="dac-ta__hang">
+                    <dt>Điện thoại</dt>
+                    <dd>{d.dienThoai}</dd>
+                  </div>
+                )}
+                {d.fax && (
+                  <div class="dac-ta__hang">
+                    <dt>Fax</dt>
+                    <dd>{d.fax}</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 id="phap-nhan">Thông tin pháp nhân</h2>
+      <dl class="dac-ta lh__phap-nhan">
+        <div class="dac-ta__hang">
+          <dt>Tên công ty</dt>
+          <dd>{c.tenPhapDinhHoa}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Mã số thuế</dt>
+          <dd class="so">{c.maSoThue}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Năm thành lập</dt>
+          <dd class="so">{c.namThanhLap}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Email</dt>
+          <dd>
+            <a href={`mailto:${c.email}`}>{c.email}</a>
+            {' · '}
+            <a href={`mailto:${c.emailPhu}`}>{c.emailPhu}</a>
+          </dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Website công ty</dt>
+          <dd><a href={c.websiteMe} rel="noopener">cuongphatsteel.com.vn</a></dd>
+        </div>
+      </dl>
+
+      <h2 id="he-thong">Hệ thống {c.diaDiem.length} địa điểm</h2>
+      <p class="lh__dan">
+        Ngoài nhà máy đinh, công ty còn có các xưởng cán tole và kho vật tư kim khí.
+        Các địa điểm này không bán đinh, liệt kê ở đây để bạn biết quy mô hệ thống.
+      </p>
+      <div class="bang-cuon">
+        <table class="bang">
+          <caption>Hệ thống địa điểm {c.tenPhapDinh}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Địa điểm</th>
+              <th scope="col">Chức năng</th>
+              <th scope="col">Địa chỉ</th>
+              <th scope="col">Điện thoại</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              [...dinh, ...khac].map((d) => (
+                <tr>
+                  <td>{d.ten}</td>
+                  <td>{d.vaiTro}</td>
+                  <td>{diaChiDayDu(d)}</td>
+                  <td>
+                    {d.hotline ? (
+                      <a href={telHref(d.hotline)}>{d.hotline}</a>
+                    ) : (
+                      d.dienThoai ?? '-'
+                    )}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .lh h1 {
+    font-size: var(--cs-h1);
+  }
+  .lh__mo {
+    margin-top: var(--k4);
+  }
+  .lh__nhanh {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k6);
+  }
+  .lh h2 {
+    margin-top: var(--k8);
+    margin-bottom: var(--k4);
+    scroll-margin-top: 110px;
+  }
+  .lh__the {
+    display: grid;
+    gap: var(--k3);
+    align-content: start;
+  }
+  .lh__phap-nhan {
+    max-width: 640px;
+  }
+  .lh__dan {
+    margin-bottom: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+    max-width: var(--do-doc);
+  }
+</style>

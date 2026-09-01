@@ -1,0 +1,325 @@
+---
+import { getEntry } from 'astro:content';
+import VunBanh from './VunBanh.astro';
+import JsonLd from './JsonLd.astro';
+import { schemaSanPham } from '../lib/schema';
+import { tenChinh, nhan, quyDoi, coGia, dinhDangGia, lienKe, type QuyCach } from '../lib/quy-cach';
+
+/**
+ * Trang MOT quy cach - trang tien chinh cua site.
+ *
+ * Muc tieu: an truy van exact-match kieu "dinh chi 5p". Doi thu trungnamcons
+ * xep #1 cho truy van do nhung ca sitemap 63 san pham cua ho chi co DUNG 1 trang
+ * dinh chi (5p) - 9 quy cach con lai bo trong.
+ *
+ * Phu CA BON cach goi trong noi dung (5p / 5 phan / 5cm / 50mm) vi doi thu chia doi
+ * quy uoc: trungnamcons dung "p", dayluoithep dung "cm".
+ */
+interface Props {
+  nhomTen: string;
+  nhomSlug: string;
+  nhomMoTa: string;
+  tenGoiKhac: string[];
+  qc: QuyCach;
+  anhChiEm: QuyCach[];
+}
+const { nhomTen, nhomSlug, nhomMoTa, tenGoiKhac, qc, anhChiEm } = Astro.props;
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+const ten = tenChinh(nhomTen, qc);
+const duongDan = `/san-pham/${qc.slug}/`;
+const qd = quyDoi(qc);
+const { truoc, sau } = lienKe(anhChiEm, qc.slug);
+
+const goiKhac = [
+  ...(qc.phan !== undefined
+    ? [`${nhomTen.toLowerCase()} ${qc.phan} phân`, `${nhomTen.toLowerCase()} ${qc.phan}cm`]
+    : []),
+  `${nhomTen.toLowerCase()} ${qc.daiMm}mm`,
+  ...tenGoiKhac.map((t) => (qc.phan !== undefined ? `${t} ${qc.phan}p` : t)),
+];
+
+// Cau mo dau, ghep o day chu khong ghep inline trong JSX - xem ghi chu o cho dung.
+const cauMoDau = [
+  `<strong>${ten}</strong> là ${nhomTen.toLowerCase()} quy cách ${qc.ma}`,
+  qd ? `, tương đương <strong>${qd}</strong>` : '',
+  qc.duongKinhMm !== undefined ? `, đường kính thân <strong>${qc.duongKinhMm}mm</strong>` : '',
+  `. Sản phẩm do ${c.tenPhapDinh} sản xuất trực tiếp tại nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}.`,
+].join('');
+
+const tieuDe = `${ten}${qd ? ` (${qc.daiMm}mm)` : ''} - Quy cách, thông số, giá | Đinh Thép Sài Gòn`;
+const moTa = `${ten}${qd ? `: ${qd}` : ''}${qc.duongKinhMm ? `, đường kính thân ${qc.duongKinhMm}mm` : ''}. Sản xuất trực tiếp tại nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}. Gọi ${c.hotline} để báo giá.`;
+
+const schema = schemaSanPham({
+  tenDayDu: ten,
+  moTa,
+  duongDan,
+  thuongHieu: c.tenThuongHieu,
+  qc,
+});
+---
+
+<VunBanh
+  muc={[
+    { ten: 'Sản phẩm', duongDan: '/san-pham/' },
+    { ten: nhomTen, duongDan: `/san-pham/${nhomSlug}/` },
+    { ten, duongDan },
+  ]}
+/>
+<JsonLd schema={schema} />
+
+<article class="section qc">
+  <div class="khung luoi luoi--chinh-phu">
+    <div>
+      <h1>{ten}{qd && <span class="qc__mm"> - {qc.daiMm}mm</span>}</h1>
+
+      {/* Doan mo dau tra loi ngay cau hoi chinh. Day la doan AI Overview
+          co kha nang trich nhat, nen dat dinh nghia + quy doi ngay cau dau.
+
+          Dung set:html thay vi ghep inline JSX: xuong dong trong JSX bi bien thanh
+          khoang trang, nen `{qc.ma}\n{qd && <>, tuong duong...` ra "5F , tuong duong"
+          - thua mot khoang trang truoc dau phay. */}
+      <p class="dan-nhap qc__mo" set:html={cauMoDau} />
+
+      <h2 id="thong-so">Thông số kỹ thuật</h2>
+      <dl class="dac-ta">
+        <div class="dac-ta__hang">
+          <dt>Mã quy cách</dt>
+          <dd>{qc.ma}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Chiều dài</dt>
+          <dd class="so">{qc.daiMm} mm{qc.phan !== undefined && ` (${qc.phan} phân = ${qc.phan}cm)`}</dd>
+        </div>
+        {
+          qc.duongKinhMm !== undefined && (
+            <div class="dac-ta__hang">
+              <dt>Đường kính thân</dt>
+              <dd class="so">{qc.duongKinhMm} mm</dd>
+            </div>
+          )
+        }
+        {
+          qc.dungSai && (
+            <div class="dac-ta__hang">
+              <dt>Dung sai</dt>
+              <dd>{qc.dungSai}</dd>
+            </div>
+          )
+        }
+        <div class="dac-ta__hang">
+          <dt>Số cây / kg</dt>
+          <dd>
+            {
+              qc.cayTrenKg !== undefined ? (
+                <span class="so">{qc.cayTrenKg.toLocaleString('vi-VN')} cây</span>
+              ) : (
+                <span class="bang__chua-co">đang cân đếm thực tế tại nhà máy</span>
+              )
+            }
+          </dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Nhà sản xuất</dt>
+          <dd>{c.tenThuongHieu}</dd>
+        </div>
+      </dl>
+
+      <h2 id="cach-goi">Các cách gọi khác của {ten}</h2>
+      <p>
+        Trong ngành, mã <strong>{qc.ma}</strong> trên bao bì đọc là
+        {qc.phan !== undefined ? <> <strong>{qc.phan} phân</strong>, và 1 phân = 1cm = 10mm</> : <> mã quy cách riêng</>}.
+        Vì vậy cùng một sản phẩm có thể được gọi là:
+      </p>
+      <ul class="qc__goi-khac">
+        {goiKhac.map((g) => <li>{g}</li>)}
+      </ul>
+
+      <h2 id="ung-dung">Dùng {ten} cho việc gì</h2>
+      <p>{nhomMoTa}</p>
+      <p class="qc__ghi-chu">
+        Cần tư vấn chọn đúng quy cách cho công việc cụ thể, gọi
+        {' '}<a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>. Nhà máy nắm rõ thông số từng lô.
+      </p>
+
+      {/* Lien ket ngang giua cac quy cach lien ke.
+          Muc dich: nguoi dang xem 5p thuong phan van giua 4p va 6p, va crawler
+          di duoc theo chuoi thay vi phai quay ve hub moi lan. */}
+      {
+        (truoc || sau) && (
+          <nav class="qc__lien-ke" aria-label="Quy cách liền kề">
+            {truoc && (
+              <a href={`/san-pham/${truoc.slug}/`}>
+                <span>Nhỏ hơn</span>
+                <strong>{tenChinh(nhomTen, truoc)}</strong>
+                <span class="qc__lk-mm">{nhan(truoc)}</span>
+              </a>
+            )}
+            {sau && (
+              <a href={`/san-pham/${sau.slug}/`}>
+                <span>Lớn hơn</span>
+                <strong>{tenChinh(nhomTen, sau)}</strong>
+                <span class="qc__lk-mm">{nhan(sau)}</span>
+              </a>
+            )}
+          </nav>
+        )
+      }
+    </div>
+
+    <aside class="qc__ben">
+      <div class="hop-gia">
+        {
+          coGia(qc) ? (
+            <>
+              <span class="gia">{dinhDangGia(qc)}</span>
+              <span class="gia__don-vi">giá nhà máy, chưa gồm VAT</span>
+            </>
+          ) : (
+            <>
+              <strong>Báo giá theo khối lượng</strong>
+              <p class="qc__gia-mo">
+                Giá thay đổi theo lô và số lượng. Gọi để nhận giá đúng cho đơn của bạn.
+              </p>
+            </>
+          )
+        }
+        <a class="nut nut--chinh nut--khoi" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+        <a class="nut nut--vien nut--khoi" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+          Nhắn Zalo
+        </a>
+      </div>
+
+      <div class="the qc__nha-may">
+        <h3>Mua thẳng từ nhà máy</h3>
+        <p>
+          {c.tenNhaMay}<br />
+          {c.diaDiem[0].diaChi}, {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}
+        </p>
+        <p class="qc__mst">MST {c.maSoThue} - thành lập {c.namThanhLap}</p>
+        <a href="/nha-may/">Xem nhà máy sản xuất</a>
+      </div>
+
+      <div class="the">
+        <h3>Cùng nhóm {nhomTen}</h3>
+        <ul class="qc__ds-chi-em">
+          {
+            anhChiEm.map((q) => (
+              <li>
+                <a href={`/san-pham/${q.slug}/`} aria-current={q.slug === qc.slug ? 'page' : undefined}>
+                  {tenChinh(nhomTen, q)} <span class="qc__lk-mm">{nhan(q)}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </aside>
+  </div>
+</article>
+
+<style>
+  .qc h1 {
+    font-size: var(--cs-h1);
+  }
+  .qc__mm {
+    color: var(--muc-2);
+    font-weight: var(--w-vua);
+  }
+  .qc__mo {
+    margin-top: var(--k4);
+    max-width: var(--do-doc);
+  }
+  .qc h2 {
+    margin-top: var(--k7);
+    margin-bottom: var(--k3);
+    scroll-margin-top: 110px;
+  }
+  .qc__goi-khac {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--k2);
+    margin-top: var(--k3);
+  }
+  .qc__goi-khac li {
+    padding: 5px 11px;
+    border-radius: var(--bo-nho);
+    background: var(--steel-050);
+    border: var(--vien-mong);
+    font-size: var(--cs-micro);
+    font-weight: var(--w-vua);
+  }
+  .qc__ghi-chu {
+    margin-top: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .qc__lien-ke {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--k3);
+    margin-top: var(--k7);
+    padding-top: var(--k5);
+    border-top: var(--vien-mong);
+  }
+  .qc__lien-ke a {
+    display: grid;
+    gap: 2px;
+    padding: var(--k4);
+    border: var(--vien-mong);
+    border-radius: var(--bo);
+    text-decoration: none;
+    color: inherit;
+  }
+  .qc__lien-ke a:hover {
+    border-color: var(--do-500);
+  }
+  .qc__lien-ke span:first-child {
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  .qc__lk-mm {
+    color: var(--muc-3);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--cs-micro);
+  }
+  .qc__ben {
+    display: grid;
+    gap: var(--k4);
+    position: sticky;
+    top: 116px;
+  }
+  .qc__gia-mo {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .qc__nha-may p {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+    margin-top: var(--k2);
+  }
+  .qc__mst {
+    font-size: var(--cs-micro);
+  }
+  .qc__ds-chi-em {
+    display: grid;
+    gap: 5px;
+    margin-top: var(--k3);
+    font-size: var(--cs-nho);
+  }
+  .qc__ds-chi-em a[aria-current='page'] {
+    font-weight: var(--w-nang);
+    color: var(--muc);
+    text-decoration: none;
+  }
+  @media (max-width: 980px) {
+    .qc__ben {
+      position: static;
+    }
+    .qc__lien-ke {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

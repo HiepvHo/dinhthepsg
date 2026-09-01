@@ -1,0 +1,665 @@
+/* ============================================================================
+   PATTERN LAYER - cac khoi dung lai tren nhieu trang.
+
+   Hoc cau truc cua baogiathep.net (do 01/09/2026): top bar do, mega menu day,
+   cot lien he co dinh, mat do thong tin cao, khung 1140px.
+   Sua 4 loi do duoc: 1 font, 1 do, 3 bo goc, chu phu co sac.
+
+   Bo sung ma ho KHONG co: bang quy cach la HTML that (ho khoa trong anh JPEG),
+   breadcrumb, thanh CTA dinh day tren mobile.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------- khung ---- */
+.khung {
+  width: 100%;
+  max-width: var(--khung);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+.khung--rong {
+  max-width: var(--khung-rong);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+.section--nhat {
+  background: var(--nen-nhat);
+}
+.section--do {
+  background: var(--nen-do);
+  color: var(--muc-nghich);
+}
+.section--do h1,
+.section--do h2,
+.section--do h3 {
+  color: var(--muc-nghich);
+}
+.section--toi {
+  background: var(--nen-toi);
+  color: var(--muc-nghich);
+}
+.section--toi h1,
+.section--toi h2,
+.section--toi h3 {
+  color: var(--muc-nghich);
+}
+
+/* Dau muc section */
+.dau-muc {
+  display: grid;
+  gap: var(--k3);
+  max-width: 56ch;
+  margin-bottom: var(--k6);
+}
+.dau-muc--giua {
+  margin-inline: auto;
+  text-align: center;
+}
+.nhan-tren {
+  display: block;
+  font-size: var(--cs-micro);
+  font-weight: var(--w-nang);
+  letter-spacing: var(--gc-micro);
+  text-transform: uppercase;
+  color: var(--do-500);
+}
+.section--do .nhan-tren,
+.section--toi .nhan-tren {
+  color: var(--trang);
+}
+.dan-nhap {
+  font-size: var(--cs-lead);
+  font-weight: var(--w-thuong);
+  color: var(--muc-2);
+  max-width: var(--do-doc);
+}
+.section--do .dan-nhap,
+.section--toi .dan-nhap {
+  color: var(--muc-nghich-2);
+}
+
+/* ---------------------------------------------------------------- luoi ----- */
+.luoi {
+  display: grid;
+  gap: var(--gap);
+}
+.luoi > * {
+  min-width: 0;
+}
+.luoi--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.luoi--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.luoi--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.luoi--chinh-phu {
+  grid-template-columns: 1fr 340px;
+  gap: var(--gap-lon);
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .luoi--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .luoi--3,
+  .luoi--chinh-phu {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 620px) {
+  .luoi--2,
+  .luoi--4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------------------------------------------- nut ----- */
+.nut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--k2);
+  min-height: var(--cham);
+  padding: 0 20px;
+  border: 1.5px solid transparent;
+  border-radius: var(--bo);
+  background: var(--trang);
+  color: var(--muc);
+  font-size: var(--cs-nho);
+  font-weight: var(--w-nang);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--thoi) var(--nhip), color var(--thoi) var(--nhip),
+    border-color var(--thoi) var(--nhip);
+}
+.nut--chinh {
+  background: var(--hanh-dong);
+  border-color: var(--hanh-dong);
+  color: var(--hanh-dong-muc);
+}
+.nut--chinh:hover {
+  background: var(--hanh-dong-nhan);
+  border-color: var(--hanh-dong-nhan);
+  color: var(--hanh-dong-muc);
+}
+.nut--vien {
+  background: transparent;
+  border-color: var(--vien-dam);
+  color: var(--muc);
+}
+.nut--vien:hover {
+  border-color: var(--do-500);
+  color: var(--do-500);
+}
+.nut--toi {
+  background: var(--steel-900);
+  border-color: var(--steel-900);
+  color: var(--trang);
+}
+.nut--toi:hover {
+  background: var(--steel-700);
+  border-color: var(--steel-700);
+  color: var(--trang);
+}
+.nut--tren-do {
+  background: var(--trang);
+  border-color: var(--trang);
+  color: var(--do-600);
+}
+.nut--tren-do:hover {
+  background: var(--do-050);
+  color: var(--do-700);
+}
+.nut--lon {
+  min-height: 52px;
+  padding: 0 28px;
+  font-size: var(--cs-than);
+}
+.nut--khoi {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ the ---- */
+.the {
+  background: var(--trang);
+  border: var(--vien-mong);
+  border-radius: var(--bo);
+  padding: var(--k5);
+  transition: box-shadow var(--thoi) var(--nhip), border-color var(--thoi) var(--nhip);
+}
+.the--noi {
+  box-shadow: var(--noi);
+  border-color: transparent;
+}
+a.the:hover,
+.the--bam:hover {
+  border-color: var(--do-500);
+  box-shadow: var(--noi);
+}
+.the__anh {
+  margin: calc(var(--k5) * -1) calc(var(--k5) * -1) var(--k4);
+  border-radius: var(--bo) var(--bo) 0 0;
+  overflow: hidden;
+  background: var(--steel-050);
+  aspect-ratio: 4 / 3;
+}
+.the__anh img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------------------------------------------------------------- huy hieu --- */
+.huy-hieu {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: var(--bo-nho);
+  background: var(--do-050);
+  color: var(--do-600);
+  font-size: var(--cs-micro);
+  font-weight: var(--w-nang);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.huy-hieu--thep {
+  background: var(--steel-100);
+  color: var(--steel-700);
+}
+.huy-hieu--con-hang {
+  background: #e7f4ed;
+  color: var(--xanh-500);
+}
+
+/* ==========================================================================
+   BANG QUY CACH - vu khi chinh cua site nay.
+
+   baogiathep khoa toan bo bang tra trong anh JPEG (do 01/09/2026: trang
+   /bang-tra-thep-hinh/ co 5 heading hua hen bang, 0 the <table>, 7 anh
+   ten bang-tra-thep-hinh-chu-*.jpg). Hau qua: Google khong doc duoc so,
+   AI khong trich duoc, nguoi dung khong Ctrl+F duoc.
+
+   Bang cua ta la HTML that, cuon ngang duoc tren dien thoai.
+   ========================================================================== */
+.bang-cuon {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: var(--vien-mong);
+  border-radius: var(--bo);
+  background: var(--trang);
+}
+.bang {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: var(--cs-nho);
+}
+.bang caption {
+  caption-side: top;
+  text-align: left;
+  padding: var(--k4) var(--k4) var(--k3);
+  font-size: var(--cs-micro);
+  font-weight: var(--w-dam);
+  letter-spacing: var(--gc-micro);
+  text-transform: uppercase;
+  color: var(--muc-2);
+}
+.bang th {
+  position: sticky;
+  top: 0;
+  background: var(--steel-900);
+  color: var(--trang);
+  text-align: left;
+  font-size: var(--cs-micro);
+  font-weight: var(--w-nang);
+  letter-spacing: var(--gc-micro);
+  text-transform: uppercase;
+  padding: 12px var(--k4);
+  white-space: nowrap;
+}
+.bang td {
+  padding: 13px var(--k4);
+  border-top: var(--vien-mong);
+  font-weight: var(--w-thuong);
+  vertical-align: baseline;
+}
+.bang tbody tr:hover td {
+  background: var(--steel-050);
+}
+.bang td:first-child {
+  font-weight: var(--w-nang);
+  white-space: nowrap;
+}
+.bang__gia {
+  font-weight: var(--w-nang);
+  color: var(--do-600);
+  white-space: nowrap;
+}
+.bang__chua-co {
+  color: var(--muc-3);
+  font-style: normal;
+}
+.bang-ghi-chu {
+  margin-top: var(--k3);
+  font-size: var(--cs-micro);
+  color: var(--muc-2);
+}
+
+/* ----------------------------------------------------- danh sach dac ta ---- */
+.dac-ta {
+  display: grid;
+  border-top: var(--vien-mong);
+}
+.dac-ta__hang {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.45fr) 1fr;
+  gap: var(--k4);
+  padding: 12px 0;
+  border-bottom: var(--vien-mong);
+}
+.dac-ta dt {
+  font-size: var(--cs-nho);
+  color: var(--muc-2);
+}
+.dac-ta dd {
+  font-size: var(--cs-nho);
+  font-weight: var(--w-nang);
+}
+
+/* --------------------------------------------------------------- gia ------- */
+.gia {
+  font-size: var(--cs-h2);
+  font-weight: var(--w-nang);
+  color: var(--do-600);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.gia__don-vi {
+  font-size: var(--cs-nho);
+  font-weight: var(--w-vua);
+  color: var(--muc-2);
+}
+.hop-gia {
+  background: var(--do-050);
+  border: 1px solid #f2d4d5;
+  border-radius: var(--bo);
+  padding: var(--k5);
+  display: grid;
+  gap: var(--k3);
+}
+
+/* ------------------------------------------------------------ danh muc ----- */
+.danh-sach-tick {
+  display: grid;
+  gap: var(--k3);
+}
+.danh-sach-tick li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--k3);
+  font-size: var(--cs-nho);
+}
+.tick {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border-radius: var(--bo-tron);
+  background: var(--do-500);
+  color: var(--trang);
+  display: grid;
+  place-items: center;
+}
+
+/* --------------------------------------------------------- breadcrumb ------ */
+/* Ca trungnamcons lan baogiathep deu khong co BreadcrumbList schema. Khe ho de an. */
+.vun-banh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--k2);
+  padding-block: var(--k3);
+  font-size: var(--cs-micro);
+  color: var(--muc-2);
+}
+.vun-banh a {
+  color: var(--muc-2);
+  text-decoration: none;
+}
+.vun-banh a:hover {
+  color: var(--do-600);
+  text-decoration: underline;
+}
+.vun-banh li {
+  display: flex;
+  align-items: center;
+}
+.vun-banh li + li::before {
+  content: "/";
+  margin-right: var(--k2);
+  color: var(--steel-300);
+}
+
+/* ------------------------------------------------------------- muc luc ----- */
+.muc-luc {
+  background: var(--steel-050);
+  border-left: 3px solid var(--do-500);
+  border-radius: 0 var(--bo) var(--bo) 0;
+  padding: var(--k4) var(--k5);
+}
+.muc-luc__nhan {
+  font-size: var(--cs-micro);
+  font-weight: var(--w-nang);
+  letter-spacing: var(--gc-micro);
+  text-transform: uppercase;
+  color: var(--muc-2);
+  margin-bottom: var(--k3);
+}
+.muc-luc ol {
+  display: grid;
+  gap: var(--k2);
+  counter-reset: ml;
+}
+.muc-luc li {
+  counter-increment: ml;
+  font-size: var(--cs-nho);
+}
+.muc-luc li::before {
+  content: counter(ml) ". ";
+  color: var(--muc-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------- thanh CTA dinh day ----- */
+/* Chi tren mobile. Nganh vat tu: khach GOI chu khong dien form. */
+.thanh-day {
+  position: fixed;
+  inset: auto 0 0 0;
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  background: var(--steel-900);
+  box-shadow: 0 -1px 0 0 rgba(22, 25, 28, 0.2);
+  z-index: 80;
+}
+.thanh-day a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--k2);
+  min-height: 52px;
+  font-size: var(--cs-nho);
+  font-weight: var(--w-nang);
+  color: var(--trang);
+  text-decoration: none;
+}
+.thanh-day a + a {
+  background: var(--do-500);
+}
+@media (max-width: 900px) {
+  .thanh-day {
+    display: grid;
+  }
+  body:has(.thanh-day) {
+    padding-bottom: 52px;
+  }
+}
+
+/* ------------------------------------------------------ cot lien he -------- */
+/* Hoc baogiathep nhung RUT TU 6 SO XUONG 1 hotline + 1 Zalo:
+   nhieu lua chon lam khach chan chu va khong biet goi so nao. */
+.cot-lien-he {
+  position: fixed;
+  right: 14px;
+  bottom: 90px;
+  display: grid;
+  gap: 10px;
+  z-index: 70;
+}
+.cot-lien-he a {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--bo-tron);
+  display: grid;
+  place-items: center;
+  color: var(--trang);
+  box-shadow: var(--noi-lon);
+  text-decoration: none;
+}
+.cot-lien-he__goi {
+  background: var(--do-500);
+}
+.cot-lien-he__zalo {
+  background: #0068ff;
+}
+@media (max-width: 900px) {
+  .cot-lien-he {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------- khung anh ------ */
+.khung-anh {
+  border-radius: var(--bo);
+  overflow: hidden;
+  background: var(--steel-050);
+}
+.khung-anh img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.khung-anh--16-10 {
+  aspect-ratio: 16 / 10;
+}
+.khung-anh--4-3 {
+  aspect-ratio: 4 / 3;
+}
+.khung-anh--vuong {
+  aspect-ratio: 1 / 1;
+}
+figure {
+  margin: 0;
+}
+figcaption {
+  margin-top: var(--k2);
+  font-size: var(--cs-micro);
+  color: var(--muc-2);
+}
+
+/* --------------------------------------------------------- dai so lieu ----- */
+.dai-so {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+}
+.so-lieu__n {
+  display: block;
+  font-size: var(--cs-so);
+  font-weight: var(--w-nang);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  color: var(--do-500);
+}
+.section--do .so-lieu__n,
+.section--toi .so-lieu__n {
+  color: var(--trang);
+}
+.so-lieu__nhan {
+  display: block;
+  margin-top: var(--k2);
+  font-size: var(--cs-nho);
+  color: var(--muc-2);
+  max-width: 22ch;
+}
+.section--do .so-lieu__nhan,
+.section--toi .so-lieu__nhan {
+  color: var(--muc-nghich-2);
+}
+@media (max-width: 760px) {
+  .dai-so {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------- bai viet ---- */
+.van-ban {
+  max-width: var(--do-doc);
+}
+.van-ban h2 {
+  margin-top: var(--k7);
+  margin-bottom: var(--k3);
+  scroll-margin-top: 90px;
+}
+.van-ban h3 {
+  margin-top: var(--k5);
+  margin-bottom: var(--k2);
+  scroll-margin-top: 90px;
+}
+.van-ban ul,
+.van-ban ol {
+  margin: var(--k3) 0 var(--k5) 22px;
+  list-style: revert;
+  display: grid;
+  gap: var(--k2);
+}
+.van-ban table {
+  margin-block: var(--k5);
+}
+.van-ban blockquote {
+  margin: var(--k5) 0;
+  padding-left: var(--k4);
+  border-left: 3px solid var(--do-500);
+  color: var(--muc-2);
+}
+
+/* -------------------------------------------------------------- bieu mau --- */
+.truong {
+  display: grid;
+  gap: 6px;
+}
+.truong label {
+  font-size: var(--cs-nho);
+  font-weight: var(--w-dam);
+}
+.truong label span {
+  color: var(--do-500);
+}
+.truong input,
+.truong select,
+.truong textarea {
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1.5px solid var(--vien-dam);
+  border-radius: var(--bo-nho);
+  background: var(--trang);
+  font-size: var(--cs-nho);
+  transition: border-color var(--thoi) var(--nhip);
+}
+.truong textarea {
+  padding: 12px 14px;
+  min-height: 92px;
+}
+.truong input:focus,
+.truong select:focus,
+.truong textarea:focus {
+  border-color: var(--do-500);
+}
+.truong input::placeholder,
+.truong textarea::placeholder {
+  color: var(--muc-3);
+}
+.bieu-mau {
+  display: grid;
+  gap: var(--k4);
+}
+
+/* ------------------------------------------------------------ tien ich ----- */
+.chi-mobile {
+  display: none;
+}
+@media (max-width: 900px) {
+  .chi-mobile {
+    display: block;
+  }
+  .an-mobile {
+    display: none !important;
+  }
+}
+.bo-qua {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--steel-900);
+  color: var(--trang);
+  padding: 12px 18px;
+  z-index: 1000;
+}
+.bo-qua:focus {
+  left: 0;
+}

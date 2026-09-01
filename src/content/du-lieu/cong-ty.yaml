@@ -1,0 +1,102 @@
+# =============================================================================
+# THONG TIN DOANH NGHIEP - nguon su that duy nhat.
+#
+# Moi noi tren site (header, footer, JSON-LD schema, trang lien he) deu doc tu day.
+# NAP phai nhat quan tuyet doi: lech mot ky tu giua cac trang la mat tin hieu local SEO.
+#
+# File nay la YAML de sau nay cam CMS (Sveltia/Decap) vao sua duoc, khong can lap trinh.
+# Nguon: footer cuongphatsteel.com.vn, user xac nhan 01/09/2026.
+# =============================================================================
+
+tenPhapDinh: Công ty TNHH TM XNK Thép Cường Phát
+tenPhapDinhHoa: CÔNG TY TNHH TM XNK THÉP CƯỜNG PHÁT
+tenThuongHieu: Đinh Thép Sài Gòn
+tenNhaMay: Nhà Máy Sản Xuất Đinh Thép Sài Gòn - Lưới Thép Hàn
+maSoThue: "0312168657"
+namThanhLap: 2012
+websiteMe: https://cuongphatsteel.com.vn/
+
+# Hotline mang DINH. Lay dung so cua nha may dinh, KHONG dung so xuong can tole.
+hotline: "0919 288 109"
+hotlineTel: "+84919288109"
+zalo: "0919288109"
+email: admin@cuongphatsteel.com.vn
+emailPhu: cuongphat.noibo@gmail.com
+
+# Cac hang thiet bi chau Au ma cong ty lam dai dien.
+# LUU Y: chua xac nhan thiet bi nay dung cho day chuyen DINH hay chi cho tole.
+# Khi chua xac nhan thi chi viet "cong ty la dai dien cua...", TUYET DOI khong
+# viet "day chuyen dinh su dung...".
+thietBi:
+  - ten: IMS
+    loai: Thiết bị đo lường
+    xuatXu: Germany
+  - ten: Neuenkamp
+    loai: Thiết bị dao cắt
+    xuatXu: Germany
+  - ten: BSA
+    loai: Trục cán
+    xuatXu: Italy
+
+# 6 dia diem. Chi 2 cai dau co lienQuanDenDinh = true, va CHI 2 cai do vao
+# LocalBusiness schema cua site nay. 4 xuong tole con lai chi liet ke o trang
+# He thong de the hien quy mo - dua vao schema se lam nhieu tin hieu dia phuong.
+diaDiem:
+  - id: nha-may-dinh
+    ten: Nhà máy sản xuất Đinh Thép Sài Gòn - Lưới Thép Hàn
+    vaiTro: Nhà máy sản xuất đinh
+    diaChi: Lô số 2, CCN Liên Minh, Bình Tiên 2
+    quanHuyen: Đức Hòa
+    tinhThanh: Long An
+    dienThoai: "+84 272 3778105"
+    hotline: "0919 288 109"
+    lienQuanDenDinh: true
+
+  - id: van-phong-chinh
+    ten: Văn phòng chính
+    vaiTro: Trụ sở công ty
+    diaChi: Lầu 1, Tòa nhà Thông Tấn Xã Việt Nam, 7-9-11 Trần Xuân Hòa
+    phuong: Phường An Đông
+    quanHuyen: Quận 5
+    tinhThanh: TP. Hồ Chí Minh
+    dienThoai: "028.38593969"
+    fax: "028.38593970"
+    lienQuanDenDinh: true
+
+  - id: cn-nha-be
+    ten: Chi nhánh Nhà Bè - Xưởng cán tole
+    vaiTro: Xưởng cán tole
+    diaChi: 22A Phan Văn Bảy, Ấp 1, Hiệp Phước
+    quanHuyen: Nhà Bè
+    tinhThanh: TP. Hồ Chí Minh
+    dienThoai: "028.37919057"
+    hotline: "0912 394 009"
+    lienQuanDenDinh: false
+
+  - id: cn-can-giuoc
+    ten: Chi nhánh Cần Giuộc - Xưởng cán tole
+    vaiTro: Xưởng cán tole
+    diaChi: Đường DT830, Ấp Trung, Xã Đông Thạnh
+    quanHuyen: Cần Giuộc
+    tinhThanh: Long An
+    hotline: "0918 814 009"
+    lienQuanDenDinh: false
+
+  - id: cn-can-duoc
+    ten: Chi nhánh Cần Đước - Xưởng cán tole PU
+    vaiTro: Xưởng cán tole PU
+    diaChi: Tỉnh lộ 826, Ấp Xoài Đôi, Xã Long Trạch
+    quanHuyen: Cần Đước
+    tinhThanh: Long An
+    hotline: "0931 327 977"
+    lienQuanDenDinh: false
+
+  - id: cn-can-tho
+    ten: Chi nhánh Cần Thơ - Kho vật tư kim khí
+    vaiTro: Kho vật tư kim khí
+    diaChi: 74A Nguyễn Thị Trâm
+    phuong: Phường Cái Răng
+    quanHuyen: Cái Răng
+    tinhThanh: TP. Cần Thơ
+    hotline: "0888 343 299"
+    lienQuanDenDinh: false

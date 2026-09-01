@@ -1,0 +1,141 @@
+# =============================================================================
+# MA TRAN QUY CACH - truc cua ca website.
+#
+# CHOT NGON NGU NGANH: ma "F" tren catalogue doc la "phan", nguoi tim kiem go la "p".
+#   1 phan = 1 cm = 10 mm.  5F = "dinh 5p" = "dinh 5 phan" = "dinh 5cm" = "dinh 50mm".
+# Doi thu dung ca hai quy uoc (trungnamcons dung "5p", dayluoithep dung "5cm"),
+# nen moi trang quy cach phai phu CA BON cach goi.
+#
+# CANH BAO: bang nay transcribe tu brochure IN, CHUA doi chieu voi hang dang chay.
+# Truoc khi publish phai xac nhan lai voi nha may. Cac truong `gia` va `cayTrenKg`
+# de trong co y - KHONG duoc dien bang so tinh toan.
+#
+# File YAML de sau nay cam CMS vao sua duoc.
+# =============================================================================
+
+nhom:
+  # ---------------------------------------------------------------- dinh chi --
+  - id: dinh-chi
+    ten: Đinh chì
+    tenNgan: Đinh chì
+    slug: dinh-chi
+    tenGoiKhac: [đinh coffa, đinh coppha, đinh sắt, đinh đóng gỗ, đinh xây dựng]
+    moTaNgan: >-
+      Đinh thân trơn dùng phổ biến nhất trong xây dựng và mộc: đóng cốp pha,
+      đóng gỗ, đóng khung.
+    # Lo 1 chi tach trang rieng cho nhom nay - vi day la nhom co nhu cau tim theo
+    # quy cach ro nhat, va la nhom doi thu bo trong nhieu nhat (trungnamcons chi
+    # co 1/10 quy cach).
+    tachTrangQuyCach: true
+    quyCach:
+      - { ma: 2F,  phan: 2,  daiMm: 20,  duongKinhMm: 1.7, slug: dinh-chi-2p }
+      - { ma: 3F,  phan: 3,  daiMm: 30,  duongKinhMm: 2.0, slug: dinh-chi-3p }
+      - { ma: 4F,  phan: 4,  daiMm: 40,  duongKinhMm: 2.3, slug: dinh-chi-4p }
+      - { ma: 5F,  phan: 5,  daiMm: 50,  duongKinhMm: 2.8, slug: dinh-chi-5p }
+      - { ma: 6F,  phan: 6,  daiMm: 60,  duongKinhMm: 3.0, slug: dinh-chi-6p }
+      - { ma: 7F,  phan: 7,  daiMm: 70,  duongKinhMm: 3.3, slug: dinh-chi-7p }
+      - { ma: 8F,  phan: 8,  daiMm: 80,  duongKinhMm: 4.1, slug: dinh-chi-8p }
+      - { ma: 10F, phan: 10, daiMm: 100, duongKinhMm: 4.5, slug: dinh-chi-10p }
+      - { ma: 12F, phan: 12, daiMm: 120, duongKinhMm: 5.1, slug: dinh-chi-12p }
+      - { ma: 15F, phan: 15, daiMm: 150, duongKinhMm: 6.0, slug: dinh-chi-15p }
+
+  # -------------------------------------------------------- dinh thep trang --
+  - id: dinh-thep-trang
+    ten: Đinh thép trắng
+    tenNgan: Thép trắng
+    slug: dinh-thep-trang
+    tenGoiKhac: [đinh trắng, đinh mạ trắng]
+    moTaNgan: >-
+      Đinh thép xử lý bề mặt sáng màu. Cùng đường kính thân 3.5mm cho cả bốn quy cách.
+    tachTrangQuyCach: false
+    canXacNhan: >-
+      Cả 4 quy cách đều ghi đường kính 3.5mm - cần xác nhận đúng hay lỗi in catalogue.
+    quyCach:
+      - { ma: 2F, phan: 2, daiMm: 20, duongKinhMm: 3.5, slug: dinh-thep-trang-2p }
+      - { ma: 3F, phan: 3, daiMm: 30, duongKinhMm: 3.5, slug: dinh-thep-trang-3p }
+      - { ma: 4F, phan: 4, daiMm: 40, duongKinhMm: 3.5, slug: dinh-thep-trang-4p }
+      - { ma: 5F, phan: 5, daiMm: 50, duongKinhMm: 3.5, slug: dinh-thep-trang-5p }
+
+  # --------------------------------------------------------- dinh thep vang --
+  - id: dinh-thep-vang
+    ten: Đinh thép vàng
+    tenNgan: Thép vàng
+    slug: dinh-thep-vang
+    tenGoiKhac: [đinh vàng, đinh mạ vàng]
+    moTaNgan: >-
+      Đinh thép xử lý bề mặt vàng, quy cách ngắn. Mã đặt tên theo chiều dài mm
+      chứ không theo phân.
+    tachTrangQuyCach: false
+    canXacNhan: Mã 1F6 / 1F9 / 2F3 đọc thế nào, và vì sao khác quy ước phân.
+    quyCach:
+      - { ma: 1F6, daiMm: 16, duongKinhMm: 2.3, slug: dinh-thep-vang-1f6 }
+      - { ma: 1F9, daiMm: 19, duongKinhMm: 2.3, slug: dinh-thep-vang-1f9 }
+      - { ma: 2F3, daiMm: 23, duongKinhMm: 2.3, slug: dinh-thep-vang-2f3 }
+
+  # ----------------------------------------------------------------- dinh du --
+  - id: dinh-du
+    ten: Đinh dù
+    tenNgan: Đinh dù
+    slug: dinh-du
+    tenGoiKhac: [đinh mũ, đinh mái tôn, đinh lợp tôn]
+    moTaNgan: Đinh có mũ rộng dạng dù, dùng để lợp và cố định tấm mỏng.
+    tachTrangQuyCach: false
+    canXacNhan: >-
+      CẦN XÁC NHẬN GẤP: đinh dù ghi 3F = 33mm, trong khi các nhóm khác 3F = 30mm.
+      Đây là quy ước đặt tên riêng của đinh dù hay lỗi in? Ảnh hưởng cả URL lẫn nội dung.
+    quyCach:
+      - { ma: 3F, daiMm: 33, slug: dinh-du-3f }
+      - { ma: 4F, daiMm: 43, slug: dinh-du-4f }
+      - { ma: 5F, daiMm: 53, slug: dinh-du-5f }
+
+  # ---------------------------------------------------------------- dinh vit --
+  - id: dinh-vit
+    ten: Đinh vít
+    tenNgan: Đinh vít
+    slug: dinh-vit
+    tenGoiKhac: [vít tự khoan, vít bắn tôn, đinh vít tự khoan]
+    moTaNgan: Vít có ren, bắt bằng máy, dùng cho tôn và khung kim loại.
+    tachTrangQuyCach: false
+    quyCach:
+      - { ma: 4x30, daiMm: 30, duongKinhMm: 4, slug: dinh-vit-4x30 }
+      - { ma: 5x30, daiMm: 30, duongKinhMm: 5, slug: dinh-vit-5x30 }
+      - { ma: 5x40, daiMm: 40, duongKinhMm: 5, slug: dinh-vit-5x40 }
+
+  # ------------------------------------------------------------ day kem hap --
+  - id: day-kem-hap
+    ten: Dây kẽm hấp
+    tenNgan: Dây kẽm
+    slug: day-kem-hap
+    tenGoiKhac: [dây kẽm buộc, dây thép buộc, kẽm buộc]
+    moTaNgan: Dây thép ủ mềm dùng buộc thép, buộc cốp pha, buộc hàng.
+    tachTrangQuyCach: false
+    canXacNhan: Catalogue chỉ ghi 1mm. Thường còn 0.8 / 1.2 / 1.5mm - cần bổ sung.
+    quyCach:
+      - { ma: 1mm, daiMm: 0, duongKinhMm: 1.0, slug: day-kem-hap-1mm }
+
+# =============================================================================
+# Bang tra bu long va oc he met M3-M36.
+# d = duong kinh ren, P = buoc ren, k = chieu cao dau, s = kich thuoc chia khoa.
+# Day la bang tra ky thuat tieu chuan, khac ban chat voi bang quy cach dinh
+# (dinh la san pham cua nha may, bu long kha nang cao la hang thuong mai)
+# nen tach rieng, va CHUA khang dinh la hang tu san xuat.
+# =============================================================================
+buLong:
+  - { d: M3,  P: 0.5,  k: 2,    s: 5.5 }
+  - { d: M4,  P: 0.7,  k: 2.8,  s: 7 }
+  - { d: M5,  P: 0.8,  k: 3.5,  s: 8 }
+  - { d: M6,  P: 1,    k: 4,    s: 10 }
+  - { d: M7,  P: 1,    k: 4.8,  s: 11 }
+  - { d: M8,  P: 1.25, k: 5.3,  s: 13 }
+  - { d: M10, P: 1.5,  k: 6.4,  s: 17 }
+  - { d: M12, P: 1.75, k: 7.5,  s: 19 }
+  - { d: M14, P: 2,    k: 8.8,  s: 22 }
+  - { d: M16, P: 2,    k: 10,   s: 24 }
+  - { d: M18, P: 2.5,  k: 11.5, s: 27 }
+  - { d: M20, P: 2.5,  k: 12.5, s: 30 }
+  - { d: M22, P: 2.5,  k: 14,   s: 32 }
+  - { d: M24, P: 3,    k: 15,   s: 36 }
+  - { d: M27, P: 3,    k: 17,   s: 41 }
+  - { d: M30, P: 3.5,  k: 18.7, s: 46 }
+  - { d: M33, P: 3.5,  k: 21,   s: 50 }
+  - { d: M36, P: 4,    k: 22.5, s: 55 }

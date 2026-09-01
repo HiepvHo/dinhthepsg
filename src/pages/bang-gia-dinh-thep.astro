@@ -1,0 +1,274 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VunBanh from '../components/VunBanh.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { tenChinh, quyDoi, coGia, dinhDangGia } from '../lib/quy-cach';
+import { tuyetDoi } from '../lib/schema';
+import { catTieuDe, catMoTa } from '../lib/seo-text';
+
+/**
+ * TRANG HUB - trang tien manh nhat cua site.
+ *
+ * Doi thu truc tiep: dayluoithep.com/dinh-thep-5cm/ - 2.084 tu, 2 bang HTML that
+ * (26 + 6 dong), schema day du, co han H2 "Dinh thep 1kg bao nhieu cai?".
+ * Muc tieu trang nay la vuot trang do o cum "bang gia dinh thep".
+ *
+ * Khac biet: ta co DU 24 quy cach cua 6 nhom trong MOT bang, cong bang bu long
+ * M3-M36. dayluoithep chi co dinh go va dinh cuon.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhom = await getCollection('nhomSanPham');
+const buLong = (await getCollection('buLong')).sort(
+  (a, b) => parseInt(a.data.d.slice(1)) - parseInt(b.data.d.slice(1)),
+);
+const nhaMay = c.diaDiem[0];
+const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
+const thang = String(new Date().getMonth() + 1).padStart(2, '0');
+const nam = new Date().getFullYear();
+
+const tieuDe = catTieuDe(`Bảng giá đinh thép ${thang}/${nam} - ${tong} quy cách`);
+const moTa = catMoTa(`Bảng quy cách và giá đinh thép: đinh chì 2p-15p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. ${tong} quy cách kèm chiều dài và đường kính. Gọi ${c.hotline}.`);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Bảng quy cách đinh thép - ${c.tenThuongHieu}`,
+  numberOfItems: tong,
+  itemListElement: nhom.flatMap((n) =>
+    n.data.quyCach.map((q) => ({
+      '@type': 'ListItem',
+      name: tenChinh(n.data.ten, q),
+      ...(n.data.tachTrangQuyCach ? { url: tuyetDoi(`/san-pham/${q.slug}/`) } : {}),
+    })),
+  ),
+};
+
+const mucLuc = [
+  ...nhom.map((n) => ({ id: n.data.slug, ten: n.data.ten })),
+  { id: 'bu-long', ten: 'Bu lông và ốc M3-M36' },
+  { id: 'cach-doc', ten: 'Cách đọc mã quy cách' },
+];
+---
+
+<BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/bang-gia-dinh-thep/" schema={schema}>
+  <VunBanh muc={[{ ten: 'Bảng giá đinh thép', duongDan: '/bang-gia-dinh-thep/' }]} />
+
+  <article class="section bg">
+    <div class="khung">
+      <h1>Bảng giá và quy cách đinh thép</h1>
+      <p class="dan-nhap bg__mo">
+        Toàn bộ {tong} quy cách của {nhom.length} nhóm sản phẩm do nhà máy
+        {' '}{c.tenNhaMay} sản xuất, kèm chiều dài và đường kính thân. Cập nhật tháng {thang}/{nam}.
+      </p>
+
+      <nav class="muc-luc bg__muc-luc" aria-label="Mục lục">
+        <p class="muc-luc__nhan">Nội dung</p>
+        <ol>
+          {mucLuc.map((m) => <li><a href={`#${m.id}`}>{m.ten}</a></li>)}
+        </ol>
+      </nav>
+
+      {
+        nhom.map((n) => {
+          const coDuongKinh = n.data.quyCach.some((q) => q.duongKinhMm !== undefined);
+          const coPhan = n.data.quyCach.some((q) => q.phan !== undefined);
+          return (
+            <section class="bg__nhom">
+              <h2 id={n.data.slug}>
+                {n.data.ten}
+                <span class="bg__dem"> - {n.data.quyCach.length} quy cách</span>
+              </h2>
+              <p class="bg__nhom-mo">{n.data.moTaNgan}</p>
+
+              <div class="bang-cuon">
+                <table class="bang">
+                  <caption>Quy cách {n.data.ten}</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Quy cách</th>
+                      <th scope="col">Mã</th>
+                      <th scope="col" class="so">Chiều dài</th>
+                      {coDuongKinh && <th scope="col" class="so">Đường kính thân</th>}
+                      {coPhan && <th scope="col">Quy đổi</th>}
+                      <th scope="col">Giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {n.data.quyCach.map((q) => (
+                      <tr>
+                        <td>
+                          {n.data.tachTrangQuyCach ? (
+                            <a href={`/san-pham/${q.slug}/`}>{tenChinh(n.data.ten, q)}</a>
+                          ) : (
+                            tenChinh(n.data.ten, q)
+                          )}
+                        </td>
+                        <td>{q.ma}</td>
+                        <td class="so">{q.daiMm > 0 ? `${q.daiMm} mm` : '-'}</td>
+                        {coDuongKinh && (
+                          <td class="so">
+                            {q.duongKinhMm !== undefined ? `${q.duongKinhMm} mm` : '-'}
+                          </td>
+                        )}
+                        {coPhan && <td>{quyDoi(q) ?? '-'}</td>}
+                        <td>
+                          {coGia(q) ? (
+                            <span class="bang__gia">{dinhDangGia(q)}</span>
+                          ) : (
+                            <span class="bang__chua-co">gọi để báo giá</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {n.data.canXacNhan && (
+                <p class="bg__xac-nhan">
+                  <strong>Đang đối chiếu với nhà máy:</strong> {n.data.canXacNhan}
+                </p>
+              )}
+            </section>
+          );
+        })
+      }
+
+      <section class="bg__nhom">
+        <h2 id="bu-long">Bu lông và ốc hệ mét M3-M36</h2>
+        <p class="bg__nhom-mo">
+          Bảng tra kích thước ren hệ mét tiêu chuẩn. d là đường kính ren, P là bước ren,
+          k là chiều cao đầu, s là kích thước chìa khóa.
+        </p>
+        <div class="bang-cuon">
+          <table class="bang">
+            <caption>Kích thước bu lông đầu lục giác hệ mét</caption>
+            <thead>
+              <tr>
+                <th scope="col">d (đường kính ren)</th>
+                <th scope="col" class="so">P (bước ren)</th>
+                <th scope="col" class="so">k (chiều cao đầu)</th>
+                <th scope="col" class="so">s (chìa khóa)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                buLong.map((b) => (
+                  <tr>
+                    <td>{b.data.d}</td>
+                    <td class="so">{b.data.P} mm</td>
+                    <td class="so">{b.data.k} mm</td>
+                    <td class="so">{b.data.s} mm</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bg__nhom">
+        <h2 id="cach-doc">Cách đọc mã quy cách trên bao đinh</h2>
+        <p>
+          Mã in trên bao thường có dạng <strong>2F, 3F, 5F, 10F</strong>. Chữ
+          {' '}<strong>F</strong> ở đây đọc là <strong>phân</strong>, là đơn vị đo chiều dài
+          quen dùng trong ngành xây dựng Việt Nam.
+        </p>
+        <p>
+          <strong>1 phân = 1 cm = 10 mm.</strong> Vì vậy đinh 5F chính là đinh 5 phân,
+          cũng là đinh 5cm, cũng là đinh 50mm - bốn cách gọi cho cùng một sản phẩm.
+          Người mua ở mỗi vùng quen một cách gọi khác nhau nên bảng trên quy đổi sẵn cả bốn.
+        </p>
+        <p class="bg__luu-y">
+          <strong>Lưu ý về đường kính:</strong> phân chỉ định nghĩa <em>chiều dài</em>.
+          Đường kính thân của cùng một chiều dài thay đổi theo từng nhà sản xuất và theo
+          sợi thép đầu vào. Số trong bảng trên là thông số của đinh do chúng tôi sản xuất,
+          có dung sai theo lô. Cần con số chính xác cho công trình, gọi
+          {' '}<a href={`tel:${c.hotlineTel}`}>{c.hotline}</a> để nhận thông số theo lô đang chạy.
+        </p>
+      </section>
+
+      <div class="bg__cta">
+        <div>
+          <h2>Nhận báo giá theo khối lượng</h2>
+          <p class="dan-nhap">
+            Nói rõ loại đinh, quy cách theo phân hoặc mm, và số lượng theo kg hoặc bao.
+            Nhà máy tại {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
+          </p>
+        </div>
+        <div class="bg__cta-nut">
+          <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+          <a class="nut nut--vien nut--lon" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+            Nhắn Zalo
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .bg h1 {
+    font-size: var(--cs-h1);
+  }
+  .bg__mo {
+    margin-top: var(--k4);
+  }
+  .bg__muc-luc {
+    margin-top: var(--k6);
+    max-width: 520px;
+  }
+  .bg__nhom {
+    margin-top: var(--k8);
+  }
+  .bg__nhom h2 {
+    scroll-margin-top: 110px;
+    margin-bottom: var(--k2);
+  }
+  .bg__dem {
+    color: var(--muc-2);
+    font-weight: var(--w-vua);
+    font-size: var(--cs-h3);
+  }
+  .bg__nhom-mo {
+    margin-bottom: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+    max-width: var(--do-doc);
+  }
+  .bg__nhom p {
+    max-width: var(--do-doc);
+  }
+  .bg__xac-nhan {
+    margin-top: var(--k4);
+    padding: var(--k4);
+    border-left: 3px solid var(--do-500);
+    background: var(--do-050);
+    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
+    font-size: var(--cs-nho);
+  }
+  .bg__luu-y {
+    margin-top: var(--k4);
+    padding: var(--k4);
+    background: var(--steel-050);
+    border-radius: var(--bo-nho);
+    font-size: var(--cs-nho);
+  }
+  .bg__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-lon);
+    flex-wrap: wrap;
+    margin-top: var(--k9);
+    padding-top: var(--k6);
+    border-top: var(--vien-mong);
+  }
+  .bg__cta-nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+  }
+</style>

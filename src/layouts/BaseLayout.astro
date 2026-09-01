@@ -1,0 +1,98 @@
+---
+import { getEntry } from 'astro:content';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CotLienHe from '../components/CotLienHe.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { schemaToChuc, schemaWebSite } from '../lib/schema';
+import { CHO_INDEX } from '../lib/moi-truong';
+
+interface Props {
+  tieuDe: string;
+  moTa: string;
+  duongDan: string;
+  anhOg?: string;
+  khongIndex?: boolean;
+  /** Schema rieng cua trang, them vao Organization + WebSite san co */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { tieuDe, moTa, duongDan, anhOg, khongIndex = false, schema } = Astro.props;
+
+// Chan index tren MOI moi truong khong phai domain that (vercel.app, preview, local).
+// Ly do: tranh ban vercel.app duoc index roi canh tranh voi domain that sau nay.
+const chanIndex = khongIndex || !CHO_INDEX;
+
+const ct = await getEntry('congTy', 'cong-ty');
+if (!ct) throw new Error('Thieu src/content/du-lieu/cong-ty.yaml');
+const c = ct.data;
+
+const canonical = new URL(duongDan, Astro.site).toString();
+const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{tieuDe}</title>
+    <meta name="description" content={moTa} />
+    <link rel="canonical" href={canonical} />
+    {chanIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    {/* LCP element la tieu de weight 800. Tieng Viet can CA HAI subset:
+        chu ASCII lay tu latin, chu co dau lay tu vietnamese.
+        Chi preload dung 2 file nay - preload thua la lam cham chinh minh. */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="/fonts/be-vietnam-pro-latin-800-normal.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="/fonts/be-vietnam-pro-vietnamese-800-normal.woff2"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:site_name" content={c.tenThuongHieu} />
+    <meta property="og:title" content={tieuDe} />
+    <meta property="og:description" content={moTa} />
+    <meta property="og:url" content={canonical} />
+    {ogUrl && <meta property="og:image" content={ogUrl} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <JsonLd schema={schemaToChuc(c)} />
+    <JsonLd schema={schemaWebSite(c)} />
+    {schema && <JsonLd schema={schema} />}
+  </head>
+
+  <body>
+    <a class="bo-qua" href="#noi-dung">Bỏ qua tới nội dung</a>
+
+    <Header />
+
+    <main id="noi-dung">
+      <slot />
+    </main>
+
+    <Footer />
+    <CotLienHe />
+
+    {/* Thanh CTA dinh day - chi hien tren mobile. Nganh vat tu: khach GOI. */}
+    <div class="thanh-day">
+      <a href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+      <a href={`https://zalo.me/${c.zalo}`} rel="noopener">Nhắn Zalo</a>
+    </div>
+  </body>
+</html>

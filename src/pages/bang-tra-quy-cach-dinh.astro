@@ -1,0 +1,239 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VunBanh from '../components/VunBanh.astro';
+import { tenChinh } from '../lib/quy-cach';
+import { catTieuDe, catMoTa } from '../lib/seo-text';
+
+/**
+ * TRANG MUC TIEU GEO.
+ *
+ * Bang chung tu research: AI Overview dang tra loi MAU THUAN cho cac cau ve
+ * duong kinh dinh (mot lan "3.4mm", lan khac "3.0-3.5mm") vi khong co nguon chuan.
+ * Va baogiathep.net - trang dang rank cho cum "bang tra" - khoa toan bo bang
+ * trong anh JPEG (do 01/09/2026: 5 heading hua hen bang, 0 the <table>, 7 anh
+ * ten bang-tra-thep-hinh-chu-*.jpg).
+ *
+ * Trang nay la bang HTML that + cau tra loi dat ngay dau moi muc, de AI trich duoc.
+ *
+ * Dung FAQPage: day la Q&A do trang tu bien soan (QAPage danh cho cau hoi do
+ * NGUOI DUNG dat). FAQPage da mat rich result tu 07/05/2026 nhung van giup
+ * AI Mode nhan dien thuc the - do la ly do giu markup.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhom = await getCollection('nhomSanPham');
+const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
+const nhaMay = c.diaDiem[0];
+
+// Bang quy doi day du 1-15 phan, khong chi cac quy cach dang ban.
+// Ly do: nguoi ta tra "9 phan bang bao nhieu mm" ke ca khi ta khong ban co do.
+const bangPhan = Array.from({ length: 15 }, (_, i) => i + 1);
+const dangBan = new Set(dinhChi.data.quyCach.map((q) => q.phan));
+
+const cauHoi = [
+  {
+    h: '1 phân bằng bao nhiêu cm và bao nhiêu mm?',
+    a: '1 phân bằng 1 cm và bằng 10 mm. Đây là đơn vị đo chiều dài quen dùng trong ngành xây dựng và cơ khí tại Việt Nam. Mã in trên bao đinh có chữ F, ví dụ 5F, chính là 5 phân.',
+  },
+  {
+    h: 'Đinh 5 phân dài bao nhiêu?',
+    a: 'Đinh 5 phân dài 50 mm, tức 5 cm. Cùng một sản phẩm này còn được gọi là đinh 5p, đinh 5cm hoặc đinh 50mm tùy vùng miền và thói quen của người mua.',
+  },
+  {
+    h: 'Đinh 5p và đinh 5cm có phải cùng một loại không?',
+    a: 'Đúng, hoàn toàn cùng một loại. 5p là cách viết tắt của 5 phân, mà 1 phân bằng 1 cm, nên đinh 5p chính là đinh 5cm và cũng là đinh 50mm.',
+  },
+  {
+    h: 'Vì sao cùng chiều dài mà đường kính thân đinh lại khác nhau giữa các nơi bán?',
+    a: 'Vì phân chỉ định nghĩa chiều dài, không định nghĩa đường kính. Đường kính thân của cùng một chiều dài thay đổi theo từng nhà sản xuất và theo sợi thép đầu vào. Do đó hai nơi cùng bán đinh 5 phân vẫn có thể công bố đường kính khác nhau mà cả hai đều đúng với hàng của họ.',
+  },
+  {
+    h: 'Một kilogram đinh có bao nhiêu cây?',
+    a: 'Số cây trên một kilogram phụ thuộc vào chiều dài và đường kính thân của từng quy cách: đinh càng ngắn và càng nhỏ thì một kilogram càng nhiều cây. Con số chính xác phải cân và đếm thực tế chứ không tính bằng công thức, vì công thức bỏ qua khối lượng mũ đinh nên lệch khoảng mười phần trăm.',
+  },
+];
+
+const tieuDe = catTieuDe('Bảng tra quy cách đinh: phân, cm, mm - quy đổi');
+const moTa = catMoTa('1 phân bằng 1cm bằng 10mm. Bảng tra quy đổi đầy đủ từ 1 đến 15 phân cho đinh xây dựng, kèm mã quy cách và đường kính thân theo thông số nhà máy.');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: cauHoi.map((q) => ({
+    '@type': 'Question',
+    name: q.h,
+    acceptedAnswer: { '@type': 'Answer', text: q.a },
+  })),
+};
+---
+
+<BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/bang-tra-quy-cach-dinh/" schema={schema}>
+  <VunBanh muc={[{ ten: 'Bảng tra quy cách đinh', duongDan: '/bang-tra-quy-cach-dinh/' }]} />
+
+  <article class="section bt">
+    <div class="khung bt__trong">
+      <h1>Bảng tra quy cách đinh: phân, cm và mm</h1>
+
+      {/* Cau tra loi dat NGAY dau trang, mot cau, khong vong vo.
+          Day la doan co kha nang duoc AI Overview trich nhat. */}
+      <p class="bt__chot">
+        <strong>1 phân = 1 cm = 10 mm.</strong> Mã <strong>F</strong> in trên bao đinh
+        đọc là phân, nên đinh 5F là đinh 5 phân, cũng là đinh 5cm và đinh 50mm.
+      </p>
+
+      <h2 id="bang-quy-doi">Bảng quy đổi phân sang cm và mm</h2>
+      <div class="bang-cuon">
+        <table class="bang">
+          <caption>Quy đổi đơn vị phân dùng cho đinh xây dựng</caption>
+          <thead>
+            <tr>
+              <th scope="col">Cách gọi</th>
+              <th scope="col">Mã trên bao</th>
+              <th scope="col" class="so">Centimet</th>
+              <th scope="col" class="so">Milimet</th>
+              <th scope="col">Nhà máy có sản xuất</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              bangPhan.map((p) => {
+                const qc = dinhChi.data.quyCach.find((q) => q.phan === p);
+                return (
+                  <tr>
+                    <td>{p} phân ({p}p)</td>
+                    <td>{p}F</td>
+                    <td class="so">{p} cm</td>
+                    <td class="so">{p * 10} mm</td>
+                    <td>
+                      {qc ? (
+                        <a href={`/san-pham/${qc.slug}/`}>{tenChinh(dinhChi.data.ten, qc)}</a>
+                      ) : (
+                        <span class="bang__chua-co">chưa có quy cách này</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="bang-ghi-chu">
+        Bảng liệt kê đủ từ 1 đến 15 phân kể cả các cỡ nhà máy chưa sản xuất, để tra cứu
+        được trọn vẹn. Cột cuối cho biết cỡ nào hiện có hàng.
+      </p>
+
+      <h2 id="duong-kinh">Đường kính thân theo từng quy cách</h2>
+      <p>
+        Phân chỉ cho biết chiều dài. Đường kính thân là thông số riêng, và nó thay đổi
+        theo nhà sản xuất. Dưới đây là thông số của đinh chì do
+        {' '}{c.tenNhaMay} sản xuất.
+      </p>
+      <div class="bang-cuon">
+        <table class="bang">
+          <caption>Đường kính thân đinh chì theo thông số nhà máy</caption>
+          <thead>
+            <tr>
+              <th scope="col">Quy cách</th>
+              <th scope="col" class="so">Chiều dài</th>
+              <th scope="col" class="so">Đường kính thân</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              dinhChi.data.quyCach.map((q) => (
+                <tr>
+                  <td><a href={`/san-pham/${q.slug}/`}>{tenChinh(dinhChi.data.ten, q)}</a></td>
+                  <td class="so">{q.daiMm} mm</td>
+                  <td class="so">{q.duongKinhMm ? `${q.duongKinhMm} mm` : '-'}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="bt__luu-y">
+        Đây là thông số của hàng do chúng tôi sản xuất, có dung sai theo lô. Nơi khác
+        công bố con số khác không có nghĩa là sai - họ đang mô tả hàng của họ.
+        Cần thông số chính xác cho lô đang chạy, gọi
+        {' '}<a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>.
+      </p>
+
+      <h2 id="cau-hoi">Câu hỏi thường gặp về quy cách đinh</h2>
+      <div class="bt__hoi">
+        {
+          cauHoi.map((q) => (
+            <div class="bt__muc">
+              <h3>{q.h}</h3>
+              <p>{q.a}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="bt__cta">
+        <p>
+          Cần tư vấn chọn đúng quy cách cho công việc, hoặc cần báo giá theo khối lượng:
+        </p>
+        <div class="bt__cta-nut">
+          <a class="nut nut--chinh" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+          <a class="nut nut--vien" href="/bang-gia-dinh-thep/">Xem bảng quy cách đầy đủ</a>
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .bt__trong {
+    max-width: 860px;
+  }
+  .bt h1 {
+    font-size: var(--cs-h1);
+  }
+  .bt__chot {
+    margin-top: var(--k5);
+    padding: var(--k4) var(--k5);
+    background: var(--do-050);
+    border-left: 3px solid var(--do-500);
+    border-radius: 0 var(--bo) var(--bo) 0;
+    font-size: var(--cs-lead);
+  }
+  .bt h2 {
+    margin-top: var(--k8);
+    margin-bottom: var(--k4);
+    scroll-margin-top: 110px;
+  }
+  .bt p {
+    max-width: var(--do-doc);
+  }
+  .bt__luu-y {
+    margin-top: var(--k4);
+    padding: var(--k4);
+    background: var(--steel-050);
+    border-radius: var(--bo-nho);
+    font-size: var(--cs-nho);
+  }
+  .bt__hoi {
+    display: grid;
+    gap: var(--k5);
+  }
+  .bt__muc h3 {
+    margin-bottom: var(--k2);
+  }
+  .bt__muc p {
+    color: var(--muc-2);
+  }
+  .bt__cta {
+    margin-top: var(--k8);
+    padding-top: var(--k5);
+    border-top: var(--vien-mong);
+  }
+  .bt__cta-nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k4);
+  }
+</style>

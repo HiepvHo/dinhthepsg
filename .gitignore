@@ -1,0 +1,22 @@
+# build
+dist/
+.astro/
+.vercel/
+
+# phu thuoc
+node_modules/
+
+# bien moi truong - KHONG BAO GIO commit
+.env
+.env.*
+!.env.example
+
+# he dieu hanh va editor
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# anh chup man hinh tam khi kiem tra
+.playwright-mcp/
+*-screenshot.png

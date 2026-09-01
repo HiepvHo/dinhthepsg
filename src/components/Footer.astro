@@ -1,0 +1,211 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+
+/**
+ * Footer = dai toi duy nhat cua trang, va la noi dat NAP day du.
+ * NAP o day phai giong HET thong tin trong LocalBusiness schema va tren
+ * Google Business Profile - lech mot ky tu la mat tin hieu local SEO.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhom = await getCollection('nhomSanPham');
+
+const dinh = c.diaDiem.filter((d) => d.lienQuanDenDinh);
+const khac = c.diaDiem.filter((d) => !d.lienQuanDenDinh);
+const nam = new Date().getFullYear();
+const soNam = nam - c.namThanhLap;
+
+function diaChiDayDu(d: (typeof c.diaDiem)[number]) {
+  return [d.diaChi, d.phuong, d.quanHuyen, d.tinhThanh].filter(Boolean).join(', ');
+}
+---
+
+<footer class="chan section--toi">
+  <div class="khung">
+    <div class="chan__luoi">
+      <div class="chan__hieu">
+        <span class="chan__ten">ĐINH THÉP SÀI GÒN</span>
+        <p class="chan__mo-ta">
+          Nhà máy sản xuất đinh thép xây dựng, trực thuộc {c.tenPhapDinh}.
+          Sản xuất và phân phối trực tiếp từ năm {c.namThanhLap}, {soNam} năm trong ngành.
+        </p>
+        <p class="chan__mst">Mã số thuế: {c.maSoThue}</p>
+        <p class="chan__mst">
+          Website công ty: <a href={c.websiteMe} rel="noopener">cuongphatsteel.com.vn</a>
+        </p>
+      </div>
+
+      <div class="chan__cot">
+        <h3 class="chan__dau">Sản phẩm</h3>
+        <ul class="chan__ds">
+          {nhom.map((n) => <li><a href={`/san-pham/${n.data.slug}/`}>{n.data.ten}</a></li>)}
+          <li><a href="/bang-gia-dinh-thep/">Bảng giá đầy đủ</a></li>
+        </ul>
+      </div>
+
+      <div class="chan__cot">
+        <h3 class="chan__dau">Tra cứu</h3>
+        <ul class="chan__ds">
+          <li><a href="/bang-tra-quy-cach-dinh/">Bảng tra phân - cm - mm</a></li>
+          <li><a href="/bang-gia-dinh-thep/#bu-long">Bảng tra bu lông M3-M36</a></li>
+          <li><a href="/kien-thuc/">Kiến thức về đinh</a></li>
+          <li><a href="/nha-may/">Nhà máy sản xuất</a></li>
+          <li><a href="/lien-he/">Liên hệ</a></li>
+        </ul>
+      </div>
+
+      <div class="chan__cot chan__cot--lien-he">
+        <h3 class="chan__dau">Liên hệ mua đinh</h3>
+        {
+          dinh.map((d) => (
+            <div class="chan__dia-diem">
+              <strong>{d.ten}</strong>
+              <span>{diaChiDayDu(d)}</span>
+              {d.hotline && (
+                <a href={`tel:${d.hotline.replace(/[^0-9+]/g, '')}`}>Hotline: {d.hotline}</a>
+              )}
+              {d.dienThoai && <span>Tel: {d.dienThoai}</span>}
+            </div>
+          ))
+        }
+        <a class="nut nut--chinh chan__nut" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+          Nhắn Zalo {c.hotline}
+        </a>
+      </div>
+    </div>
+
+    <details class="chan__he-thong">
+      <summary>Hệ thống {c.diaDiem.length} địa điểm của Thép Cường Phát</summary>
+      <div class="chan__he-thong-ds">
+        {
+          khac.map((d) => (
+            <div class="chan__dia-diem">
+              <strong>{d.ten}</strong>
+              <span>{diaChiDayDu(d)}</span>
+              {d.hotline && <span>Hotline: {d.hotline}</span>}
+            </div>
+          ))
+        }
+      </div>
+    </details>
+
+    <div class="chan__day">
+      <span>(c) {nam} {c.tenPhapDinhHoa}. MST {c.maSoThue}.</span>
+      <span>Hotline {c.hotline}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .chan {
+    padding-block: var(--k8) var(--k5);
+    font-size: var(--cs-nho);
+  }
+  .chan__luoi {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+    gap: var(--gap-lon);
+  }
+  .chan__luoi > * {
+    min-width: 0;
+  }
+  .chan__ten {
+    display: block;
+    font-size: 20px;
+    font-weight: var(--w-nang);
+    color: var(--trang);
+    margin-bottom: var(--k3);
+  }
+  .chan__mo-ta {
+    color: var(--muc-nghich-2);
+    max-width: 42ch;
+  }
+  .chan__mst {
+    margin-top: var(--k3);
+    font-size: var(--cs-micro);
+    color: var(--muc-nghich-2);
+  }
+  .chan__dau {
+    font-size: var(--cs-micro);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--trang);
+    margin-bottom: var(--k4);
+  }
+  .chan__ds {
+    display: grid;
+    gap: 9px;
+  }
+  .chan a {
+    color: var(--muc-nghich-2);
+    text-decoration: none;
+  }
+  .chan a:hover {
+    color: var(--trang);
+    text-decoration: underline;
+  }
+  .chan__dia-diem {
+    display: grid;
+    gap: 3px;
+    margin-bottom: var(--k4);
+    font-size: var(--cs-micro);
+    color: var(--muc-nghich-2);
+    line-height: 1.5;
+  }
+  .chan__dia-diem strong {
+    color: var(--trang);
+    font-weight: var(--w-dam);
+  }
+  .chan__nut {
+    margin-top: var(--k2);
+  }
+  .chan__he-thong {
+    margin-top: var(--k7);
+    padding-top: var(--k5);
+    border-top: 1px solid var(--vien-nghich);
+  }
+  .chan__he-thong summary {
+    cursor: pointer;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    color: var(--muc-nghich-2);
+  }
+  .chan__he-thong summary:hover {
+    color: var(--trang);
+  }
+  .chan__he-thong-ds {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap);
+    margin-top: var(--k4);
+  }
+  .chan__day {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--k4);
+    flex-wrap: wrap;
+    margin-top: var(--k5);
+    padding-top: var(--k4);
+    border-top: 1px solid var(--vien-nghich);
+    font-size: var(--cs-micro);
+    color: var(--muc-nghich-2);
+  }
+  @media (max-width: 980px) {
+    .chan__luoi {
+      grid-template-columns: 1fr 1fr;
+    }
+    .chan__hieu {
+      grid-column: 1 / -1;
+    }
+    .chan__he-thong-ds {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 620px) {
+    .chan__luoi,
+    .chan__he-thong-ds {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

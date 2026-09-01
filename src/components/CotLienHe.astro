@@ -1,0 +1,40 @@
+---
+import { getEntry } from 'astro:content';
+
+/**
+ * Cot lien he co dinh ben phai.
+ *
+ * baogiathep.net dat 6 nut dien thoai xep doc ben trai + 3 nut Zalo ben phai.
+ * Ta rut xuong DUNG 2: mot hotline, mot Zalo.
+ * Ly do: sau so dien thoai khong lam khach goi nhieu hon - no lam khach khong
+ * biet goi so nao roi thoi khong goi. Neu cong ty that su co nhieu nhan vien sale
+ * truc rieng thi de mot so tong dai roi chuyen may, dung bat khach chon.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+---
+
+<div class="cot-lien-he an-mobile">
+  <a
+    class="cot-lien-he__goi"
+    href={`tel:${c.hotlineTel}`}
+    aria-label={`Gọi hotline ${c.hotline}`}
+    title={`Gọi ${c.hotline}`}
+  >
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"></path>
+    </svg>
+  </a>
+
+  <a
+    class="cot-lien-he__zalo"
+    href={`https://zalo.me/${c.zalo}`}
+    rel="noopener"
+    aria-label="Nhắn tin Zalo"
+    title="Nhắn Zalo"
+  >
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H9l-4 4v-4H5.5A1.5 1.5 0 0 1 4 14.5v-9Z"></path>
+    </svg>
+  </a>
+</div>

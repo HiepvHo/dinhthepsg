@@ -1,0 +1,95 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TrangNhom from '../../components/TrangNhom.astro';
+import TrangQuyCach from '../../components/TrangQuyCach.astro';
+import { metaNhom, metaQuyCach } from '../../lib/seo-text';
+import type { QuyCach } from '../../lib/quy-cach';
+
+/**
+ * Router cho ca trang NHOM lan trang QUY CACH.
+ *
+ * Gop mot route vi hai loai nam cung namespace /san-pham/ (`dinh-chi` va
+ * `dinh-chi-5p` la anh em). Neu tach hai file route thi Astro se bao xung dot.
+ *
+ * Chi sinh trang quy cach cho nhom co `tachTrangQuyCach: true`. Lo 1 chi co
+ * dinh chi - dung sinh 42 trang mong cung luc, cho du lieu Search Console
+ * roi moi mo them.
+ */
+export async function getStaticPaths() {
+  const nhom = await getCollection('nhomSanPham');
+  const duong: any[] = [];
+
+  for (const n of nhom) {
+    duong.push({
+      params: { slug: n.data.slug },
+      props: { loai: 'nhom' as const, nhom: n.data },
+    });
+
+    if (n.data.tachTrangQuyCach) {
+      for (const q of n.data.quyCach) {
+        duong.push({
+          params: { slug: q.slug },
+          props: { loai: 'quy-cach' as const, nhom: n.data, qc: q },
+        });
+      }
+    }
+  }
+  return duong;
+}
+
+const { loai, nhom, qc } = Astro.props as {
+  loai: 'nhom' | 'quy-cach';
+  nhom: {
+    ten: string;
+    slug: string;
+    moTaNgan: string;
+    tenGoiKhac: string[];
+    quyCach: QuyCach[];
+    tachTrangQuyCach: boolean;
+    canXacNhan?: string;
+  };
+  qc?: QuyCach;
+};
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhaMay = c.diaDiem[0];
+
+const meta =
+  loai === 'quy-cach'
+    ? metaQuyCach(nhom.ten, qc!, {
+        hotline: c.hotline,
+        tenPhapDinh: c.tenPhapDinh,
+        quanHuyen: nhaMay.quanHuyen,
+        tinhThanh: nhaMay.tinhThanh,
+      })
+    : metaNhom(nhom.ten, nhom.quyCach.length, nhom.moTaNgan, { hotline: c.hotline });
+
+const duongDan = loai === 'quy-cach' ? `/san-pham/${qc!.slug}/` : `/san-pham/${nhom.slug}/`;
+---
+
+<BaseLayout tieuDe={meta.tieuDe} moTa={meta.moTa} duongDan={duongDan}>
+  {
+    loai === 'quy-cach' ? (
+      <TrangQuyCach
+        nhomTen={nhom.ten}
+        nhomSlug={nhom.slug}
+        nhomMoTa={nhom.moTaNgan}
+        tenGoiKhac={nhom.tenGoiKhac}
+        qc={qc!}
+        anhChiEm={nhom.quyCach}
+      />
+    ) : (
+      <TrangNhom
+        ten={nhom.ten}
+        slug={nhom.slug}
+        moTaNgan={nhom.moTaNgan}
+        tenGoiKhac={nhom.tenGoiKhac}
+        quyCach={nhom.quyCach}
+        tachTrangQuyCach={nhom.tachTrangQuyCach}
+        canXacNhan={nhom.canXacNhan}
+      />
+    )
+  }
+</BaseLayout>

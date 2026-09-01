@@ -1,0 +1,257 @@
+---
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VunBanh from '../components/VunBanh.astro';
+import { schemaDiaDiem } from '../lib/schema';
+
+import anhDayChuyen from '../assets/anh/day-chuyen-dap-dinh.jpg';
+import anhRaMay from '../assets/anh/dinh-ra-khoi-may.jpg';
+import anhDongBao from '../assets/anh/dong-bao-dinh-sai-gon.jpg';
+import anhCongNhan from '../assets/anh/cong-nhan-thep-cuong-phat.jpg';
+import anhSoiThep from '../assets/anh/cuon-soi-thep-nguyen-lieu.jpg';
+import anhKho from '../assets/anh/kho-bao-dinh.jpg';
+import { catTieuDe, catMoTa } from '../lib/seo-text';
+
+/**
+ * TRANG E-E-A-T MANH NHAT.
+ *
+ * Day la thu dai ly khong the co: anh day chuyen that, cong nhan mac dong phuc
+ * cong ty, bao bi mang thuong hieu. Doi thu #1 (trungnamcons) co mot doan
+ * "quy trinh san xuat 5 buoc" chung chung khong kem anh nao.
+ *
+ * NGUYEN TAC: chi noi nhung gi anh chung minh duoc. Chua xac nhan thiet bi
+ * chau Au dung cho day chuyen dinh hay chi cho tole, nen viet "cong ty lam
+ * dai dien cho..." chu KHONG viet "day chuyen dinh su dung...".
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const nhaMay = c.diaDiem[0];
+const soNam = new Date().getFullYear() - c.namThanhLap;
+
+const tieuDe = catTieuDe(`Nhà máy sản xuất đinh thép ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}`);
+const moTa = catMoTa(`Nhà máy sản xuất đinh thép tại ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, thuộc ${c.tenPhapDinh}. Dây chuyền dập đinh và đóng bao tại chỗ từ ${c.namThanhLap}. Gọi ${c.hotline}.`);
+
+const buoc = [
+  {
+    n: '01',
+    t: 'Sợi thép đầu vào',
+    d: 'Sợi thép cuộn được đưa về xưởng và kiểm tra trước khi vào chuyền. Đường kính sợi quyết định đường kính thân đinh thành phẩm.',
+  },
+  {
+    n: '02',
+    t: 'Dập đinh',
+    d: 'Máy dập tạo mũ và cắt thân theo chiều dài của từng quy cách. Mỗi cỡ chạy một mẻ riêng, đây là lý do đường kính thân khác nhau giữa các quy cách.',
+  },
+  {
+    n: '03',
+    t: 'Ra thành phẩm',
+    d: 'Đinh ra khỏi máy xuống máng chứa, rồi được gom lại trước khi cân và đóng bao.',
+  },
+  {
+    n: '04',
+    t: 'Cân và đóng bao',
+    d: 'Đinh được cân theo khối lượng rồi đóng vào bao mang nhãn Đinh Sài Gòn. Quy cách đóng bao theo yêu cầu đơn hàng.',
+  },
+];
+---
+
+<BaseLayout
+  tieuDe={tieuDe}
+  moTa={moTa}
+  duongDan="/nha-may/"
+  schema={schemaDiaDiem(c, nhaMay)}
+>
+  <VunBanh muc={[{ ten: 'Nhà máy', duongDan: '/nha-may/' }]} />
+
+  <article class="section nm">
+    <div class="khung">
+      <h1>{c.tenNhaMay}</h1>
+      <p class="dan-nhap nm__mo">
+        Thuộc {c.tenPhapDinh}, mã số thuế {c.maSoThue}, thành lập năm {c.namThanhLap} -
+        {' '}{soNam} năm sản xuất và phân phối vật tư kim khí. Nhà máy đặt tại
+        {' '}{nhaMay.diaChi}, {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
+      </p>
+
+      <div class="nm__anh-chinh">
+        <figure class="khung-anh khung-anh--16-10">
+          <Image
+            src={anhRaMay}
+            alt="Đinh thép vừa ra khỏi máy dập, rơi xuống máng chứa tại xưởng sản xuất"
+            widths={[600, 1000, 1400]}
+            sizes="(max-width: 900px) 92vw, 1100px"
+            loading="eager"
+          />
+          <figcaption>Đinh ra khỏi máy dập tại xưởng {nhaMay.quanHuyen}, {nhaMay.tinhThanh}</figcaption>
+        </figure>
+      </div>
+
+      <h2 id="quy-trinh">Quy trình sản xuất</h2>
+      <div class="nm__buoc">
+        {
+          buoc.map((b) => (
+            <div class="nm__buoc-muc">
+              <span class="nm__so so">{b.n}</span>
+              <div>
+                <h3>{b.t}</h3>
+                <p>{b.d}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 id="hinh-anh">Hình ảnh tại xưởng</h2>
+      <p class="nm__dan">Ảnh chụp thực tế tại nhà máy, không phải ảnh minh họa.</p>
+      <div class="luoi luoi--3 nm__luoi">
+        <figure class="khung-anh khung-anh--4-3">
+          <Image src={anhDayChuyen} alt="Dây chuyền máy dập đinh đang hoạt động tại nhà máy" widths={[400, 700]} sizes="(max-width: 900px) 92vw, 360px" loading="lazy" />
+        </figure>
+        <figure class="khung-anh khung-anh--4-3">
+          <Image src={anhSoiThep} alt="Cuộn sợi thép nguyên liệu dùng để dập đinh, tập kết tại xưởng" widths={[400, 700]} sizes="(max-width: 900px) 92vw, 360px" loading="lazy" />
+        </figure>
+        <figure class="khung-anh khung-anh--4-3">
+          <Image src={anhDongBao} alt="Công nhân đóng đinh vào bao mang nhãn Đinh Sài Gòn" widths={[400, 700]} sizes="(max-width: 900px) 92vw, 360px" loading="lazy" />
+        </figure>
+        <figure class="khung-anh khung-anh--4-3">
+          <Image src={anhCongNhan} alt="Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh" widths={[400, 700]} sizes="(max-width: 900px) 92vw, 360px" loading="lazy" />
+        </figure>
+        <figure class="khung-anh khung-anh--4-3">
+          <Image src={anhKho} alt="Bao đinh thành phẩm xếp trong kho nhà máy" widths={[400, 700]} sizes="(max-width: 900px) 92vw, 360px" loading="lazy" />
+        </figure>
+      </div>
+
+      <h2 id="thiet-bi">Thiết bị và đối tác châu Âu</h2>
+      <p>
+        {c.tenPhapDinh} làm đại diện tại Việt Nam cho một số hãng cung cấp thiết bị
+        châu Âu trong ngành sản xuất và cơ khí chế tạo thép:
+      </p>
+      <div class="bang-cuon nm__bang">
+        <table class="bang">
+          <caption>Các hãng thiết bị công ty làm đại diện</caption>
+          <thead>
+            <tr>
+              <th scope="col">Hãng</th>
+              <th scope="col">Loại thiết bị</th>
+              <th scope="col">Xuất xứ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              c.thietBi.map((t) => (
+                <tr>
+                  <td>{t.ten}</td>
+                  <td>{t.loai}</td>
+                  <td>{t.xuatXu}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="dia-chi">Địa chỉ nhà máy</h2>
+      <dl class="dac-ta nm__dac-ta">
+        <div class="dac-ta__hang">
+          <dt>Tên nhà máy</dt>
+          <dd>{c.tenNhaMay}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Địa chỉ</dt>
+          <dd>{nhaMay.diaChi}, {nhaMay.quanHuyen}, {nhaMay.tinhThanh}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Hotline bán hàng</dt>
+          <dd><a href={`tel:${c.hotlineTel}`}>{c.hotline}</a></dd>
+        </div>
+        {
+          nhaMay.dienThoai && (
+            <div class="dac-ta__hang">
+              <dt>Điện thoại</dt>
+              <dd>{nhaMay.dienThoai}</dd>
+            </div>
+          )
+        }
+        <div class="dac-ta__hang">
+          <dt>Pháp nhân</dt>
+          <dd>{c.tenPhapDinh}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Mã số thuế</dt>
+          <dd class="so">{c.maSoThue}</dd>
+        </div>
+      </dl>
+
+      <div class="nm__cta">
+        <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>Gọi nhà máy {c.hotline}</a>
+        <a class="nut nut--vien nut--lon" href="/lien-he/">Xem toàn bộ hệ thống</a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .nm h1 {
+    font-size: var(--cs-h1);
+  }
+  .nm__mo {
+    margin-top: var(--k4);
+  }
+  .nm__anh-chinh {
+    margin-top: var(--k6);
+  }
+  .nm h2 {
+    margin-top: var(--k8);
+    margin-bottom: var(--k4);
+    scroll-margin-top: 110px;
+  }
+  .nm p {
+    max-width: var(--do-doc);
+  }
+  .nm__dan {
+    margin-bottom: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .nm__buoc {
+    display: grid;
+    gap: var(--k4);
+    border-top: var(--vien-mong);
+  }
+  .nm__buoc-muc {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--k4);
+    padding: var(--k4) 0;
+    border-bottom: var(--vien-mong);
+  }
+  .nm__so {
+    font-size: var(--cs-h2);
+    font-weight: var(--w-nang);
+    line-height: 1;
+    color: var(--do-500);
+  }
+  .nm__buoc-muc h3 {
+    margin-bottom: 4px;
+  }
+  .nm__buoc-muc p {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .nm__luoi {
+    margin-top: var(--k4);
+  }
+  .nm__bang,
+  .nm__dac-ta {
+    margin-top: var(--k4);
+    max-width: 640px;
+  }
+  .nm__cta {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k8);
+    padding-top: var(--k6);
+    border-top: var(--vien-mong);
+  }
+</style>
