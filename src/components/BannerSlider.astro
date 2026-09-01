@@ -1,0 +1,198 @@
+---
+import { Image } from 'astro:assets';
+
+/**
+ * Banner slider - dung theo do thegioithepvn.com (01/09/2026):
+ *   8 anh, buoc 1425px dung bang be rong khung, overflow hidden,
+ *   dich trai lien tuc khoang 250px/giay tuc ~5,7 giay mot anh,
+ *   khong dung thu vien (khong slick/swiper/owl).
+ *
+ * KHAC HO O BON DIEM, deu co ly do:
+ *
+ * 1. LCP: chi anh DAU eager + fetchpriority=high, cac anh sau lazy.
+ *    Neu tai ca 8 anh cung luc thi chung tranh bang thong voi anh dau va
+ *    LCP tut - day la loi thuong gap nhat cua banner slider.
+ *
+ * 2. Co CHAM DIEU HUONG. Ho khong co, nghia la nguoi dung khong quay lai duoc
+ *    anh vua troi qua. Cham vua la dieu khien vua cho biet con bao nhieu anh.
+ *
+ * 3. DUNG khi hover hoac focus. Anh troi trong luc nguoi ta dang nhin la kho chiu.
+ *
+ * 4. Ton trong prefers-reduced-motion: khong tu chay, chi doi khi bam cham.
+ *
+ * Chieu cao co dinh 534px de khong gay CLS.
+ */
+interface Anh {
+  src: ImageMetadata;
+  alt: string;
+}
+interface Props {
+  anh: Anh[];
+  giay?: number;
+}
+const { anh, giay = 5.5 } = Astro.props;
+---
+
+<div
+  class="bn"
+  data-giay={giay}
+  role="region"
+  aria-roledescription="Băng ảnh"
+  aria-label="Hình ảnh nhà máy Đinh Thép Sài Gòn"
+>
+  <div class="bn__ray">
+    {
+      anh.map((a, i) => (
+        <div class="bn__anh" role="group" aria-roledescription="Ảnh" aria-label={`${i + 1} trên ${anh.length}`}>
+          <Image
+            src={a.src}
+            alt={a.alt}
+            widths={[900, 1440, 1920]}
+            sizes="100vw"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'auto'}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="bn__cham" role="tablist" aria-label="Chọn ảnh">
+    {
+      anh.map((_, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="bn__nut"
+          data-i={i}
+          aria-label={`Ảnh ${i + 1}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .bn {
+    position: relative;
+    width: 100%;
+    height: 534px;
+    overflow: hidden;
+    background: var(--steel-100);
+  }
+  .bn__ray {
+    display: flex;
+    height: 100%;
+    transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: transform;
+  }
+  .bn__anh {
+    position: relative;
+    flex: 0 0 100%;
+    height: 100%;
+  }
+  .bn__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bn__cham {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: var(--bo-tron);
+    background: rgba(5, 40, 89, 0.42);
+  }
+  .bn__nut {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background var(--thoi) var(--nhip), width var(--thoi) var(--nhip);
+  }
+  .bn__nut:hover {
+    background: rgba(255, 255, 255, 0.85);
+  }
+  .bn__nut[aria-selected='true'] {
+    width: 24px;
+    border-radius: var(--bo-tron);
+    background: var(--do-500);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bn__ray {
+      transition: none;
+    }
+  }
+  @media (max-width: 980px) {
+    .bn {
+      height: 320px;
+    }
+  }
+  @media (max-width: 560px) {
+    .bn {
+      height: 220px;
+    }
+    .bn__cham {
+      bottom: 10px;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.bn').forEach((bn) => {
+    const ray = bn.querySelector<HTMLElement>('.bn__ray');
+    const nut = [...bn.querySelectorAll<HTMLButtonElement>('.bn__nut')];
+    if (!ray || nut.length < 2) return;
+
+    const soAnh = nut.length;
+    const chuKy = (Number(bn.dataset.giay) || 5.5) * 1000;
+    const itChuyenDong = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0;
+    let hen: number | undefined;
+
+    const den = (k: number) => {
+      i = (k + soAnh) % soAnh;
+      ray.style.transform = `translateX(-${i * 100}%)`;
+      nut.forEach((n, j) => n.setAttribute('aria-selected', String(j === i)));
+    };
+
+    const chay = () => {
+      if (itChuyenDong) return;
+      dung();
+      hen = window.setInterval(() => den(i + 1), chuKy);
+    };
+    const dung = () => {
+      if (hen) window.clearInterval(hen);
+      hen = undefined;
+    };
+
+    nut.forEach((n) =>
+      n.addEventListener('click', () => {
+        den(Number(n.dataset.i));
+        chay();
+      }),
+    );
+
+    // Dung khi nguoi dung dang xem hoac dang dung ban phim
+    bn.addEventListener('mouseenter', dung);
+    bn.addEventListener('mouseleave', chay);
+    bn.addEventListener('focusin', dung);
+    bn.addEventListener('focusout', chay);
+    // Khong chay khi tab bi an - tiet kiem pin va tranh nhay mot loat khi quay lai
+    document.addEventListener('visibilitychange', () => (document.hidden ? dung() : chay()));
+
+    chay();
+  });
+</script>
