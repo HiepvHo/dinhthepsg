@@ -45,20 +45,21 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
 
     {/* LCP element la tieu de weight 800. Tieng Viet can CA HAI subset:
         chu ASCII lay tu latin, chu co dau lay tu vietnamese.
-        Chi preload dung 2 file nay - preload thua la lam cham chinh minh. */}
+        Chi preload 2 file CHU HIEN THI (Barlow 700) - do la chu ve dau tien va
+        thuong la LCP element. Than bai Be Vietnam Pro de font-display: swap lo. */}
     <link
       rel="preload"
       as="font"
       type="font/woff2"
       crossorigin
-      href="/fonts/be-vietnam-pro-latin-800-normal.woff2"
+      href="/fonts/barlow-semi-condensed-latin-700-normal.woff2"
     />
     <link
       rel="preload"
       as="font"
       type="font/woff2"
       crossorigin
-      href="/fonts/be-vietnam-pro-vietnamese-800-normal.woff2"
+      href="/fonts/barlow-semi-condensed-vietnamese-700-normal.woff2"
     />
 
     <meta property="og:type" content="website" />

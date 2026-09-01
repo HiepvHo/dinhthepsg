@@ -79,9 +79,20 @@ const navSau = [
   </div>
 
   <div class="khung dau-trang__trong">
+    {/* Lockup thuong hieu: DAU HIEU + chu. Cong ty chua co file logo nao, ma mot
+        dong chu dam khong doc ra la logo. Dau hieu la dung hinh cay dinh trong
+        favicon - mot tai san, dung o hai cho, khong ve them cai moi. */}
     <a class="hieu" href="/" aria-label={`${c.tenThuongHieu} - trang chủ`}>
-      <span class="hieu__ten">ĐINH THÉP SÀI GÒN</span>
-      <span class="hieu__phu">Nhà máy sản xuất - Cường Phát Steel</span>
+      <span class="hieu__dau" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <rect x="11" y="9.5" width="26" height="6" rx="1.5"></rect>
+          <path d="M20.6 15.5h6.8l-2.5 19.4a0.9 0.9 0 0 1-1.8 0Z"></path>
+        </svg>
+      </span>
+      <span class="hieu__chu">
+        <span class="hieu__ten">ĐINH THÉP SÀI GÒN</span>
+        <span class="hieu__phu">Nhà máy sản xuất - Cường Phát Steel</span>
+      </span>
     </a>
 
     <button
@@ -162,6 +173,11 @@ const navSau = [
         }
       </ul>
     </nav>
+
+    <a class="nut-lh" href="/lien-he/">
+      Liên hệ ngay
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5.5-6 6 6-6 6"></path></svg>
+    </a>
   </div>
 </header>
 
@@ -231,32 +247,100 @@ const navSau = [
   }
 
   /* Tang 2 */
+  /* Logo va nav DINH LIEN NHAU ben trai, CTA day sang phai.
+     Truoc day dung justify-content: space-between nen logo bam le trai va nav
+     bam le phai, giua hut mot mang trong 430px - doc ra roi rac.
+     Do ban tham chieu (hoclaptrinhrobotics.com, khung nhin 1425):
+       logo 173-281 | khe 70 | nav 350-957 | khe 97 | CTA 1054-1253
+     tuc logo+nav la MOT cum, CTA neo le phai. */
   .dau-trang__trong {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--k5);
-    min-height: 76px;
+    gap: var(--k6);
+    min-height: 80px;
+  }
+  .dieu-huong {
+    margin-right: auto; /* day CTA sang phai, nav van dinh sat logo */
   }
 
   .hieu {
+    display: flex;
+    align-items: center;
+    gap: var(--k3);
+    text-decoration: none;
+    line-height: 1.05;
+  }
+  /* Dau hieu: o bo goc do, cay dinh trang - cung hinh voi favicon */
+  .hieu__dau {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    background: var(--do-500);
+    box-shadow: var(--noi-do);
+  }
+  .hieu__dau svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--trang);
+  }
+  .hieu__chu {
     display: grid;
     gap: 1px;
-    text-decoration: none;
-    line-height: 1.1;
   }
   .hieu__ten {
-    font-size: 20px;
-    font-weight: var(--w-nang);
-    letter-spacing: -0.01em;
+    font-family: var(--font-hien);
+    font-size: 26px;
+    font-weight: var(--w-dam);
+    letter-spacing: -0.005em;
     color: var(--do-500);
   }
   .hieu__phu {
     font-size: 10.5px;
     font-weight: var(--w-vua);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.045em;
     text-transform: uppercase;
     color: var(--muc-2);
+  }
+
+  /* ---------- nut Lien he ngay ----------
+     Ban tham chieu: vien pill 999px, nen gradient, vien trang 2px, bong cung
+     4px duoi day. Ta BO cai bong cung do - no cho nut mot ve day dan hop trang
+     tre em, khong hop trang vat tu cong nghiep. Giu pill + gradient + bong mem
+     nhuom do thuong hieu. */
+  .nut-lh {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--k2);
+    flex: none;
+    padding: 12px 22px;
+    border-radius: var(--bo-tron);
+    background: linear-gradient(180deg, var(--do-500), var(--do-600));
+    color: var(--trang);
+    font-family: var(--font-hien);
+    font-size: 17px;
+    font-weight: var(--w-dam);
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(196, 22, 28, 0.28);
+    transition:
+      transform var(--thoi) var(--nhip),
+      box-shadow var(--thoi) var(--nhip);
+  }
+  .nut-lh svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .nut-lh:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(196, 22, 28, 0.36);
   }
 
   .dieu-huong {
@@ -268,15 +352,18 @@ const navSau = [
     align-items: center;
     gap: var(--k5);
   }
+  /* Nav dung font hien thi o 17px. Be Vietnam Pro o 17px se lam nav rong them
+     ~12% va het cho cho nut CTA; Barlow hep hon nen dat to duoc. */
   /* Muc nav cao het hang trang de vung bam rong, danh dau bang gach do duoi
      chan chu khong bang o nen dac - nen dac chi hop khi nav nam tren dai mau. */
   .dieu-huong__cap1 > li > a {
     display: flex;
     align-items: center;
     gap: 4px;
-    min-height: 76px;
-    font-size: var(--cs-nho);
-    font-weight: var(--w-dam);
+    min-height: 80px;
+    font-family: var(--font-hien);
+    font-size: 17px;
+    font-weight: var(--w-vua);
     color: var(--muc);
     text-decoration: none;
     border-bottom: 2px solid transparent;
@@ -446,11 +533,48 @@ const navSau = [
      Giu nav day du. baogiathep an han nav duoi 900px - tuc cat het internal link
      o dung thiet bi chiem phan lon traffic. */
   @media (max-width: 980px) {
+    /* Hang trang o mobile: logo | CTA | hamburger.
+       nav luc nay la panel tuyet doi nen khong con trong hang flex nua.
+       DOM van la logo - hamburger - nav - CTA (thu tu doc man hinh dung),
+       chi dao vi tri BAY bang order. */
     .dau-trang__trong {
-      min-height: 62px;
+      min-height: 64px;
+      gap: var(--k3);
+      flex-wrap: nowrap;
+    }
+    .hieu {
+      min-width: 0;
+      gap: var(--k2);
+    }
+    .hieu__dau {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+    .hieu__dau svg {
+      width: 22px;
+      height: 22px;
+    }
+    .hieu__ten {
+      font-size: 20px;
+    }
+    .hieu__phu {
+      font-size: 9.5px;
+    }
+    .nut-lh {
+      order: 2;
+      margin-left: auto;
+      padding: 9px 16px;
+      font-size: 15px;
+    }
+    .nut-lh svg {
+      width: 15px;
+      height: 15px;
     }
     .nut-menu {
+      order: 3;
       display: flex;
+      padding: 12px 0 12px 4px;
     }
     /* Nav xo xuong thanh bang menu tran ngang duoi header.
        Giu NAV DAY DU - baogiathep an han nav duoi 900px, tuc cat het internal
@@ -525,6 +649,19 @@ const navSau = [
     }
     .tha__mui {
       display: none;
+    }
+  }
+
+  /* Duoi 560px bo nut CTA khoi header: logo + CTA + hamburger khong cung vua
+     335px (do duoc: nut tran ra 20px ngoai khung, logo bi day xuong dong lam
+     header cao 243px). Bo duoc vi da co thanh Goi/Zalo dinh day man hinh - CTA
+     o header luc nay chi la lap lai. */
+  @media (max-width: 560px) {
+    .nut-lh {
+      display: none;
+    }
+    .hieu__ten {
+      font-size: 19px;
     }
   }
 </style>

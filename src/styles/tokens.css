@@ -81,7 +81,12 @@
   --focus: var(--do-500);
 
   /* ---------- chu ----------
-     Mot ho font duy nhat. Phan biet bang weight va co, khong ghep font. */
+     HAI ho font, moi ho mot viec (xem ly do chon trong fonts.css):
+       --font-hien : Barlow Semi Condensed - ten thuong hieu, nav, H1-H3
+       --font      : Be Vietnam Pro        - than bai, bang so lieu, chu nho
+     Barlow hep hon nen tieu de dat duoc co lon hon ma van vua cho; Be Vietnam
+     Pro ve rieng cho tieng Viet nen doc tot hon o co nho va trong bang. */
+  --font-hien: "Barlow Semi Condensed", "Arial Narrow", "Segoe UI", sans-serif;
   --font: "Be Vietnam Pro", "Segoe UI", Tahoma, sans-serif;
 
   --w-thuong: 500;   /* than bai - KHONG dung 400, chu bi nhat tren nen trang */
@@ -89,11 +94,14 @@
   --w-dam: 700;
   --w-nang: 800;
 
-  /* Thang chu nhay bac that. Ty le 44/16.5 = 2.7 lan, so voi 1.6 lan cua ho. */
-  --cs-display: 44px;
-  --cs-h1: 34px;
-  --cs-h2: 26px;
-  --cs-h3: 19px;
+  /* Thang chu nhay bac that. Ty le 48/16.5 = 2.9 lan, so voi 1.6 lan cua ho.
+     Nang mot bac so voi truoc (44/34/26/19) vi doi sang Barlow Semi Condensed:
+     font hep hon nen cung mot px doc ra nho hon. Nang len la vua khoi phuc
+     kich thuoc quang hoc, vua dung cai user can khi bao "co chu to hon xiu". */
+  --cs-display: 48px;
+  --cs-h1: 38px;
+  --cs-h2: 29px;
+  --cs-h3: 21px;
   --cs-lead: 18px;
   --cs-than: 16.5px;
   --cs-nho: 14.5px;
@@ -157,9 +165,9 @@
 
 @media (max-width: 1100px) {
   :root {
-    --cs-display: 36px;
-    --cs-h1: 28px;
-    --cs-h2: 23px;
+    --cs-display: 40px;
+    --cs-h1: 31px;
+    --cs-h2: 25px;
     --cs-so: 34px;
     --section-y: 56px;
   }
@@ -167,10 +175,10 @@
 
 @media (max-width: 760px) {
   :root {
-    --cs-display: 30px;
-    --cs-h1: 26px;
-    --cs-h2: 21px;
-    --cs-h3: 17.5px;
+    --cs-display: 33px;
+    --cs-h1: 28px;
+    --cs-h2: 23px;
+    --cs-h3: 19px;
     --cs-lead: 16.5px;
     --cs-than: 16px;
     --cs-nho: 14px;

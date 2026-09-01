@@ -73,7 +73,11 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: var(--w-nang);
+  /* Barlow Semi Condensed - hep hon Be Vietnam Pro nen tieu de dat duoc co lon
+     hon ma van vua mot dong. Chi weight 700 duoc nap cho font nay, khong dung
+     800 nhu truoc. */
+  font-family: var(--font-hien);
+  font-weight: var(--w-dam);
   line-height: var(--dc-dau);
   letter-spacing: var(--gc-dau);
   text-wrap: balance;
@@ -88,10 +92,11 @@ h2 {
 }
 h3 {
   font-size: var(--cs-h3);
-  font-weight: var(--w-dam);
   letter-spacing: var(--gc-than);
 }
+/* h4 tro xuong ve lai than bai: o co nho Be Vietnam Pro doc tot hon */
 h4 {
+  font-family: var(--font);
   font-size: var(--cs-than);
   font-weight: var(--w-dam);
 }
