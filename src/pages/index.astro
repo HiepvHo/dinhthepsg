@@ -1,124 +1,165 @@
 ---
 import { getEntry, getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { tenChinh, quyDoi, coGia, dinhDangGia } from '../lib/quy-cach';
 import { catTieuDe, catMoTa } from '../lib/seo-text';
+import { tenChinh, quyDoi, coGia, dinhDangGia } from '../lib/quy-cach';
 
+import anhRaMay from '../assets/anh/dinh-ra-khoi-may.jpg';
+import anhDayChuyen from '../assets/anh/day-chuyen-dap-dinh.jpg';
+import anhDongBao from '../assets/anh/dong-bao-dinh-sai-gon.jpg';
+import anhCongNhan from '../assets/anh/cong-nhan-thep-cuong-phat.jpg';
+import anhSoiThep from '../assets/anh/cuon-soi-thep-nguyen-lieu.jpg';
+import anhKho from '../assets/anh/kho-bao-dinh.jpg';
+import anhNenTrang1 from '../assets/anh/dinh-tren-nen-trang-01.jpg';
+import anhNenTrang2 from '../assets/anh/dinh-tren-nen-trang-02.jpg';
+import anhCan from '../assets/anh/can-dinh-tai-xuong.jpg';
+
+/**
+ * TRANG CHU.
+ *
+ * Ban truoc bi AI slop, do duoc bang so: 0 anh tren trang chu trong khi
+ * baogiathep.net co 109 anh; hero la mot o placeholder vien dut; dai 4 con so
+ * tren nen xam (dong tac kinh dien cua landing page AI sinh); nhan eyebrow
+ * tren moi tieu de (mau SaaS, khong phai mau web vat tu).
+ *
+ * Ban nay sua bo cuc chu khong re-skin:
+ *  - hero navy co anh that, khong con o rong
+ *  - moi the nhom co anh
+ *  - dai so gop thanh mot dai mong trong hero thay vi mot section rieng
+ *  - bo het nhan eyebrow
+ *
+ * ANH HIEN TAI LA TAM. Chua co anh rieng tung nhom, chua co anh dan hang theo
+ * thuoc. Xem docs/ANH-DA-CO.md muc 4.
+ */
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
-
 const nhom = await getCollection('nhomSanPham');
 const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
+const nhaMay = c.diaDiem[0];
 const soNam = new Date().getFullYear() - c.namThanhLap;
 const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
 
+/** Anh cho tung nhom. TAM THOI - can anh rieng cho tung nhom san pham. */
+const anhNhom: Record<string, { src: ImageMetadata; alt: string; tam: boolean }> = {
+  'dinh-chi': { src: anhNenTrang1, alt: 'Đinh chì do nhà máy Đinh Thép Sài Gòn sản xuất', tam: false },
+  'dinh-thep-trang': { src: anhNenTrang2, alt: 'Đinh thép trắng, thân trơn bề mặt sáng', tam: false },
+  'dinh-thep-vang': { src: anhRaMay, alt: 'Đinh thép vừa ra khỏi máy dập tại xưởng', tam: true },
+  'dinh-du': { src: anhCan, alt: 'Đinh thành phẩm được cân tại xưởng', tam: true },
+  'dinh-vit': { src: anhDongBao, alt: 'Đóng bao đinh mang nhãn Đinh Sài Gòn', tam: true },
+  'day-kem-hap': { src: anhSoiThep, alt: 'Cuộn sợi thép nguyên liệu tại nhà máy', tam: false },
+};
+
 const tieuDe = catTieuDe('Đinh Thép Sài Gòn - Nhà máy sản xuất đinh, dây kẽm');
-const moTa = catMoTa(`Nhà máy sản xuất đinh thép xây dựng: đinh chì 2p đến 15p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`);
+const moTa = catMoTa(
+  `Nhà máy sản xuất đinh thép xây dựng: đinh chì 2p đến 15p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`,
+);
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/">
-  {/* ------------------------------------------------------------- hero --- */}
+  {/* =================================================== HERO navy + anh === */}
   <section class="hero">
     <div class="khung hero__trong">
-      <div>
-        <span class="nhan-tren">Nhà sản xuất trực tiếp từ {c.namThanhLap}</span>
+      <div class="hero__chu">
+        <p class="hero__tren">Nhà sản xuất trực tiếp từ {c.namThanhLap}</p>
         <h1 class="hero__h1">
-          Đinh thép xây dựng, <span class="hero__nhan">bán thẳng từ nhà máy</span>
+          Đinh thép xây dựng<br /><span class="hero__nhan">bán thẳng từ nhà máy</span>
         </h1>
-        <p class="dan-nhap hero__phu">
+        <p class="hero__phu">
           {tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít
-          và dây kẽm. Quy cách công bố đầy đủ theo phân, cm và mm - không phải ảnh chụp bảng.
+          và dây kẽm. Thông số công bố đầy đủ theo phân, cm và mm.
         </p>
         <div class="hero__nut">
           <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
             Gọi báo giá {c.hotline}
           </a>
-          <a class="nut nut--vien nut--lon" href="/bang-gia-dinh-thep/">Xem bảng quy cách</a>
+          <a class="nut nut--lon hero__nut-phu" href="/bang-gia-dinh-thep/">Xem bảng quy cách</a>
         </div>
-        <p class="hero__ghi-chu">
-          Nhà máy tại {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}. Giao hàng TP.HCM,
-          Long An và các tỉnh lân cận.
-        </p>
       </div>
 
       <div class="hero__anh">
-        {/* Cho anh: dan hang cac quy cach tren cung mot cay thuoc.
-            Chua co anh nay - xem ANH-DA-CO.md muc 4. */}
-        <div class="cho-anh">
-          <span>Ảnh dàn hàng quy cách theo thước</span>
-          <small>chưa có, cần chụp tại xưởng</small>
-        </div>
+        <figure class="hero__anh-lon">
+          <Image
+            src={anhRaMay}
+            alt="Đinh thép vừa ra khỏi máy dập, rơi xuống máng chứa tại nhà máy"
+            widths={[520, 900]}
+            sizes="(max-width: 980px) 92vw, 520px"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+        <figure class="hero__anh-nho">
+          <Image src={anhDayChuyen} alt="Dây chuyền máy dập đinh đang chạy" widths={[260, 480]} sizes="250px" loading="eager" />
+        </figure>
+        <figure class="hero__anh-nho">
+          <Image src={anhDongBao} alt="Công nhân đóng đinh vào bao nhãn Đinh Sài Gòn" widths={[260, 480]} sizes="250px" loading="eager" />
+        </figure>
       </div>
     </div>
-  </section>
 
-  {/* --------------------------------------------------------- bao chung --- */}
-  <section class="section section--nhat">
+    {/* Dai so gop vao hero thanh mot dong mong, khong con la section rieng
+        tren nen xam - do la dong tac AI slop kinh dien. */}
     <div class="khung">
-      <div class="dai-so">
-        <div>
-          <span class="so-lieu__n so">{soNam}</span>
-          <span class="so-lieu__nhan">năm sản xuất và phân phối vật tư kim khí</span>
-        </div>
-        <div>
-          <span class="so-lieu__n so">{tongQuyCach}</span>
-          <span class="so-lieu__nhan">quy cách đinh công bố đầy đủ thông số</span>
-        </div>
-        <div>
-          <span class="so-lieu__n so">{c.diaDiem.length}</span>
-          <span class="so-lieu__nhan">nhà máy, chi nhánh và kho tại miền Nam</span>
-        </div>
-        <div>
-          <span class="so-lieu__n so">3</span>
-          <span class="so-lieu__nhan">hãng thiết bị châu Âu công ty làm đại diện</span>
-        </div>
-      </div>
+      <ul class="dai-mong">
+        <li><b>{soNam}</b> năm sản xuất vật tư kim khí</li>
+        <li><b>{tongQuyCach}</b> quy cách công bố đủ thông số</li>
+        <li><b>{c.diaDiem.length}</b> nhà máy, chi nhánh và kho</li>
+        <li><b>MST {c.maSoThue}</b> pháp nhân rõ ràng</li>
+      </ul>
     </div>
   </section>
 
-  {/* ------------------------------------------------------ nhom san pham -- */}
+  {/* ============================================== nhom san pham co anh === */}
   <section class="section">
     <div class="khung">
-      <div class="dau-muc">
-        <span class="nhan-tren">Sản phẩm</span>
-        <h2>Các nhóm đinh và vật tư liên kết</h2>
-        <p class="dan-nhap">
-          Mỗi nhóm công bố đầy đủ mã quy cách, chiều dài và đường kính thân.
-        </p>
+      <div class="tieu-de-hang">
+        <h2>Sản phẩm nhà máy sản xuất</h2>
+        <a class="tieu-de-hang__them" href="/san-pham/">Xem tất cả sản phẩm</a>
       </div>
 
-      <div class="luoi luoi--3">
+      <div class="luoi-sp">
         {
-          nhom.map((n) => (
-            <a class="the the--bam nhom-the" href={`/san-pham/${n.data.slug}/`}>
-              <h3>{n.data.ten}</h3>
-              <p class="nhom-the__mo-ta">{n.data.moTaNgan}</p>
-              <div class="nhom-the__day">
-                <span class="huy-hieu huy-hieu--thep">{n.data.quyCach.length} quy cách</span>
-                {n.data.tenGoiKhac.length > 0 && (
-                  <span class="nhom-the__khac">còn gọi: {n.data.tenGoiKhac[0]}</span>
-                )}
-              </div>
-            </a>
-          ))
+          nhom.map((n) => {
+            const a = anhNhom[n.id];
+            return (
+              <a class="sp" href={`/san-pham/${n.data.slug}/`}>
+                <div class="sp__anh">
+                  <Image
+                    src={a.src}
+                    alt={a.alt}
+                    widths={[280, 520]}
+                    sizes="(max-width: 980px) 46vw, 340px"
+                    loading="lazy"
+                  />
+                  <span class="sp__dem">{n.data.quyCach.length} quy cách</span>
+                </div>
+                <div class="sp__than">
+                  <h3>{n.data.ten}</h3>
+                  <p>{n.data.moTaNgan}</p>
+                  {n.data.tenGoiKhac.length > 0 && (
+                    <p class="sp__khac">Còn gọi: {n.data.tenGoiKhac.slice(0, 2).join(', ')}</p>
+                  )}
+                  <span class="sp__xem">Xem quy cách và giá</span>
+                </div>
+              </a>
+            );
+          })
         }
       </div>
     </div>
   </section>
 
-  {/* ============ BANG QUY CACH - vu khi chinh cua site ============
-      baogiathep.net khoa toan bo bang tra trong anh JPEG. Bang cua ta la HTML that:
-      Google doc duoc so, AI trich duoc, nguoi dung Ctrl+F duoc, dien thoai cuon duoc. */}
+  {/* ==================================== bang quy cach - vu khi cua site === */}
   <section class="section section--nhat">
     <div class="khung">
-      <div class="dau-muc">
-        <span class="nhan-tren">Bảng quy cách</span>
+      <div class="tieu-de-hang">
         <h2>Đinh chì - {dinhChi.data.quyCach.length} quy cách từ 2 phân đến 15 phân</h2>
-        <p class="dan-nhap">
-          Trong ngành, mã <strong>F</strong> trên bao bì đọc là <strong>phân</strong>, và
-          1 phân = 1cm = 10mm. Bảng dưới quy đổi sẵn cả bốn cách gọi.
-        </p>
+        <a class="tieu-de-hang__them" href="/bang-gia-dinh-thep/">Bảng đầy đủ 6 nhóm</a>
       </div>
+      <p class="dan-nhap bang-dan">
+        Mã <strong>F</strong> trên bao đọc là <strong>phân</strong>, và 1 phân = 1cm = 10mm.
+        Bảng dưới quy đổi sẵn cả bốn cách gọi.
+      </p>
 
       <div class="bang-cuon">
         <table class="bang">
@@ -137,9 +178,7 @@ const moTa = catMoTa(`Nhà máy sản xuất đinh thép xây dựng: đinh chì
             {
               dinhChi.data.quyCach.map((q) => (
                 <tr>
-                  <td>
-                    <a href={`/san-pham/${q.slug}/`}>{tenChinh(dinhChi.data.ten, q)}</a>
-                  </td>
+                  <td><a href={`/san-pham/${q.slug}/`}>{tenChinh(dinhChi.data.ten, q)}</a></td>
                   <td>{q.ma}</td>
                   <td class="so">{q.daiMm} mm</td>
                   <td class="so">{q.duongKinhMm ? `${q.duongKinhMm} mm` : '-'}</td>
@@ -158,76 +197,56 @@ const moTa = catMoTa(`Nhà máy sản xuất đinh thép xây dựng: đinh chì
         </table>
       </div>
       <p class="bang-ghi-chu">
-        Thông số theo catalogue nhà máy. Đường kính thân có dung sai theo lô sản xuất -
-        cần số chính xác cho công trình, gọi {c.hotline} để nhận thông số theo lô.
+        Thông số theo catalogue nhà máy. Đường kính thân có dung sai theo lô - cần số chính xác
+        cho công trình, gọi <a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>.
       </p>
     </div>
   </section>
 
-  {/* -------------------------------------------------- vi sao nha may ----- */}
-  <section class="section">
-    <div class="khung luoi luoi--chinh-phu">
-      <div>
-        <div class="dau-muc">
-          <span class="nhan-tren">Mua thẳng từ nơi sản xuất</span>
-          <h2>Vì sao nên mua đinh từ nhà máy</h2>
-        </div>
-        <ul class="danh-sach-tick">
+  {/* ============================================ nha may - bang chung that === */}
+  <section class="section nm-khoi">
+    <div class="khung nm-khoi__trong">
+      <div class="nm-khoi__anh">
+        <figure><Image src={anhCongNhan} alt="Công nhân mặc đồng phục Thép Cường Phát tại xưởng đinh" widths={[320, 600]} sizes="(max-width: 980px) 46vw, 300px" loading="lazy" /></figure>
+        <figure><Image src={anhKho} alt="Bao đinh thành phẩm xếp trong kho nhà máy" widths={[320, 600]} sizes="(max-width: 980px) 46vw, 300px" loading="lazy" /></figure>
+      </div>
+      <div class="nm-khoi__chu">
+        <h2>Mua thẳng nơi sản xuất, không qua trung gian</h2>
+        <ul class="nm-khoi__ds">
           <li>
-            <span class="tick" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17 20 6.5"/></svg>
-            </span>
-            <span>
-              <strong>Thông số là của chính hàng chúng tôi làm ra.</strong> Không phải số chép
-              lại từ nơi khác, nên đúng với cây đinh bạn nhận.
-            </span>
+            <strong>Thông số là của chính hàng chúng tôi làm ra.</strong>
+            Không phải số chép lại, nên đúng với cây đinh bạn nhận.
           </li>
           <li>
-            <span class="tick" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17 20 6.5"/></svg>
-            </span>
-            <span>
-              <strong>Đặt được số lượng lớn và quy cách riêng.</strong> Nhà máy chạy theo đơn,
-              không phụ thuộc tồn kho của đại lý.
-            </span>
+            <strong>Đặt được số lượng lớn và quy cách riêng.</strong>
+            Nhà máy chạy theo đơn, không phụ thuộc tồn kho đại lý.
           </li>
           <li>
-            <span class="tick" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17 20 6.5"/></svg>
-            </span>
-            <span>
-              <strong>Doanh nghiệp có pháp nhân rõ ràng.</strong> {c.tenPhapDinh},
-              MST {c.maSoThue}, thành lập {c.namThanhLap}.
-            </span>
+            <strong>Pháp nhân rõ ràng.</strong>
+            {c.tenPhapDinh}, MST {c.maSoThue}, thành lập {c.namThanhLap}.
           </li>
         </ul>
+        <div class="nm-khoi__nut">
+          <a class="nut nut--chinh" href="/nha-may/">Xem nhà máy sản xuất</a>
+          <a class="nut nut--vien" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+        </div>
       </div>
-
-      <aside class="hop-gia">
-        <strong>Cần báo giá theo tấn?</strong>
-        <p>
-          Đơn công trình và đại lý lấy sỉ gọi trực tiếp nhà máy để có giá theo khối lượng.
-        </p>
-        <a class="nut nut--chinh nut--khoi" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
-        <a class="nut nut--vien nut--khoi" href={`https://zalo.me/${c.zalo}`} rel="noopener">
-          Nhắn Zalo
-        </a>
-      </aside>
     </div>
   </section>
 
-  {/* ------------------------------------------------------------ dai CTA -- */}
-  <section class="section section--do">
-    <div class="khung cta">
+  {/* ================================================================= CTA === */}
+  <section class="cta-do">
+    <div class="khung cta-do__trong">
       <div>
         <h2>Gửi quy cách và số lượng, nhận báo giá trong ngày</h2>
-        <p class="dan-nhap">
-          Nói rõ loại đinh, quy cách theo phân hoặc mm, và số lượng theo kg hoặc bao.
+        <p>
+          Nói rõ loại đinh, quy cách theo phân hoặc mm, số lượng theo kg hoặc bao.
+          Nhà máy tại {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
         </p>
       </div>
-      <div class="cta__nut">
+      <div class="cta-do__nut">
         <a class="nut nut--tren-do nut--lon" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
-        <a class="nut nut--lon cta__zalo" href={`https://zalo.me/${c.zalo}`} rel="noopener">
+        <a class="nut nut--lon cta-do__zalo" href={`https://zalo.me/${c.zalo}`} rel="noopener">
           Nhắn Zalo
         </a>
       </div>
@@ -236,109 +255,309 @@ const moTa = catMoTa(`Nhà máy sản xuất đinh thép xây dựng: đinh chì
 </BaseLayout>
 
 <style>
+  /* ------------------------------------------------------------- hero ---- */
   .hero {
-    padding-block: var(--k8) var(--k7);
-    border-bottom: var(--vien-mong);
+    background: var(--navy-900);
+    color: var(--muc-nghich);
+    padding-block: var(--k8) var(--k5);
   }
   .hero__trong {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1fr 0.95fr;
     gap: var(--gap-lon);
     align-items: center;
   }
   .hero__trong > * {
     min-width: 0;
   }
+  .hero__tren {
+    font-size: var(--cs-micro);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--navy-400);
+  }
   .hero__h1 {
     font-size: var(--cs-display);
+    color: var(--trang);
     margin-top: var(--k3);
   }
   .hero__nhan {
-    color: var(--do-500);
+    color: #ff6b6b;
   }
   .hero__phu {
     margin-top: var(--k4);
+    font-size: var(--cs-lead);
+    color: var(--muc-nghich-2);
+    max-width: 46ch;
   }
   .hero__nut {
     display: flex;
-    flex-wrap: wrap;
     gap: var(--k3);
+    flex-wrap: wrap;
     margin-top: var(--k6);
   }
-  .hero__ghi-chu {
-    margin-top: var(--k4);
-    font-size: var(--cs-micro);
-    color: var(--muc-2);
+  .hero__nut-phu {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.4);
+    color: var(--trang);
   }
-  .cho-anh {
+  .hero__nut-phu:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--trang);
+  }
+
+  .hero__anh {
     display: grid;
-    gap: 4px;
-    place-content: center;
-    text-align: center;
-    aspect-ratio: 4 / 3;
-    border: 1.5px dashed var(--steel-200);
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .hero__anh figure {
+    position: relative;
+    margin: 0;
     border-radius: var(--bo);
-    background: var(--steel-050);
-    color: var(--muc-2);
+    overflow: hidden;
+    background: var(--navy-800);
+  }
+  .hero__anh-lon {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+  .hero__anh-nho {
+    aspect-ratio: 4 / 3;
+  }
+    /* Anh phai absolute - xem ghi chu trong patterns.css (.khung-anh) */
+  .hero__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Dai so mong, khong phai section rieng tren nen xam */
+  .dai-mong {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--k4);
+    margin-top: var(--k7);
+    padding-top: var(--k5);
+    border-top: 1px solid var(--vien-nghich);
+    font-size: var(--cs-micro);
+    color: var(--muc-nghich-2);
+  }
+  .dai-mong b {
+    display: block;
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+    color: var(--trang);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --------------------------------------------------- tieu de mot hang -- */
+  .tieu-de-hang {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--k4);
+    flex-wrap: wrap;
+    padding-bottom: var(--k3);
+    margin-bottom: var(--k5);
+    border-bottom: 2px solid var(--do-500);
+  }
+  .tieu-de-hang__them {
     font-size: var(--cs-nho);
     font-weight: var(--w-dam);
-  }
-  .cho-anh small {
-    font-weight: var(--w-thuong);
-    color: var(--muc-3);
+    white-space: nowrap;
   }
 
-  .nhom-the {
+  /* ------------------------------------------------- the nhom co anh ----- */
+  .luoi-sp {
     display: grid;
-    gap: var(--k3);
-    align-content: start;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+  .sp {
+    display: flex;
+    flex-direction: column;
+    border: var(--vien-mong);
+    border-radius: var(--bo);
+    overflow: hidden;
+    background: var(--trang);
     text-decoration: none;
     color: inherit;
+    transition: border-color var(--thoi) var(--nhip), box-shadow var(--thoi) var(--nhip);
   }
-  .nhom-the__mo-ta {
+  .sp:hover {
+    border-color: var(--do-500);
+    box-shadow: var(--noi);
+  }
+  .sp__anh {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--steel-050);
+  }
+  .sp__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sp__dem {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 4px 10px;
+    border-radius: var(--bo-nho);
+    background: var(--do-500);
+    color: var(--trang);
+    font-size: var(--cs-micro);
+    font-weight: var(--w-nang);
+  }
+  .sp__than {
+    display: grid;
+    gap: 6px;
+    padding: var(--k4);
+    flex: 1;
+    align-content: start;
+  }
+  .sp__than h3 {
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+  }
+  .sp__than p {
     font-size: var(--cs-nho);
     color: var(--muc-2);
   }
-  .nhom-the__day {
-    display: flex;
-    align-items: center;
-    gap: var(--k3);
-    flex-wrap: wrap;
-    margin-top: var(--k2);
-  }
-  .nhom-the__khac {
+  .sp__khac {
     font-size: var(--cs-micro);
     color: var(--muc-3);
   }
+  .sp__xem {
+    margin-top: auto;
+    padding-top: var(--k3);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-dam);
+    color: var(--do-600);
+  }
 
-  .cta {
+  .bang-dan {
+    margin-bottom: var(--k4);
+    font-size: var(--cs-nho);
+  }
+
+  /* ------------------------------------------------------- khoi nha may -- */
+  .nm-khoi__trong {
+    display: grid;
+    grid-template-columns: 0.85fr 1fr;
+    gap: var(--gap-lon);
+    align-items: center;
+  }
+  .nm-khoi__trong > * {
+    min-width: 0;
+  }
+  .nm-khoi__anh {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .nm-khoi__anh figure {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--bo);
+    overflow: hidden;
+    background: var(--steel-050);
+  }
+  .nm-khoi__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .nm-khoi__ds {
+    display: grid;
+    gap: var(--k4);
+    margin-top: var(--k5);
+    border-top: var(--vien-mong);
+  }
+  .nm-khoi__ds li {
+    padding-top: var(--k4);
+    border-bottom: var(--vien-mong);
+    padding-bottom: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .nm-khoi__ds strong {
+    display: block;
+    color: var(--muc);
+    margin-bottom: 2px;
+  }
+  .nm-khoi__nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k5);
+  }
+
+  /* ------------------------------------------------------------- CTA ----- */
+  .cta-do {
+    background: var(--do-500);
+    color: var(--trang);
+    padding-block: var(--k7);
+  }
+  .cta-do__trong {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--gap-lon);
     flex-wrap: wrap;
   }
-  .cta__nut {
+  .cta-do h2 {
+    color: var(--trang);
+  }
+  .cta-do p {
+    margin-top: var(--k2);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--cs-nho);
+    max-width: 56ch;
+  }
+  .cta-do__nut {
     display: flex;
     gap: var(--k3);
     flex-wrap: wrap;
   }
-  .cta__zalo {
+  .cta-do__zalo {
     background: transparent;
     border-color: rgba(255, 255, 255, 0.55);
     color: var(--trang);
   }
-  .cta__zalo:hover {
-    background: rgba(255, 255, 255, 0.12);
+  .cta-do__zalo:hover {
+    background: rgba(255, 255, 255, 0.14);
     color: var(--trang);
   }
 
-  @media (max-width: 900px) {
-    .hero {
-      padding-block: var(--k6) var(--k5);
-    }
-    .hero__trong {
+  @media (max-width: 980px) {
+    .hero__trong,
+    .nm-khoi__trong {
       grid-template-columns: 1fr;
+    }
+    .luoi-sp {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .dai-mong {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 620px) {
+    .luoi-sp {
+      grid-template-columns: 1fr;
+    }
+    .hero {
+      padding-block: var(--k6) var(--k4);
     }
   }
 </style>

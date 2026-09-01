@@ -202,13 +202,17 @@ a.the:hover,
   box-shadow: var(--noi);
 }
 .the__anh {
+  position: relative;
   margin: calc(var(--k5) * -1) calc(var(--k5) * -1) var(--k4);
   border-radius: var(--bo) var(--bo) 0 0;
   overflow: hidden;
   background: var(--steel-050);
   aspect-ratio: 4 / 3;
 }
+/* Anh absolute - cung ly do nhu .khung-anh o tren */
 .the__anh img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -505,11 +509,20 @@ a.the:hover,
 
 /* ---------------------------------------------------------- khung anh ------ */
 .khung-anh {
+  position: relative;
   border-radius: var(--bo);
   overflow: hidden;
   background: var(--steel-050);
 }
+/* Anh trong khung ti le co dinh PHAI absolute.
+     Ly do: `height:100%` tren con ma cha co chieu cao auto thi phan tram khong
+     giai duoc (vong tron), trinh duyet roi ve `auto`, anh dung theo ti le goc va
+     DAY CHA GIAN RA - khung khai aspect-ratio 4/3 nhung anh doc 960x1280 lam
+     khung cao 465px thay vi 261px. Absolute dua anh ra khoi flow nen cha giu
+     dung ti le da khai. */
 .khung-anh img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;

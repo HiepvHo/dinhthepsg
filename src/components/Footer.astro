@@ -2,92 +2,135 @@
 import { getEntry, getCollection } from 'astro:content';
 
 /**
- * Footer = dai toi duy nhat cua trang, va la noi dat NAP day du.
- * NAP o day phai giong HET thong tin trong LocalBusiness schema va tren
- * Google Business Profile - lech mot ky tu la mat tin hieu local SEO.
+ * MEGA FOOTER - kiem sitemap + khoi NAP day du.
+ *
+ * Hoc cau truc tu footer hoclaptrinhrobotics.com (do 01/09/2026):
+ *   - nen navy sau #052859, cao ~1012px (khong phai dai mong)
+ *   - danh sach dia diem dung BADGE SO TRON 43px, nen #0648A9, chu trang w800
+ *   - gach chan ngan duoi moi tieu de cot
+ *   - dong lien he co icon dung truoc
+ *
+ * NAP o day phai giong HET LocalBusiness schema va Google Business Profile.
+ * Lech mot ky tu la mat tin hieu local SEO.
  */
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhom = await getCollection('nhomSanPham');
 
 const dinh = c.diaDiem.filter((d) => d.lienQuanDenDinh);
-const khac = c.diaDiem.filter((d) => !d.lienQuanDenDinh);
 const nam = new Date().getFullYear();
 const soNam = nam - c.namThanhLap;
 
 function diaChiDayDu(d: (typeof c.diaDiem)[number]) {
   return [d.diaChi, d.phuong, d.quanHuyen, d.tinhThanh].filter(Boolean).join(', ');
 }
+function telHref(s: string) {
+  return 'tel:' + s.replace(/[^0-9+]/g, '');
+}
 ---
 
-<footer class="chan section--toi">
+<footer class="chan">
+  <div class="chan__vien-tren" aria-hidden="true"></div>
+
   <div class="khung">
     <div class="chan__luoi">
       <div class="chan__hieu">
         <span class="chan__ten">ĐINH THÉP SÀI GÒN</span>
+        <p class="chan__phap-nhan">{c.tenPhapDinhHoa} - MST {c.maSoThue}</p>
         <p class="chan__mo-ta">
-          Nhà máy sản xuất đinh thép xây dựng, trực thuộc {c.tenPhapDinh}.
-          Sản xuất và phân phối trực tiếp từ năm {c.namThanhLap}, {soNam} năm trong ngành.
+          Nhà máy sản xuất đinh thép xây dựng và lưới thép hàn. Sản xuất, phân phối trực tiếp
+          từ năm {c.namThanhLap}, {soNam} năm trong ngành vật tư kim khí.
         </p>
-        <p class="chan__mst">Mã số thuế: {c.maSoThue}</p>
-        <p class="chan__mst">
-          Website công ty: <a href={c.websiteMe} rel="noopener">cuongphatsteel.com.vn</a>
+        <p class="chan__mo-ta">
+          Website công ty:
+          <a href={c.websiteMe} rel="noopener">cuongphatsteel.com.vn</a>
         </p>
       </div>
 
-      <div class="chan__cot">
-        <h3 class="chan__dau">Sản phẩm</h3>
+      <nav class="chan__cot" aria-labelledby="chan-sp">
+        <h3 class="chan__dau" id="chan-sp">Sản phẩm</h3>
         <ul class="chan__ds">
           {nhom.map((n) => <li><a href={`/san-pham/${n.data.slug}/`}>{n.data.ten}</a></li>)}
-          <li><a href="/bang-gia-dinh-thep/">Bảng giá đầy đủ</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <div class="chan__cot">
-        <h3 class="chan__dau">Tra cứu</h3>
+      <nav class="chan__cot" aria-labelledby="chan-tc">
+        <h3 class="chan__dau" id="chan-tc">Tra cứu</h3>
         <ul class="chan__ds">
+          <li><a href="/bang-gia-dinh-thep/">Bảng giá đầy đủ quy cách</a></li>
           <li><a href="/bang-tra-quy-cach-dinh/">Bảng tra phân - cm - mm</a></li>
           <li><a href="/bang-gia-dinh-thep/#bu-long">Bảng tra bu lông M3-M36</a></li>
-          <li><a href="/kien-thuc/">Kiến thức về đinh</a></li>
           <li><a href="/nha-may/">Nhà máy sản xuất</a></li>
+          <li><a href="/kien-thuc/">Kiến thức về đinh</a></li>
           <li><a href="/lien-he/">Liên hệ</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <div class="chan__cot chan__cot--lien-he">
+      <div class="chan__cot">
         <h3 class="chan__dau">Liên hệ mua đinh</h3>
-        {
-          dinh.map((d) => (
-            <div class="chan__dia-diem">
-              <strong>{d.ten}</strong>
-              <span>{diaChiDayDu(d)}</span>
-              {d.hotline && (
-                <a href={`tel:${d.hotline.replace(/[^0-9+]/g, '')}`}>Hotline: {d.hotline}</a>
-              )}
-              {d.dienThoai && <span>Tel: {d.dienThoai}</span>}
-            </div>
-          ))
-        }
+        <ul class="chan__lh">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><path
+                d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"
+              ></path></svg
+            >
+            <span>
+              <em>Hotline nhà máy</em>
+              <a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>
+            </span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h15A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5v-11Z"
+              ></path><path d="m3.6 6.2 8.4 6 8.4-6"></path></svg
+            >
+            <span>
+              <em>Email</em>
+              <a href={`mailto:${c.email}`}>{c.email}</a>
+            </span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><path d="M12 21s6-5.3 6-10a6 6 0 1 0-12 0c0 4.7 6 10 6 10Z"></path><circle
+                cx="12"
+                cy="11"
+                r="2.2"></circle></svg
+            >
+            <span>
+              <em>Nhà máy</em>
+              {dinh[0].quanHuyen}, {dinh[0].tinhThanh}
+            </span>
+          </li>
+        </ul>
         <a class="nut nut--chinh chan__nut" href={`https://zalo.me/${c.zalo}`} rel="noopener">
           Nhắn Zalo {c.hotline}
         </a>
       </div>
     </div>
 
-    <details class="chan__he-thong">
-      <summary>Hệ thống {c.diaDiem.length} địa điểm của Thép Cường Phát</summary>
-      <div class="chan__he-thong-ds">
+    {/* Danh sach dia diem dung badge so tron - hoc tu hoclaptrinhrobotics.com */}
+    <section class="chan__he-thong" aria-labelledby="chan-ht">
+      <h3 class="chan__dau chan__dau--giua" id="chan-ht">
+        Hệ thống {c.diaDiem.length} địa điểm của Thép Cường Phát
+      </h3>
+      <ol class="chan__dd">
         {
-          khac.map((d) => (
-            <div class="chan__dia-diem">
-              <strong>{d.ten}</strong>
-              <span>{diaChiDayDu(d)}</span>
-              {d.hotline && <span>Hotline: {d.hotline}</span>}
-            </div>
+          c.diaDiem.map((d, i) => (
+            <li class={d.lienQuanDenDinh ? 'chan__dd-muc chan__dd-muc--dinh' : 'chan__dd-muc'}>
+              <span class="chan__so" aria-hidden="true">
+                {i + 1}
+              </span>
+              <div>
+                <strong>{d.ten}</strong>
+                <span class="chan__dd-dc">{diaChiDayDu(d)}</span>
+                {d.hotline && <a href={telHref(d.hotline)}>{d.hotline}</a>}
+              </div>
+            </li>
           ))
         }
-      </div>
-    </details>
+      </ol>
+    </section>
 
     <div class="chan__day">
       <span>(c) {nam} {c.tenPhapDinhHoa}. MST {c.maSoThue}.</span>
@@ -98,44 +141,87 @@ function diaChiDayDu(d: (typeof c.diaDiem)[number]) {
 
 <style>
   .chan {
+    position: relative;
+    background: var(--nen-toi);
+    color: var(--muc-nghich);
     padding-block: var(--k8) var(--k5);
     font-size: var(--cs-nho);
   }
+  /* Dai gradient mong tren dinh footer - tao chuyen tiep thay vi cat mau dot ngot */
+  .chan__vien-tren {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--do-500) 0%, var(--navy-600) 55%, var(--navy-400) 100%);
+  }
+  .chan h3 {
+    color: var(--muc-nghich);
+  }
+
   .chan__luoi {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
     gap: var(--gap-lon);
   }
   .chan__luoi > * {
     min-width: 0;
   }
+
   .chan__ten {
     display: block;
-    font-size: 20px;
+    font-size: 21px;
     font-weight: var(--w-nang);
-    color: var(--trang);
+    letter-spacing: -0.01em;
+    margin-bottom: var(--k2);
+  }
+  .chan__phap-nhan {
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    color: var(--muc-nghich-2);
     margin-bottom: var(--k3);
   }
   .chan__mo-ta {
     color: var(--muc-nghich-2);
-    max-width: 42ch;
-  }
-  .chan__mst {
+    max-width: 40ch;
     margin-top: var(--k3);
-    font-size: var(--cs-micro);
-    color: var(--muc-nghich-2);
   }
+
+  /* Gach chan ngan duoi tieu de cot */
   .chan__dau {
+    position: relative;
     font-size: var(--cs-micro);
     font-weight: var(--w-nang);
     letter-spacing: var(--gc-micro);
     text-transform: uppercase;
-    color: var(--trang);
+    padding-bottom: 10px;
     margin-bottom: var(--k4);
   }
+  .chan__dau::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 34px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--do-500);
+  }
+  .chan__dau--giua {
+    text-align: center;
+    font-size: var(--cs-h3);
+    text-transform: none;
+    letter-spacing: var(--gc-dau);
+    padding-bottom: 14px;
+  }
+  .chan__dau--giua::after {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+  }
+
   .chan__ds {
     display: grid;
-    gap: 9px;
+    gap: 10px;
   }
   .chan a {
     color: var(--muc-nghich-2);
@@ -145,66 +231,121 @@ function diaChiDayDu(d: (typeof c.diaDiem)[number]) {
     color: var(--trang);
     text-decoration: underline;
   }
-  .chan__dia-diem {
+
+  /* Dong lien he co icon */
+  .chan__lh {
     display: grid;
-    gap: 3px;
-    margin-bottom: var(--k4);
-    font-size: var(--cs-micro);
-    color: var(--muc-nghich-2);
-    line-height: 1.5;
+    gap: var(--k4);
   }
-  .chan__dia-diem strong {
+  .chan__lh li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: var(--k3);
+    align-items: start;
+  }
+  .chan__lh svg {
+    width: 34px;
+    height: 34px;
+    padding: 8px;
+    border-radius: var(--bo-nho);
+    background: rgba(255, 255, 255, 0.08);
+    fill: none;
+    stroke: var(--trang);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .chan__lh span {
+    display: grid;
+    gap: 1px;
+    color: var(--muc-nghich-2);
+  }
+  .chan__lh em {
+    font-style: normal;
+    font-size: var(--cs-micro);
+    color: var(--navy-400);
+  }
+  .chan__lh a {
+    font-weight: var(--w-nang);
     color: var(--trang);
-    font-weight: var(--w-dam);
   }
   .chan__nut {
-    margin-top: var(--k2);
+    margin-top: var(--k5);
+    width: 100%;
   }
+
+  /* ---------- he thong dia diem, badge so tron ---------- */
   .chan__he-thong {
-    margin-top: var(--k7);
-    padding-top: var(--k5);
+    margin-top: var(--k8);
+    padding-top: var(--k7);
     border-top: 1px solid var(--vien-nghich);
   }
-  .chan__he-thong summary {
-    cursor: pointer;
+  .chan__dd {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--k5) var(--gap-lon);
+  }
+  .chan__dd-muc {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: var(--k3);
+    align-items: start;
+  }
+  .chan__so {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--navy-600);
+    color: var(--trang);
     font-size: var(--cs-micro);
-    font-weight: var(--w-dam);
+    font-weight: var(--w-nang);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Dia diem BAN DINH danh dau bang mau thuong hieu - phan biet voi xuong tole */
+  .chan__dd-muc--dinh .chan__so {
+    background: var(--do-500);
+  }
+  .chan__dd-muc > div {
+    display: grid;
+    gap: 3px;
+    font-size: var(--cs-micro);
+    line-height: 1.5;
     color: var(--muc-nghich-2);
   }
-  .chan__he-thong summary:hover {
+  .chan__dd-muc strong {
     color: var(--trang);
+    font-weight: var(--w-dam);
+    font-size: var(--cs-nho);
   }
-  .chan__he-thong-ds {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--gap);
-    margin-top: var(--k4);
-  }
+
   .chan__day {
     display: flex;
     justify-content: space-between;
     gap: var(--k4);
     flex-wrap: wrap;
-    margin-top: var(--k5);
+    margin-top: var(--k7);
     padding-top: var(--k4);
     border-top: 1px solid var(--vien-nghich);
     font-size: var(--cs-micro);
     color: var(--muc-nghich-2);
   }
-  @media (max-width: 980px) {
+
+  @media (max-width: 1100px) {
     .chan__luoi {
       grid-template-columns: 1fr 1fr;
     }
     .chan__hieu {
       grid-column: 1 / -1;
     }
-    .chan__he-thong-ds {
+    .chan__dd {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 620px) {
+  @media (max-width: 680px) {
     .chan__luoi,
-    .chan__he-thong-ds {
+    .chan__dd {
       grid-template-columns: 1fr;
     }
   }

@@ -39,6 +39,14 @@
   --steel-050: #f4f6f8;
   --trang: #ffffff;
 
+  /* Navy sau - nen toi cua trang. Do tu footer hoclaptrinhrobotics.com
+     (#052859, cao 1012px). Truoc day dung #16191C gan-den: den thuan doc ra
+     "xam ban", navy sau co chieu sau va sang trong hon o cung do toi. */
+  --navy-900: #052859;
+  --navy-800: #0a3570;
+  --navy-600: #0648a9;   /* badge so, gach chan tieu de - do tu badge tron 43px cua ho */
+  --navy-400: #4a7fc4;
+
   /* Mot mau tin hieu duy nhat, chi dung cho trang thai "con hang" */
   --xanh-500: #1a7f4b;
 
@@ -47,17 +55,17 @@
   --muc-2: var(--steel-500);        /* chu phu - CO SAC, khong phai xam */
   --muc-3: var(--steel-300);        /* chu mo, placeholder */
   --muc-nghich: var(--trang);       /* chu tren nen toi */
-  --muc-nghich-2: #b9c2ca;
+  --muc-nghich-2: #a8bdd8;           /* chu phu tren navy - mang sac navy, khong xam */
 
   --nen: var(--trang);
   --nen-trang: var(--trang);
   --nen-nhat: var(--steel-050);     /* nen trang xen ke */
   --nen-do: var(--do-500);          /* dai do - top bar, dai CTA */
-  --nen-toi: var(--steel-900);      /* footer */
+  --nen-toi: var(--navy-900);       /* footer - navy sau, khong phai gan-den */
 
   --vien: var(--steel-100);
   --vien-dam: var(--steel-200);
-  --vien-nghich: rgba(255, 255, 255, 0.16);
+  --vien-nghich: rgba(255, 255, 255, 0.14);
 
   --thuong-hieu: var(--do-500);
   --hanh-dong: var(--do-500);        /* nut CTA chinh */
