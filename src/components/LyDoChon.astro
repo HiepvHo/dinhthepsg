@@ -1,137 +1,196 @@
 ---
+import { getEntry } from 'astro:content';
+
 /**
- * Dai "Ly do chon chung toi" - thay cho 4 chip mau dac cu.
+ * DAI "LY DO CHON CHUNG TOI" - bang truot tu chay, dat sat day banner.
  *
- * VI SAO BO 4 CHIP: bon khoi mau bao hoa (do/navy/xanh la) nam sat nhau ngay
- * duoi banner keo het su chu y ra khoi anh nha may, va ba mau tin hieu trong
- * mot hang lam trang doc ra nhu bang dieu khien chu khong phai trang ban hang.
+ * DOC CAI DAT THAT CUA mamaflow.vn (02/09/2026, doc tu owl.carousel instance):
+ *   .service-highlights: autoplay true, autoplayTimeout 5000, smartSpeed 250,
+ *                        loop true, items 5, margin 10, nav false, dots false
+ *   .slideshow (banner): autoplay true, autoplayTimeout 5000, autoplaySpeed 1000,
+ *                        loop true, items 1.9, margin 10, center true
+ *   Muc rong 232px, KHONG co vien ngan cach nao (do duoc: moi border deu 0px).
+ *   Duong ngan voi phan duoi KHONG phai border ma la
+ *     box-shadow: rgba(0,0,0,.11) 0 2px 5px  -> nen no dam hon mot vach 1px.
  *
- * HOC TU mamaflow.vn (do 01/09/2026), dai `.service-highlights` cua ho:
- *   cao 107px, dem 20px, nam o y=642 tuc DUNG DAY BANNER - khong mot khe ho nao.
- *   Moi muc 232px: icon trai, hai dong chu phai.
- *   Ho boc trong owl-carousel VI 6 muc x 242px = 1452px > 1425px khung nhin,
- *   tuc slider la CACH CHUA TRAN chu khong phai y do tham my.
+ * TA KHAC HO BA CHO:
  *
- * TA CO 4 MUC, vua thoai mai trong 1140px -> KHONG boc slider. Slider 4 muc thi
- * hoac khong bao gio chay (JS thua), hoac tu troi va day chu nguoi ta dang doc.
- * Thay vao do dung grid-auto-columns: minmax(240px, 1fr) + overflow-x:
- *   4 muc  -> moi cot 285px, khong tran, dung yen
- *   6 muc  -> 1fr chi con 190px < 240px nen cot bi ep ve 240px, tong 1440 > 1140,
- *             tran -> tu cuon duoc
- * Them muc thu 5 la no thanh slider, khong phai sua dong CSS nao.
+ * 1. CHU KY 4s CHU KHONG 5s. Hai bang truot cua ho cung dat 5000ms, chi khong
+ *    trung nhau vi khoi tao lech thoi diem - tuc no phu thuoc may hen. Dat 4s
+ *    cho dai nay va 5,5s cho banner thi hai cai chi gap nhau 44 giay mot lan,
+ *    va gap cung khong doc ra vi thoi gian chuyen khac han (260ms voi 620ms).
  *
- * KHONG CO TIEU DE NHIN THAY. Dai nay la vach tin cay noi lien banner, khong
- * phai mot section rieng; them mot dong "LY DO CHON CHUNG TOI" o giua la dung
- * mot cai chan ngang giua banner va noi dung. Ho cung khong co tieu de.
+ * 2. HIEN 4 MUC CHU KHONG 5. Khung ho 1425px chia 5 duoc 232px. Khung ta 1140px
+ *    chia 5 chi con 228px, ma tieu de cua ta dai hon cua ho ("Nhan don quy cach
+ *    rieng" so voi "Thanh toan an toan"). Chia 4 duoc 277px.
  *
- * NOI DUNG PHAI CU THE. "Chat luong - Uy tin - Tan tam" la loai chu khong ai
- * doc; con so va dia danh thi doc duoc va cung la tu khoa.
+ * 3. TON TRONG prefers-reduced-motion. Ho van tu chay. O che do do bang truot
+ *    dung han VA xoe ra thanh luoi 3 cot - phai xoe, vi neu chi dung lai thi
+ *    nguoi dung khong bao gio thay 2 muc con lai.
+ *
+ * LAP VONG: nhan doi danh sach trong markup roi chay toi het ban goc thi NHAY
+ * ve 0 khong hieu ung. Vi tri i va i+6 hien cung mot noi dung nen mat khong
+ * thay cu nhay. Ban sao deu aria-hidden.
  */
 interface Props {
   soQuyCach: number;
 }
 const { soQuyCach } = Astro.props;
 
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+const soNam = new Date().getFullYear() - c.namThanhLap;
+
+/**
+ * SAU LY DO. Tham khao bo 6 muc user gui, doi sang thu CONG TY NAY that su co.
+ *
+ * KHONG viet "cong nghe san xuat tien tien" theo mau: thiet bi chau Au (IMS,
+ * Neuenkamp, BSA) chua xac nhan la dung cho day chuyen DINH hay chi cho day
+ * chuyen tole - xem ghi chu trong cong-ty.yaml. Thay bang "tu san xuat tai nha
+ * may", cai nay xac nhan roi.
+ *
+ * Muc thu 6 thay "Doan ket" bang so nam kinh nghiem theo yeu cau. So nam TINH
+ * TU namThanhLap chu khong go cung, de sang nam khong phai sua.
+ */
 const muc = [
   {
     ten: 'Tự sản xuất tại nhà máy',
-    phu: `${soQuyCach} quy cách, không qua trung gian`,
+    phu: `${soQuyCach} quy cách, bán trực tiếp không qua trung gian`,
     icon: 'nha-may',
   },
-  { ten: 'Thông số công bố đủ', phu: 'Theo phân, cm và mm', icon: 'thuoc' },
-  { ten: 'Giao tận công trình', phu: 'TP.HCM, Long An và lân cận', icon: 'xe' },
-  { ten: 'Nhận đơn quy cách riêng', phu: 'Nhà máy chạy theo đơn', icon: 'thung' },
+  {
+    ten: 'Thông số công bố đủ',
+    phu: 'Chiều dài và đường kính thân theo phân, cm và mm',
+    icon: 'thuoc',
+  },
+  {
+    ten: 'Tư vấn đúng quy cách',
+    phu: 'Nói rõ công việc, chúng tôi chọn giúp loại đinh phù hợp',
+    icon: 'tai-nghe',
+  },
+  {
+    ten: 'Giao tận công trình',
+    phu: 'TP.HCM, Long An và các tỉnh lân cận',
+    icon: 'xe',
+  },
+  {
+    ten: 'Nhận đơn quy cách riêng',
+    phu: 'Nhà máy chạy theo đơn, đặt được số lượng lớn',
+    icon: 'thung',
+  },
+  {
+    ten: `Hơn ${soNam} năm kinh nghiệm`,
+    phu: `Thành lập ${c.namThanhLap}, MST ${c.maSoThue}`,
+    icon: 'huy-chuong',
+  },
 ];
+
+/* Nhan doi de lap vong. Ban sao khong duoc doc len - da co aria-hidden. */
+const day = [...muc, ...muc];
 ---
 
 <section class="ly-do" aria-label="Lý do chọn Đinh Thép Sài Gòn">
   <div class="khung">
-    <ul class="ly-do__hang">
-      {
-        muc.map((m) => (
-          <li class="ly-do__muc">
-            <span class="ly-do__vong" aria-hidden="true">
-              {m.icon === 'nha-may' && (
-                <svg viewBox="0 0 24 24">
-                  <path d="M3 20h18" />
-                  <path d="M4 20v-9l4.5 2.7V11L13 13.7V11l4.5 2.7V20" />
-                  <path d="M17.6 11 18.1 4h2.3l.5 7" />
-                </svg>
-              )}
-              {m.icon === 'thuoc' && (
-                <svg viewBox="0 0 24 24">
-                  <rect x="2.5" y="8" width="19" height="8" rx="1" />
-                  <path d="M7 8v3.4M11 8v4.4M15 8v3.4M19 8v4.4" />
-                </svg>
-              )}
-              {m.icon === 'xe' && (
-                <svg viewBox="0 0 24 24">
-                  <path d="M2 5.5h11.5v11H2z" />
-                  <path d="M13.5 9h3.9L22 12.6v3.9h-8.5" />
-                  <circle cx="7" cy="18.5" r="2" />
-                  <circle cx="17.5" cy="18.5" r="2" />
-                </svg>
-              )}
-              {m.icon === 'thung' && (
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2.8 20.6 7v10L12 21.2 3.4 17V7L12 2.8Z" />
-                  <path d="M3.4 7 12 11.4 20.6 7M12 11.4v9.8" />
-                </svg>
-              )}
-            </span>
-            <strong>{m.ten}</strong>
-            <span class="ly-do__phu">{m.phu}</span>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="ld" data-giay="4" data-so={muc.length} style="--i: 0">
+      <ul class="ld__ray">
+        {
+          day.map((m, i) => (
+            <li class="ld__muc" aria-hidden={i >= muc.length ? 'true' : undefined}>
+              <span class="ld__vong" aria-hidden="true">
+                {m.icon === 'nha-may' && (
+                  <svg viewBox="0 0 24 24">
+                    <path d="M3 20h18" />
+                    <path d="M4 20v-9l4.5 2.7V11L13 13.7V11l4.5 2.7V20" />
+                    <path d="M17.6 11 18.1 4h2.3l.5 7" />
+                  </svg>
+                )}
+                {m.icon === 'thuoc' && (
+                  <svg viewBox="0 0 24 24">
+                    <rect x="2.5" y="8" width="19" height="8" rx="1" />
+                    <path d="M7 8v3.4M11 8v4.4M15 8v3.4M19 8v4.4" />
+                  </svg>
+                )}
+                {m.icon === 'tai-nghe' && (
+                  <svg viewBox="0 0 24 24">
+                    <path d="M4 14.5v-2.2a8 8 0 0 1 16 0v2.2" />
+                    <rect x="2.2" y="13.4" width="4.2" height="7" rx="1.7" />
+                    <rect x="17.6" y="13.4" width="4.2" height="7" rx="1.7" />
+                  </svg>
+                )}
+                {m.icon === 'xe' && (
+                  <svg viewBox="0 0 24 24">
+                    <path d="M2 5.5h11.5v11H2z" />
+                    <path d="M13.5 9h3.9L22 12.6v3.9h-8.5" />
+                    <circle cx="7" cy="18.5" r="2" />
+                    <circle cx="17.5" cy="18.5" r="2" />
+                  </svg>
+                )}
+                {m.icon === 'thung' && (
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 2.8 20.6 7v10L12 21.2 3.4 17V7L12 2.8Z" />
+                    <path d="M3.4 7 12 11.4 20.6 7M12 11.4v9.8" />
+                  </svg>
+                )}
+                {m.icon === 'huy-chuong' && (
+                  <svg viewBox="0 0 24 24">
+                    <path d="M8.8 9.6 6.2 2.8h11.6l-2.6 6.8" />
+                    <circle cx="12" cy="15" r="6" />
+                    <circle cx="12" cy="15" r="2.4" />
+                  </svg>
+                )}
+              </span>
+              <strong>{m.ten}</strong>
+              <span class="ld__phu">{m.phu}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
 
 <style>
-  /* Dinh sat day banner - day la thu tao cam giac "noi lien" ma mamaflow co.
-     Dem 18px moi ben, khong padding-block lon nhu mot section thuong. */
   .ly-do {
+    --hien: 4;
+    --khe: 10px;
+    position: relative;
+    z-index: 1;
     padding-block: 18px;
-    border-bottom: var(--vien-mong);
+    background: var(--nen);
+    /* Do theo ho: KHONG phai border ma la bong do duoi ca dai. Bong doc ra dam
+       hon mot vach 1px va tach han dai nay khoi phan noi dung ben duoi. */
+    box-shadow: 0 2px 5px rgba(22, 25, 28, 0.11);
   }
 
-  /* 4 muc -> moi cot 1fr (285px), khong tran, dung yen.
-     Them muc thu 5-6 -> 1fr tut duoi 240px nen cot bi ep ve 240px va tran ->
-     tu cuon duoc bang ngon tay. Khong can mot dong JS nao. */
-  .ly-do__hang {
+  .ld {
+    /* Rong mot muc = (khung - cac khe) / so muc hien */
+    --rong: calc((100% - (var(--hien) - 1) * var(--khe)) / var(--hien));
+    overflow: hidden;
+  }
+  .ld__ray {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(240px, 1fr);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+    grid-auto-columns: var(--rong);
+    gap: var(--khe);
+    transform: translateX(calc(var(--i) * -1 * (var(--rong) + var(--khe))));
+    /* 260ms - do theo smartSpeed 250 cua ho. Nhanh, khong phai hieu ung. */
+    transition: transform 260ms ease-out;
+    will-change: transform;
   }
-  .ly-do__hang::-webkit-scrollbar {
-    display: none;
+  .ld__ray--nhay {
+    transition: none;
   }
 
-  /* Icon trai, hai dong chu phai - dung bo cuc cua ho. Xep doc can giua doc
-     ra nhu mot section san pham, khong ra vach tin cay. */
-  .ly-do__muc {
-    scroll-snap-align: start;
+  /* KHONG co vien ngan cach giua cac muc - do duoc ben ho moi border deu 0px.
+     Cach nhau bang khoang trong, khong bang net ke. */
+  .ld__muc {
     display: grid;
     grid-template-columns: 44px 1fr;
     align-items: center;
     gap: 1px var(--k3);
-    /* Dem 16px chu khong 24px: cot rong 285px, tru icon 44 + khe 12 + dem thi
-       chu chi con ~181px va "Nhan don quy cach rieng" xuong dong, lam bon muc
-       lech duong chan nhau. 16px du cho tieu de nam gon mot dong. */
-    padding: 6px var(--k4);
+    padding: 6px var(--k2);
   }
-  .ly-do__muc + .ly-do__muc {
-    border-left: var(--vien-mong);
-  }
-  .ly-do__muc:first-child {
-    padding-left: 0;
-  }
-  .ly-do__vong {
+  .ld__vong {
     grid-row: 1 / 3;
     display: grid;
     place-items: center;
@@ -140,7 +199,7 @@ const muc = [
     border-radius: 50%;
     background: var(--do-050);
   }
-  .ly-do__vong svg {
+  .ld__vong svg {
     width: 22px;
     height: 22px;
     fill: none;
@@ -149,13 +208,13 @@ const muc = [
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .ly-do__muc strong {
+  .ld__muc strong {
     align-self: end;
     font-size: var(--cs-nho);
     font-weight: var(--w-dam);
     line-height: 1.3;
   }
-  .ly-do__phu {
+  .ld__phu {
     align-self: start;
     font-size: var(--cs-micro);
     color: var(--muc-2);
@@ -163,30 +222,90 @@ const muc = [
   }
 
   @media (max-width: 980px) {
-    .ly-do__hang {
-      grid-auto-columns: minmax(232px, 1fr);
-    }
-    .ly-do__muc {
-      padding-inline: var(--k3);
+    .ly-do {
+      --hien: 2;
     }
   }
-  /* Duoi 560px xep doc lai: cuon ngang mot dai chu o man hep de bo sot muc,
-     ma bon muc nay deu la ly do mua hang nen phai thay het. */
   @media (max-width: 560px) {
     .ly-do {
-      padding-block: var(--k3) var(--k4);
+      --hien: 1.35; /* he lo muc ke tiep de thay ngay day la bang truot */
+      padding-block: var(--k3);
     }
-    .ly-do__hang {
+  }
+
+  /* Nguoi dat it-chuyen-dong: bang truot dung han VA xoe ra thanh luoi.
+     Chi dung lai thoi thi ho khong bao gio thay hai muc cuoi. */
+  @media (prefers-reduced-motion: reduce) {
+    .ld {
+      overflow: visible;
+    }
+    .ld__ray {
       grid-auto-flow: row;
-      grid-auto-columns: auto;
-      overflow-x: visible;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--k4) var(--gap);
+      transform: none;
+      transition: none;
     }
-    .ly-do__muc {
-      padding: var(--k3) 0;
+    .ld__muc[aria-hidden] {
+      display: none;
     }
-    .ly-do__muc + .ly-do__muc {
-      border-left: 0;
-      border-top: var(--vien-mong);
+    @media (max-width: 900px) {
+      .ld__ray {
+        grid-template-columns: 1fr;
+      }
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.ld').forEach((ld) => {
+    const ray = ld.querySelector<HTMLElement>('.ld__ray');
+    const so = Number(ld.dataset.so) || 0;
+    if (!ray || so < 2) return;
+
+    const itChuyenDong = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const chuKy = (Number(ld.dataset.giay) || 4) * 1000;
+    let i = 0;
+    let hen: number | undefined;
+
+    const ve = () => ld.style.setProperty('--i', String(i));
+
+    /* Chay het ban goc thi nhay ve 0 khong hieu ung. Vi tri i va i+so hien cung
+       noi dung (danh sach da nhan doi) nen mat khong thay cu nhay. */
+    ray.addEventListener('transitionend', (e) => {
+      if (e.propertyName !== 'transform' || i < so) return;
+      ray.classList.add('ld__ray--nhay');
+      i = 0;
+      ve();
+      void ray.offsetWidth; // buoc ve lai truoc khi bat lai hieu ung
+      ray.classList.remove('ld__ray--nhay');
+    });
+
+    const dung = () => {
+      if (hen) window.clearInterval(hen);
+      hen = undefined;
+    };
+    const chay = () => {
+      dung();
+      if (itChuyenDong.matches) return;
+      hen = window.setInterval(() => {
+        i += 1;
+        ve();
+      }, chuKy);
+    };
+
+    ld.addEventListener('mouseenter', dung);
+    ld.addEventListener('mouseleave', chay);
+    ld.addEventListener('focusin', dung);
+    ld.addEventListener('focusout', chay);
+    document.addEventListener('visibilitychange', () => (document.hidden ? dung() : chay()));
+    // Doi che do it-chuyen-dong giua chung thi dung/chay lai cho dung
+    itChuyenDong.addEventListener('change', () => {
+      i = 0;
+      ve();
+      chay();
+    });
+
+    chay();
+  });
+</script>
