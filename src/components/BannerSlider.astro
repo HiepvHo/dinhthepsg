@@ -20,8 +20,9 @@ import { Image } from 'astro:assets';
  *    hong/trang, tu no lui ra sau. Anh cua ta la thep xam day chi tiet - de ba
  *    tam ro net ngang nhau thi mat khong biet nhin dau.
  *
- * 3. CO CHAM DIEU HUONG. Ho chi co mui ten, tuc nguoi dung khong biet con bao
- *    nhieu anh va khong nhay thang toi anh minh muon.
+ * 3. KHONG CO CHAM DIEU HUONG - giong ho. Da tung co cham roi user bo: tren mot
+ *    banner anh nha may, day cham nam de len anh doc ra nhu mot mon do gan them.
+ *    Van con hai mui ten o hai mep de nguoi dung chu dong xem duoc.
  *
  * LAP VONG: nhan ban slide cuoi dat len dau va slide dau dat xuong cuoi, chay
  * toi ban sao roi NHAY khong hieu ung ve ban that. Khong nhan ban thi o anh dau
@@ -96,19 +97,6 @@ const dauThat = lap ? 1 : 0;
         <button type="button" class="bn__lai bn__lai--sau" data-huong="1" aria-label="Ảnh tiếp theo">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7" /></svg>
         </button>
-
-        <div class="bn__cham" role="tablist" aria-label="Chọn ảnh">
-          {anh.map((_, i) => (
-            <button
-              type="button"
-              role="tab"
-              class="bn__nut"
-              data-i={i}
-              aria-label={`Ảnh ${i + 1}`}
-              aria-selected={i === 0 ? 'true' : 'false'}
-            />
-          ))}
-        </div>
       </Fragment>
     )
   }
@@ -211,40 +199,6 @@ const dauThat = lap ? 1 : 0;
     right: 18px;
   }
 
-  /* ---------- cham ---------- */
-  .bn__cham {
-    position: absolute;
-    left: 50%;
-    bottom: 16px;
-    z-index: 2;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    padding: 7px 12px;
-    border-radius: var(--bo-tron);
-    background: rgba(5, 40, 89, 0.42);
-  }
-  .bn__nut {
-    width: 9px;
-    height: 9px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition:
-      background var(--thoi) var(--nhip),
-      width var(--thoi) var(--nhip);
-  }
-  .bn__nut:hover {
-    background: rgba(255, 255, 255, 0.85);
-  }
-  .bn__nut[aria-selected='true'] {
-    width: 24px;
-    border-radius: var(--bo-tron);
-    background: var(--do-500);
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .bn__ray,
     .bn__anh {
@@ -279,9 +233,6 @@ const dauThat = lap ? 1 : 0;
          100vh doi lien tuc va banner nhay giat khi cuon. */
       height: 300px;
     }
-    .bn__cham {
-      bottom: 10px;
-    }
     /* Mui ten che mat anh tren man hep - bo, chi con cham */
     .bn__lai {
       display: none;
@@ -298,22 +249,17 @@ const dauThat = lap ? 1 : 0;
     const lap = bn.dataset.lap === '1';
     if (soThat < 2) return;
 
-    const nut = Array.from(bn.querySelectorAll<HTMLButtonElement>('.bn__nut'));
     const chuKy = (Number(bn.dataset.giay) || 5.5) * 1000;
     const itChuyenDong = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // i chay tren DOM (co ban sao); veThat doi ve so thu tu anh that de sang cham.
+    // i chay tren DOM (co ban sao)
     const dau = lap ? 1 : 0;
     let i = dau;
     let hen: number | undefined;
 
-    const veThat = (k: number) => (((k - dau) % soThat) + soThat) % soThat;
-
     const ve = () => {
       bn.style.setProperty('--i', String(i));
       o.forEach((e, k) => e.toggleAttribute('data-giua', k === i));
-      const t = veThat(i);
-      nut.forEach((n, k) => n.setAttribute('aria-selected', String(k === t)));
     };
 
     const den = (k: number) => {
@@ -353,12 +299,6 @@ const dauThat = lap ? 1 : 0;
       hen = window.setInterval(() => tien(1), chuKy);
     };
 
-    nut.forEach((n) =>
-      n.addEventListener('click', () => {
-        den(dau + Number(n.dataset.i));
-        chay();
-      }),
-    );
     bn.querySelectorAll<HTMLButtonElement>('.bn__lai').forEach((n) =>
       n.addEventListener('click', () => {
         tien(Number(n.dataset.huong));
