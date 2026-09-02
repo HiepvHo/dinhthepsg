@@ -23,7 +23,8 @@ trên cùng một món hàng**. Nhầm chỗ là đặt sai hàng.
 | 1 phân | 0,01 m |
 | 1 phân | 10 ly |
 
-Nên khi nghe "đinh 5 phân", hiểu ngay là cây đinh **dài 50mm**.
+Nên khi nghe "đinh 5 phân", hiểu ngay là cây đinh **dài 50mm** - tức
+[đinh chì 5p](/san-pham/dinh-chi-5p/) trong bảng quy cách nhà máy.
 
 ## Phân, ly, tấc, thước - bảng quy đổi đầy đủ
 
@@ -56,7 +57,8 @@ dài 5mm cả, vì không có cây đinh nào ngắn thế.
 
 ### Dây kẽm 1 ly nghĩa là gì
 
-Dây kẽm hấp nhà máy chúng tôi sản xuất là **1 ly, tức đường kính 1mm**. Khi hỏi
+[Dây kẽm hấp](/san-pham/day-kem-hap/) nhà máy chúng tôi sản xuất là
+**1 ly, tức đường kính 1mm**. Khi hỏi
 mua dây buộc, con số đứng trước chữ "ly" luôn là **đường kính sợi**, không phải
 chiều dài cuộn.
 
@@ -73,7 +75,9 @@ xưa vẫn có thể dùng nghĩa cũ. Khi thấy một con số phân mà quy r
 với món hàng, hãy hỏi lại thay vì tự quy đổi.
 
 Trong ngành vật tư kim khí hiện nay, **mặc định luôn là 1 phân = 1cm = 10mm**.
-Nhà máy chúng tôi ghi mã trên bao theo đúng quy ước này.
+Nhà máy chúng tôi ghi mã trên bao theo đúng quy ước này. Cách đọc mã đầy đủ,
+gồm hai nhóm không theo quy tắc nhân mười, xem bài
+[ký hiệu F trên bao đinh](/kien-thuc/ky-hieu-f-tren-bao-dinh/).
 
 ## Bảng tra nhanh phân sang mm cho đinh
 
@@ -94,7 +98,8 @@ Nhà máy chúng tôi ghi mã trên bao theo đúng quy ước này.
 
 Để ý cột cuối: **đường kính thân tăng dần theo chiều dài**. Cây càng dài thân
 càng to, nếu không thì đóng sẽ cong. Đây là lý do không thể suy đường kính từ
-con số phân - phải tra bảng.
+con số phân - phải tra bảng. Bảng đầy đủ cả sáu nhóm ở
+[bảng tra quy cách đinh](/bang-tra-quy-cach-dinh/).
 
 ## Câu hỏi thường gặp
 

@@ -27,7 +27,7 @@ Suy ra từ quy tắc trên: nếu tấm cần đóng dày `d`, thì cây đinh 
 **2,5 đến 3 lần `d`**.
 
 Ví dụ: ván dày 18mm thì chọn đinh dài khoảng 45 đến 54mm. Trong dải quy cách nhà
-máy, đó là **đinh 5 phân (50mm)**.
+máy, đó là **[đinh 5 phân (50mm)](/san-pham/dinh-chi-5p/)**.
 
 ## Bảng tra chiều dài đinh theo độ dày ván
 
@@ -48,7 +48,8 @@ Bảng dưới ghép quy tắc trên với dải quy cách đinh chì nhà máy 
 **Lưu ý về bảng này:** cột "chiều dài cần" là tính từ quy tắc nghề mộc, không
 phải số đo của nhà máy. Cột "quy cách nên chọn" là quy cách gần nhất trong dải
 hàng chúng tôi sản xuất. Chiều dài và đường kính từng mã thì là số thật, tra ở
-trang sản phẩm.
+[trang đinh chì](/san-pham/dinh-chi/) hoặc
+[bảng giá đầy đủ quy cách](/bang-gia-dinh-thep/).
 
 ## Áp dụng cho đóng cốp pha
 
@@ -65,8 +66,9 @@ Ván cốp pha phổ thông dày khoảng 12mm đến 20mm tuỳ loại. Với d
 tháo khuôn. Nên nhiều thợ chọn đinh thân trơn thay vì đinh có ren hay đinh xoắn -
 lực giữ vừa đủ trong lúc đổ, mà tháo ra không phá ván.
 
-Đinh chì nhà máy chúng tôi sản xuất là **đinh thân trơn**, đúng loại dùng cho
-việc này.
+[Đinh chì](/san-pham/dinh-chi/) nhà máy chúng tôi sản xuất là
+**đinh thân trơn**, đúng loại dùng cho việc này. Chi tiết cách chọn cho cốp pha
+xem bài [đinh đóng cốp pha chọn loại nào](/kien-thuc/dinh-dong-cop-pha-chon-loai-nao/).
 
 ## Khi nào quy tắc này không dùng được
 
@@ -76,7 +78,7 @@ Quy tắc 2/3 là quy tắc của **nghề mộc, đóng vào nền gỗ**. Khô
 |---|---|
 | Cốp pha thép, khuôn nhôm | Không đóng đinh vào được, dùng liên kết khác |
 | Bắn vào bê tông | Cần đinh bê tông chuyên dụng, quy tắc chiều dài khác hẳn |
-| Lợp tôn | Chọn theo tổng bề dày tôn cộng lớp cách nhiệt, và cần mũ rộng để chống dột |
+| [Lợp tôn](/kien-thuc/dinh-du-va-dinh-vit-lop-ton/) | Chọn theo tổng bề dày tôn cộng lớp cách nhiệt, và cần mũ rộng để chống dột |
 | Bắn bằng máy | Chiều dài bị giới hạn bởi băng đạn của máy, chọn trong dải máy nhận |
 
 ## Chọn đường kính thân, không chỉ chiều dài
@@ -100,7 +102,8 @@ Trong dải đinh chì, đường kính đi kèm chiều dài theo bảng sau:
 
 Còn đinh thép trắng thì **giữ nguyên 3.5mm cho cả bốn quy cách 2F đến 5F**. Nghĩa
 là cùng dài 50mm, đinh thép trắng có thân to hơn đinh chì 0,7mm - cứng hơn nhưng
-dễ nứt gỗ mỏng hơn.
+dễ nứt gỗ mỏng hơn. Đối chiếu đầy đủ ở bài
+[đinh chì và đinh thép trắng khác nhau thế nào](/kien-thuc/dinh-chi-va-dinh-thep-trang-khac-nhau/).
 
 ## Câu hỏi thường gặp
 

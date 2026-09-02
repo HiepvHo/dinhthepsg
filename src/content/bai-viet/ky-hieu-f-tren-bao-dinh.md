@@ -23,10 +23,13 @@ Trong nghề vật tư, phân là đơn vị quen dùng và quy đổi rất g�
 
 **1 phân = 1cm = 10mm**
 
+Bảng đầy đủ phân, ly, tấc, thước xem bài
+[1 phân bằng bao nhiêu cm](/kien-thuc/1-phan-bang-bao-nhieu-cm/).
+
 Nên lấy con số trước chữ F nhân với 10 là ra chiều dài theo milimet:
 
-- `5F` là đinh dài 5 phân, tức 5cm, tức 50mm
-- `12F` là đinh dài 12 phân, tức 12cm, tức 120mm
+- `5F` là đinh dài 5 phân, tức 5cm, tức 50mm - xem [đinh chì 5p](/san-pham/dinh-chi-5p/)
+- `12F` là đinh dài 12 phân, tức 12cm, tức 120mm - xem [đinh chì 12p](/san-pham/dinh-chi-12p/)
 
 Cùng một cây đinh đó, tùy người sẽ gọi là **đinh 5p**, **đinh 5 phân**,
 **đinh 5cm** hay **đinh 50mm**. Bốn cách gọi, không phải bốn loại hàng.
@@ -102,7 +105,8 @@ là một thông số riêng, và hai nhóm hàng có cách xử lý hoàn toàn
 
 Nghĩa là `5F` đinh chì (2.8mm) và `5F` đinh thép trắng (3.5mm) dài bằng nhau
 nhưng thân chênh nhau 0.7mm. Khi đặt hàng, nói mã F thôi là chưa đủ nếu công
-việc quan tâm tới độ cứng của thân đinh.
+việc quan tâm tới độ cứng của thân đinh. Đối chiếu đầy đủ hai nhóm ở bài
+[đinh chì và đinh thép trắng khác nhau thế nào](/kien-thuc/dinh-chi-va-dinh-thep-trang-khac-nhau/).
 
 ## Cách gọi khác của cùng một quy cách
 
@@ -117,7 +121,11 @@ Khi tìm mua, cùng một cây đinh có thể xuất hiện dưới các tên s
 | Theo mm | đinh 50mm |
 
 Đinh chì còn có các tên gọi theo công việc: đinh coffa, đinh coppha, đinh sắt,
-đinh đóng gỗ, đinh xây dựng. Tất cả đều chỉ cùng nhóm hàng.
+đinh đóng gỗ, đinh xây dựng. Tất cả đều chỉ cùng nhóm
+[đinh chì](/san-pham/dinh-chi/).
+
+Cần biết chọn mã nào cho việc của mình, xem
+[chọn chiều dài đinh theo độ dày ván](/kien-thuc/chon-chieu-dai-dinh-theo-do-day-van/).
 
 ## Câu hỏi thường gặp
 

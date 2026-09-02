@@ -9,7 +9,8 @@ nhomLienQuan: [dinh-chi, dinh-thep-trang]
 ---
 
 Hai nhóm này hay bị gọi lẫn khi đặt hàng, vì mã quy cách trùng nhau: cả hai đều
-có 2F, 3F, 4F, 5F. Nhưng **cùng một mã không có nghĩa là cùng một cây đinh**.
+có 2F, 3F, 4F, 5F. Nhưng **cùng một mã không có nghĩa là cùng một cây đinh**. Cách đọc mã F xem bài
+[ký hiệu F trên bao đinh](/kien-thuc/ky-hieu-f-tren-bao-dinh/).
 
 ## Khác nhau ở đâu - bảng đối chiếu
 
@@ -74,8 +75,8 @@ Hệ quả khi chọn nhầm:
 - Cần thân mảnh mà lấy phải thép trắng: **nứt gỗ mỏng, nứt nẹp**
 - Cần thân cứng mà lấy phải đinh chì mã ngắn: **cong khi đóng vào gỗ cứng**
 
-Nên khi đặt hàng, nói mã thôi là chưa đủ. **Phải nói cả nhóm hàng lẫn mã**: "đinh
-chì 5 phân" hoặc "đinh thép trắng 5 phân".
+Nên khi đặt hàng, nói mã thôi là chưa đủ. **Phải nói cả nhóm hàng lẫn mã**: "[đinh chì 5 phân](/san-pham/dinh-chi-5p/)" hoặc
+"[đinh thép trắng](/san-pham/dinh-thep-trang/) 5 phân".
 
 ## Dải quy cách: 10 với 4
 
@@ -83,13 +84,15 @@ chì 5 phân" hoặc "đinh thép trắng 5 phân".
 dựng và mộc.
 
 Đinh thép trắng chỉ có **4 quy cách, dừng ở 50mm**. Cần cây dài hơn 50mm thì
-không có lựa chọn thép trắng, phải chuyển sang đinh chì.
+không có lựa chọn thép trắng, phải chuyển sang
+[đinh chì](/san-pham/dinh-chi/). Mã dài nhất là
+[đinh chì 15p](/san-pham/dinh-chi-15p/), 150mm.
 
 ## Chọn loại nào cho việc gì
 
 | Việc | Nên chọn | Vì sao |
 |---|---|---|
-| Đóng cốp pha, tháo ra nhổ lại | Đinh chì | Thân trơn, dải dài đủ rộng, nhổ ra không phá ván |
+| [Đóng cốp pha](/kien-thuc/dinh-dong-cop-pha-chon-loai-nao/), tháo ra nhổ lại | Đinh chì | Thân trơn, dải dài đủ rộng, nhổ ra không phá ván |
 | Đóng khung gỗ, đà, xà | Đinh chì mã dài (7F trở lên) | Chỉ đinh chì mới có mã trên 50mm |
 | Đóng nẹp mỏng, gỗ dễ nứt | Đinh chì mã ngắn (2F, 3F) | Thân mảnh 1.7-2.0mm, ít làm nứt |
 | Cần thân cứng ở cây ngắn | Đinh thép trắng | Thân 3.5mm cố định, cứng hơn hẳn ở mã ngắn |
