@@ -3,7 +3,9 @@ import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VunBanh from '../../components/VunBanh.astro';
 import MucLuc from '../../components/MucLuc.astro';
-import { tuyetDoi, schemaBreadcrumb } from '../../lib/schema';
+import CotDanhMuc from '../../components/CotDanhMuc.astro';
+import HopSanPham from '../../components/HopSanPham.astro';
+import { tuyetDoi } from '../../lib/schema';
 import { catTieuDe, catMoTa } from '../../lib/seo-text';
 
 /**
@@ -48,6 +50,9 @@ const muc = headings.map((h) => ({ capDo: h.depth, neo: h.slug, chu: h.text }));
    Tac gia la TO CHUC chu khong phai mot cai ten nguoi bia ra: bai nay viet tu
    thong so cua chinh nha may, va mot tac gia khong xac minh duoc la tin hieu
    E-E-A-T am chu khong duong. */
+/* CHI Article. KHONG them schemaBreadcrumb o day: component VunBanh da tu phat
+   BreadcrumbList roi. Da do va bat duoc loi nay - toan site ra 30 BreadcrumbList
+   tren 27 trang, dung bang so bai viet bi trung. */
 const schema = [
   {
     '@context': 'https://schema.org',
@@ -61,10 +66,6 @@ const schema = [
     author: { '@type': 'Organization', name: c.tenPhapDinh, url: tuyetDoi('/') },
     publisher: { '@type': 'Organization', name: c.tenPhapDinh, url: tuyetDoi('/') },
   },
-  schemaBreadcrumb([
-    { ten: 'Kiến thức', duongDan: '/kien-thuc/' },
-    { ten: d.tieuDe, duongDan },
-  ]),
 ];
 ---
 
@@ -78,8 +79,9 @@ const schema = [
     muc={[{ ten: 'Kiến thức', duongDan: '/kien-thuc/' }, { ten: d.tieuDe, duongDan }]}
   />
 
-  <article class="section bv">
-    <div class="khung bv__trong">
+  <div class="section">
+    <div class="khung bv">
+      <article class="bv__chinh">
       <h1>{d.tieuDe}</h1>
 
       <p class="bv__meta">
@@ -103,6 +105,10 @@ const schema = [
       <div class="bv__noi-dung">
         <Content />
       </div>
+
+      {/* Bang san pham + nut goi ngay cuoi than bai - de bai tra cuu nao cung
+          dan ra duoc trang tien. Nhom lay tu frontmatter, khong go cung. */}
+      <HopSanPham nhom={d.nhomLienQuan} />
 
       <aside class="bv__cta">
         <h2>Cần tư vấn quy cách hoặc báo giá</h2>
@@ -129,15 +135,38 @@ const schema = [
           <li><a href="/kien-thuc/">Các bài kiến thức khác</a></li>
         </ul>
       </nav>
+      </article>
+
+      {/* Cot danh muc san pham ben phai - hoc dayluoithep.com: moi trang kien
+          thuc cua ho deu ganh ca cay san pham o cot ben, nen bai nao cung la mot
+          duong dan vao trang tien. Dinh lai khi cuon. */}
+      <CotDanhMuc />
     </div>
-  </article>
+  </div>
 </BaseLayout>
 
 <style>
-  /* Cot hep 740px - ho 773px. Chu chay het khung 1140 thi mot dong hon 110 ky tu
-     va mat kho bat dau dong tiep theo. */
-  .bv__trong {
-    max-width: 760px;
+  /* Hai cot: chu ben trai, danh muc san pham ben phai - dung phia dayluoithep dat.
+     Ho: cot chu 773px + cot ben. Ta: 1140 - 285 - 40 = 815px cho cot chu, nhung
+     kep than bai lai 780px de mot dong khong qua 110 ky tu (qua do thi mat kho
+     bat dau dong tiep theo). */
+  .bv {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 285px;
+    gap: var(--k7);
+    align-items: start;
+  }
+  .bv__chinh {
+    min-width: 0;
+  }
+  .bv__chinh > * {
+    max-width: 780px;
+  }
+  /* Cot ben dinh lai khi cuon - no la duong dan vao trang tien, phai theo mat
+     nguoi doc suot bai chu khong troi mat o dau trang. */
+  .bv > :global(.cot-dm) {
+    position: sticky;
+    top: 130px;
   }
   .bv h1 {
     font-size: var(--cs-h1);
@@ -251,5 +280,21 @@ const schema = [
   .bv__lien-quan li {
     padding: 6px 0;
     font-size: var(--cs-nho);
+  }
+
+  @media (max-width: 980px) {
+    .bv {
+      grid-template-columns: 1fr;
+      gap: var(--k6);
+    }
+    .bv__chinh > * {
+      max-width: none;
+    }
+    /* Cot ben xuong duoi bai tren mobile: no la phu tro, khong dang chen giua
+       nguoi doc va noi dung ho vao de doc. */
+    .bv > :global(.cot-dm) {
+      position: static;
+      order: 2;
+    }
   }
 </style>

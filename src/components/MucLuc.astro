@@ -17,6 +17,12 @@
  * 2. MO SAN (thuoc tinh open). Muc luc thu gon san thi phan lon nguoi doc khong
  *    bao gio bam mo, va cac link ben trong mat gia tri dieu huong.
  *
+ * DANH SACH LONG THAT, khong phai danh sach phang co class.
+ * Da thu cach phang + hai bo dem CSS va do duoc no HONG: muc con ra
+ * "2.1, 2.2, 3.3, 3.4" thay vi "2.1, 2.2, 3.1, 3.2" - `counter-reset` dat tren
+ * mot the anh em khong tao duoc pham vi dem moi cho cac the anh em phia sau.
+ * Long ol trong ol thi moi ol con la mot pham vi rieng, dem lai tu dau.
+ *
  * Muc luc chi hien khi co tu 3 muc tro len - hai muc thi no chi la mot cai hop
  * chiem cho.
  */
@@ -35,6 +41,15 @@ const { muc, dau = 'Nội dung chính' } = Astro.props;
 
 /* Chi lay H2 va H3. H4 tro xuong dua vao lam muc luc dai hon phan noi dung. */
 const loc = muc.filter((m) => m.capDo === 2 || m.capDo === 3);
+
+/* Dung cay: moi H2 la mot muc, cac H3 dung sau no thanh con cua no.
+   H3 nam truoc H2 dau tien thi bo - no khong co cha de neo vao. */
+type Nut = MucLucMuc & { con: MucLucMuc[] };
+const cay: Nut[] = [];
+for (const m of loc) {
+  if (m.capDo === 2) cay.push({ ...m, con: [] });
+  else if (cay.length > 0) cay[cay.length - 1].con.push(m);
+}
 ---
 
 {
@@ -42,9 +57,18 @@ const loc = muc.filter((m) => m.capDo === 2 || m.capDo === 3);
     <details class="ml" open>
       <summary class="ml__dau">{dau}</summary>
       <ol class="ml__ds">
-        {loc.map((m) => (
-          <li class={m.capDo === 3 ? 'ml__muc ml__muc--con' : 'ml__muc'}>
+        {cay.map((m) => (
+          <li class="ml__muc">
             <a href={`#${m.neo}`}>{m.chu}</a>
+            {m.con.length > 0 && (
+              <ol class="ml__con">
+                {m.con.map((k) => (
+                  <li>
+                    <a href={`#${k.neo}`}>{k.chu}</a>
+                  </li>
+                ))}
+              </ol>
+            )}
           </li>
         ))}
       </ol>
@@ -66,6 +90,7 @@ const loc = muc.filter((m) => m.capDo === 2 || m.capDo === 3);
     display: flex;
     align-items: center;
     gap: var(--k2);
+    font-family: var(--font-hien);
     font-size: var(--cs-h3);
     font-weight: var(--w-nang);
     letter-spacing: var(--gc-dau);
@@ -89,51 +114,53 @@ const loc = muc.filter((m) => m.capDo === 2 || m.capDo === 3);
     transform: rotate(-45deg) translate(-2px, 2px);
   }
 
-  /* Danh so tu dong: muc luc danh so doc nhanh hon muc luc cham dau dong,
-     va so con cho biet bai dai bao nhieu phan. */
-  /* HAI bo dem chu khong mot: muc con phai la 1.1, 1.2 chu khong duoc an so
-     chung day voi muc cha. Danh sach o day phang (mot the ol, phan biet bang
-     class) nen dem bang counter thay vi long ol trong ol. */
   .ml__ds {
-    counter-reset: ml mlc;
+    counter-reset: ml;
     margin-top: var(--k3);
     padding-top: var(--k3);
     border-top: var(--vien-mong);
   }
   .ml__muc {
+    counter-increment: ml;
+  }
+  /* Moi ol con la mot pham vi dem rieng nen tu dem lai tu 1 */
+  .ml__con {
+    counter-reset: mlc;
+  }
+  .ml__con li {
+    counter-increment: mlc;
+  }
+
+  .ml a {
     display: flex;
     gap: var(--k2);
     padding: 5px 0;
     line-height: var(--dc-vua);
+    color: var(--lien-ket);
+    text-decoration: none;
   }
-  .ml__muc:not(.ml__muc--con) {
-    counter-increment: ml;
-    counter-reset: mlc;
+  .ml a:hover {
+    text-decoration: underline;
   }
-  .ml__muc--con {
-    counter-increment: mlc;
-    padding-left: var(--k5);
-    font-size: var(--cs-micro);
-  }
-  .ml__muc::before {
+  .ml__muc > a::before {
+    content: counter(ml) '.';
     flex: none;
     min-width: 18px;
     color: var(--muc-3);
     font-variant-numeric: tabular-nums;
   }
-  .ml__muc:not(.ml__muc--con)::before {
-    content: counter(ml) '.';
+  .ml__con {
+    padding-left: var(--k5);
   }
-  .ml__muc--con::before {
-    min-width: 26px;
+  .ml__con a {
+    font-size: var(--cs-micro);
+  }
+  .ml__con a::before {
     content: counter(ml) '.' counter(mlc);
-  }
-  .ml__muc a {
-    color: var(--lien-ket);
-    text-decoration: none;
-  }
-  .ml__muc a:hover {
-    text-decoration: underline;
+    flex: none;
+    min-width: 26px;
+    color: var(--muc-3);
+    font-variant-numeric: tabular-nums;
   }
 
   @media (max-width: 560px) {

@@ -1,5 +1,5 @@
 ---
-import { getEntry } from 'astro:content';
+import { getEntry, getCollection } from 'astro:content';
 import VunBanh from './VunBanh.astro';
 import JsonLd from './JsonLd.astro';
 import DauSanPham from './DauSanPham.astro';
@@ -41,6 +41,14 @@ const dk = quyCach.map((q) => q.duongKinhMm).filter((n): n is number => n !== un
 const phan = quyCach.map((q) => q.phan).filter((n): n is number => n !== undefined);
 const khoang = (a: number[], dv: string) =>
   a.length === 0 ? null : a.length === 1 ? `${a[0]} ${dv}` : `${Math.min(...a)} - ${Math.max(...a)} ${dv}`;
+
+/* Bai kien thuc co nhac toi nhom nay - noi hai chieu voi /kien-thuc/.
+   Bai khai bao `nhomLienQuan` trong frontmatter, o day doc nguoc lai nen khong
+   phai khai bao lan hai va khong bao gio lech nhau. */
+const baiLienQuan = (await getCollection('baiViet', ({ data }) => !data.nhap))
+  .filter((b) => b.data.nhomLienQuan.includes(slug))
+  .sort((a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf())
+  .slice(0, 4);
 
 const thongSo = [
   { nhan: 'Số quy cách', giaTri: `${quyCach.length} quy cách` },
@@ -148,6 +156,24 @@ const schema = schemaNhomSanPham({
       )
     }
 
+    {
+      baiLienQuan.length > 0 && (
+        <nav class="nhom__kt" aria-labelledby="kt-dau">
+          <h2 id="kt-dau">Kiến thức về {ten.toLowerCase()}</h2>
+          <ul>
+            {baiLienQuan.map((b) => (
+              <li>
+                <a href={`/kien-thuc/${b.id}/`}>
+                  <strong>{b.data.tieuDe}</strong>
+                  <span>{b.data.moTa}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+
     <div class="nhom__cta">
       <div>
         <h2>Đặt {ten.toLowerCase()} trực tiếp từ nhà máy</h2>
@@ -196,6 +222,51 @@ const schema = schemaNhomSanPham({
     border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
     font-size: var(--cs-nho);
   }
+  .nhom__kt {
+    margin-top: var(--k7);
+  }
+  .nhom__kt h2 {
+    font-size: var(--cs-h3);
+    margin-bottom: var(--k4);
+  }
+  .nhom__kt ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
+  }
+  .nhom__kt a {
+    display: grid;
+    gap: 4px;
+    height: 100%;
+    padding: var(--k4);
+    text-decoration: none;
+    color: inherit;
+    border: var(--vien-mong);
+    border-left: 3px solid var(--do-500);
+    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
+    transition: background var(--thoi) var(--nhip);
+  }
+  .nhom__kt a:hover {
+    background: var(--nen-nhat);
+  }
+  .nhom__kt strong {
+    font-size: var(--cs-nho);
+    font-weight: var(--w-dam);
+    line-height: var(--dc-vua);
+  }
+  .nhom__kt a:hover strong {
+    color: var(--do-600);
+  }
+  .nhom__kt span {
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  @media (max-width: 760px) {
+    .nhom__kt ul {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .nhom__cta {
     display: flex;
     align-items: center;

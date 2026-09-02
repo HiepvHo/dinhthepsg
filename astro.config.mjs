@@ -25,6 +25,21 @@ export default defineConfig({
     responsiveStyles: true,
   },
 
+  markdown: {
+    /**
+     * TAT smartypants.
+     *
+     * Mac dinh Astro bat no, va no doi dau nhay THANG trong file .md thanh dau
+     * nhay CONG khi render. Da do va bat duoc: 16 dau nhay trai + 16 dau nhay
+     * phai lot vao HTML sau khi them ba bai dau tien.
+     *
+     * Du an nay chi dung ky tu ban phim - nhay thang, gach ngang thuong, ba cham
+     * viet bang ba dau cham. Bat smartypants la pha luat do o ngay khau render,
+     * khong cach nao sua bang cach viet file cho dung.
+     */
+    smartypants: false,
+  },
+
   integrations: [
     sitemap({
       // Trang tien uu tien cao hon bai viet

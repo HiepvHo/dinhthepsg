@@ -1,0 +1,199 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { anhCuaNhom } from '../lib/anh-nhom';
+
+/**
+ * HOP SAN PHAM nhung GIUA bai viet.
+ *
+ * VI SAO PHAI CO: muc tieu cua trang la "khach search ra web, thay san pham cung
+ * gia, roi lien he". Mot bai kien thuc doc het ma khong thay bang thong so, gia
+ * va nut goi thi du len top van truot muc tieu.
+ *
+ * Dat o CUOI than bai. Con truong hop nguoi doc lay duoc con so roi bo di giua
+ * chung thi da co CotDanhMuc dinh (sticky) o cot phai lo - no theo mat nguoi doc
+ * suot bai. Khong nhung duoc vao giua vi <Content /> la mot khoi markdown lien,
+ * muon cat doi phai them MDX - mot phu thuoc khong dang cho mot cho chen.
+ *
+ * Lay nhom nao thi doc tu truong `nhomLienQuan` trong frontmatter bai viet -
+ * khong go cung trong bai, nen sua o mot cho.
+ *
+ * O GIA de trong san. Khi `gia` co trong nhom-san-pham.yaml thi hien so, chua co
+ * thi hien "Gọi để báo giá" - khong doi bo cuc.
+ */
+interface Props {
+  /** id nhom trong nhom-san-pham.yaml, vi du ['dinh-chi', 'dinh-du'] */
+  nhom: string[];
+  dau?: string;
+}
+const { nhom, dau = 'Sản phẩm nhà máy đang sản xuất' } = Astro.props;
+
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+const tatCa = await getCollection('nhomSanPham');
+const chon = nhom
+  .map((id) => tatCa.find((n) => n.id === id))
+  .filter((n): n is NonNullable<typeof n> => !!n);
+
+/** Khoang chieu dai cua nhom, de khach uoc duoc ngay co dung co minh can khong */
+function khoangDai(qc: { daiMm: number }[]) {
+  const d = qc.map((q) => q.daiMm).filter((x) => x > 0);
+  if (d.length === 0) return '-';
+  const min = Math.min(...d);
+  const max = Math.max(...d);
+  return min === max ? `${min} mm` : `${min} - ${max} mm`;
+}
+---
+
+{
+  chon.length > 0 && (
+    <aside class="hsp" aria-labelledby="hsp-dau">
+      <h2 class="hsp__dau" id="hsp-dau">{dau}</h2>
+
+      <ul class="hsp__ds">
+        {chon.map((n) => {
+          const a = anhCuaNhom(n.id);
+          return (
+            <li>
+              <a class="hsp__muc" href={`/san-pham/${n.data.slug}/`}>
+                <span class="hsp__anh">
+                  <Image src={a.src} alt={a.alt} widths={[120, 240]} sizes="72px" loading="lazy" />
+                </span>
+                <span class="hsp__chu">
+                  <strong>{n.data.ten}</strong>
+                  <em>
+                    {n.data.quyCach.length} quy cách | {khoangDai(n.data.quyCach)}
+                  </em>
+                </span>
+                <span class="hsp__gia">Gọi để báo giá</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div class="hsp__day">
+        <p>Gửi quy cách và số lượng, nhận báo giá trong ngày.</p>
+        <div class="hsp__nut">
+          <a class="nut nut--chinh" href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
+          <a class="nut nut--vien" href={`https://zalo.me/${c.zalo}`} rel="noopener">Nhắn Zalo</a>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
+<style>
+  .hsp {
+    margin-block: var(--k7);
+    border: var(--vien-dam-1);
+    border-radius: var(--bo);
+    overflow: hidden;
+  }
+  .hsp__dau {
+    padding: 11px var(--k4);
+    background: var(--navy-900);
+    color: var(--trang);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--do-500);
+  }
+
+  .hsp__muc {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    align-items: center;
+    gap: var(--k3);
+    padding: var(--k3) var(--k4);
+    text-decoration: none;
+    color: inherit;
+    border-bottom: var(--vien-mong);
+  }
+  .hsp__ds li:last-child .hsp__muc {
+    border-bottom: 0;
+  }
+  .hsp__muc:hover {
+    background: var(--nen-nhat);
+  }
+  .hsp__anh {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--bo-nho);
+    overflow: hidden;
+    background: var(--nen-nhat);
+  }
+  .hsp__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hsp__chu {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .hsp__chu strong {
+    font-size: var(--cs-than);
+    font-weight: var(--w-dam);
+  }
+  .hsp__muc:hover .hsp__chu strong {
+    color: var(--do-600);
+  }
+  .hsp__chu em {
+    font-style: normal;
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  /* Cho gia - khi nhom-san-pham.yaml co gia thi thay chu nay bang so */
+  .hsp__gia {
+    font-size: var(--cs-nho);
+    font-weight: var(--w-nang);
+    color: var(--do-500);
+    white-space: nowrap;
+  }
+
+  .hsp__day {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--k4);
+    flex-wrap: wrap;
+    padding: var(--k4);
+    background: var(--nen-nhat);
+    border-top: var(--vien-mong);
+  }
+  .hsp__day p {
+    font-size: var(--cs-nho);
+    font-weight: var(--w-vua);
+    margin: 0;
+  }
+  .hsp__nut {
+    display: flex;
+    gap: var(--k2);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 560px) {
+    .hsp__muc {
+      grid-template-columns: 56px 1fr;
+      row-gap: 6px;
+    }
+    .hsp__gia {
+      grid-column: 2;
+    }
+    .hsp__day {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .hsp__nut .nut {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+</style>

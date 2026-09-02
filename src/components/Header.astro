@@ -24,6 +24,13 @@ const nhom = (await getCollection('nhomSanPham')).sort((a, b) =>
   a.data.tachTrangQuyCach === b.data.tachTrangQuyCach ? 0 : a.data.tachTrangQuyCach ? -1 : 1,
 );
 
+/* Bai kien thuc dat NGAY TRONG mega menu San pham, khong phai chi o nav "Tin tuc".
+   Ly do: bai tra cuu la mot buoc tren duong khach di toi don hang - de no o nhanh
+   rieng thi no nam ngoai duong do. Chi lay 5 bai moi nhat, con lai xem o trang. */
+const baiMega = (await getCollection('baiViet', ({ data }) => !data.nhap))
+  .sort((a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf())
+  .slice(0, 5);
+
 const duongDanHienTai = Astro.url.pathname;
 const dangO = (d: string) => duongDanHienTai === d || duongDanHienTai.startsWith(d + '/');
 
@@ -137,6 +144,23 @@ const navSau = [
                     )}
                   </div>
                 ))
+              }
+
+              {
+                baiMega.length > 0 && (
+                  <div class="mega__cot mega__cot--kt">
+                    <a class="mega__dau" href="/kien-thuc/">
+                      Tra cứu &amp; hướng dẫn
+                    </a>
+                    <ul class="mega__ds">
+                      {baiMega.map((b) => (
+                        <li>
+                          <a href={`/kien-thuc/${b.id}/`}>{b.data.tieuDe}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
               }
             </div>
           </div>
@@ -504,6 +528,21 @@ const navSau = [
   .mega__mm {
     color: var(--muc-3);
     font-variant-numeric: tabular-nums;
+  }
+  /* Cot kien thuc noi bat hon cac cot nhom: nen tint + gach do trai, de mat
+     nhan ra day la loai khac chu khong phai them mot nhom hang. */
+  .mega__cot--kt {
+    padding: var(--k4);
+    background: var(--nen-nhat);
+    border-left: 3px solid var(--do-500);
+    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
+  }
+  .mega__cot--kt .mega__ds a {
+    font-weight: var(--w-vua);
+    color: var(--muc);
+  }
+  .mega__cot--kt .mega__ds a:hover {
+    color: var(--do-500);
   }
   .mega__mota {
     font-size: var(--cs-micro);
