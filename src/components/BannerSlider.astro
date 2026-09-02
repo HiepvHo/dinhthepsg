@@ -124,13 +124,13 @@ const dauThat = lap ? 1 : 0;
     --i: 0;
     position: relative;
     width: 100%;
-    /* Cao theo MAN HINH chu khong co dinh 600px.
-       Do duoc o 1920x1080: header 115px + banner 600px = 66% man hinh, trong khi
-       mamaflow dat 72%. Header cua ta thap hon ho mot nua (115 so voi 228) nen
-       phai bu bang banner chu khong bang cach phinh header.
-       clamp: man thap thi banner co lai vua man, man cao thi chan o 820px de
-       khong bi keo lo. O 1080: header + banner = 935px = 87% man. */
-    height: clamp(420px, calc(100vh - 115px), 820px);
+    /* Cao theo MAN HINH, va CHUA CHO cho dai ly do ngay duoi.
+       Tru 225px = header 115 + dai ly do 110. Muc tieu: mot man hinh dau tien
+       phai thay DU sau muc ly do, khong bi cat mat dong nao.
+       Da thu tru moi 115px va do duoc no hong: o khung nhin that (1080 tru thanh
+       trinh duyet con ~990) thi header + banner = 935, dai ly do het o 1037 -
+       tran ra ngoai 47px. */
+    height: clamp(360px, calc(100vh - 225px), 720px);
     overflow: hidden;
     background: var(--trang);
   }
