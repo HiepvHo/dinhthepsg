@@ -94,44 +94,12 @@ const moTa = catMoTa(
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/">
-  {/* ==== 1. HERO: chu dat THANG len anh, khong dung the noi ====
-      Truoc day o day la mot the trang bo goc do bong noi tren anh. Da bo:
-      the trang bo goc do bong dat len anh hero la mot trong nhung mau template
-      de nhan ra nhat, va no mau thuan voi chinh viec vua lam o vong truoc -
-      go 55 cai the vien xam roi lai dan cai the to nhat trang len hero.
-
-      Thay bang cach lam cua hero bien tap that: mot LOP CHUYEN TOI phu tu trai
-      sang, chu trang dat thang len anh. Lop chuyen giu duoc anh o nua phai,
-      dong thoi du toi o nua trai de chu trang doc ro. */}
-  <div class="hero">
-    <BannerSlider anh={anhBanner} giay={5.5} />
-
-    <div class="hero__toi" aria-hidden="true"></div>
-
-    <div class="hero__lop">
-      <div class="khung">
-        <div class="hero__the">
-          <span class="hero__nhan">Nhà máy sản xuất</span>
-          <h1>Đinh thép xây dựng</h1>
-          <p class="hero__phu">
-            {tongQuyCach} quy cách từ 20mm đến 150mm. Công bố đủ chiều dài và đường kính
-            thân theo phân, cm và mm.
-          </p>
-          <div class="hero__nut">
-            <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
-              Gọi báo giá {c.hotline}
-            </a>
-            <a class="nut nut--vien nut--lon" href="/bang-gia-dinh-thep/">Xem bảng giá</a>
-          </div>
-          <ul class="hero__tin">
-            <li><strong>{soNam}</strong> năm</li>
-            <li><strong>{c.diaDiem.length}</strong> địa điểm</li>
-            <li>MST <strong>{c.maSoThue}</strong></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+  {/* ==== 1. BANG TRUOT ANH full-bleed, KHONG co chu de len ====
+      Da thu dat chu len banner (nhan + H1 + doan phu + nut + so lieu) va user
+      bo: khong ai yeu cau chu tren banner. Banner la anh, het.
+      Chieu cao van tinh theo man hinh de dai ly do ngay duoi lot tron vao man
+      hinh dau - xem BannerSlider.astro. */}
+  <BannerSlider anh={anhBanner} giay={5.5} />
 
   {/* ==== 2. Ly do chon chung toi - thay cho 4 chip mau dac cu ==== */}
   <LyDoChon soQuyCach={tongQuyCach} />
@@ -140,7 +108,7 @@ const moTa = catMoTa(
   <section class="gioi-thieu">
     <div class="khung gioi-thieu__trong">
       <div>
-        <h2>Đinh Thép Sài Gòn - Nhà máy sản xuất đinh thép xây dựng</h2>
+        <h1>Đinh Thép Sài Gòn - Nhà máy sản xuất đinh thép xây dựng</h1>
         <p>
           {c.tenPhapDinhHoa} là đơn vị <strong>sản xuất trực tiếp</strong> đinh thép xây dựng
           và lưới thép hàn, hoạt động từ năm {c.namThanhLap}, {soNam} năm trong ngành vật tư
@@ -293,134 +261,6 @@ const moTa = catMoTa(
 </BaseLayout>
 
 <style>
-  /* ---------- HERO ----------
-     Banner nam trong components/BannerSlider.astro, chieu cao theo man hinh.
-     Chu dat thang len anh, khong co the noi. */
-  .hero {
-    position: relative;
-  }
-  /* Lop chuyen toi tu trai sang. Dung GRADIENT chu khong phai mot lop phu deu:
-     lop phu deu lam toi ca anh ben phai va anh thanh xam xit; gradient chi toi
-     o nua trai dung cho co chu, nua phai giu nguyen anh. */
-  .hero__toi {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(
-      90deg,
-      rgba(8, 11, 14, 0.93) 0%,
-      rgba(8, 11, 14, 0.88) 26%,
-      rgba(8, 11, 14, 0.6) 46%,
-      rgba(8, 11, 14, 0) 66%
-    );
-  }
-  .hero__lop {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    align-items: center;
-    pointer-events: none;
-  }
-  .hero__lop > .khung {
-    width: 100%;
-  }
-  .hero__the {
-    pointer-events: auto;
-    max-width: 540px;
-    color: var(--trang);
-  }
-  .hero__nhan {
-    display: block;
-    font-size: var(--cs-micro);
-    font-weight: var(--w-nang);
-    letter-spacing: var(--gc-micro);
-    text-transform: uppercase;
-    /* Do-500 tren nen toi khong du tuong phan; dung sac do sang hon */
-    color: #ff8a8f;
-    margin-bottom: var(--k2);
-  }
-  .hero h1 {
-    font-size: var(--cs-display);
-    line-height: var(--dc-chat);
-    margin-bottom: var(--k3);
-    color: var(--trang);
-  }
-  .hero__phu {
-    font-size: var(--cs-lead);
-    line-height: var(--dc-vua);
-    color: rgba(255, 255, 255, 0.86);
-    max-width: 30rem;
-  }
-  .hero__nut {
-    display: flex;
-    gap: var(--k3);
-    flex-wrap: wrap;
-    margin-top: var(--k5);
-  }
-  /* Nut phu tren nen toi: vien trang, khong phai vien xam nhu tren nen sang */
-  .hero__nut .nut--vien {
-    border-color: rgba(255, 255, 255, 0.6);
-    color: var(--trang);
-    background: transparent;
-  }
-  .hero__nut .nut--vien:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: var(--trang);
-    color: var(--trang);
-  }
-  /* Ba so lieu tin cay ngay duoi nut - nghien cuu B2B: dat bang chung ngay
-     duoi hero, khong de xuong cuoi trang. */
-  .hero__tin {
-    display: flex;
-    gap: var(--k5);
-    flex-wrap: wrap;
-    margin-top: var(--k5);
-    padding-top: var(--k4);
-    border-top: 1px solid rgba(255, 255, 255, 0.22);
-    font-size: var(--cs-micro);
-    color: rgba(255, 255, 255, 0.72);
-  }
-  .hero__tin strong {
-    font-family: var(--font-hien);
-    font-size: var(--cs-h3);
-    font-weight: var(--w-nang);
-    color: var(--trang);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* Duoi 900px KHONG de chu len anh nua, ma tach thanh dai toi ngay duoi anh.
-     Ly do do duoc: o 390px be ngang, khoi chu cao ~340px trong khi banner chi
-     300px, nen chu tran nguoc len tren, nhan bi cat va dong so lieu bien mat.
-     Tren man hep, anh phai du cao de chua chu - ma keo anh cao len thi lai an
-     mat dai ly do khoi man hinh dau. Tach ra la giai duoc ca hai. */
-  @media (max-width: 900px) {
-    .hero__toi {
-      display: none;
-    }
-    .hero__lop {
-      position: static;
-      display: block;
-      pointer-events: auto;
-      background: var(--navy-900);
-      padding-block: var(--k5);
-    }
-    .hero__the {
-      max-width: none;
-    }
-    .hero__phu {
-      max-width: none;
-    }
-  }
-  @media (max-width: 560px) {
-    .hero__nut .nut {
-      flex: 1;
-      justify-content: center;
-    }
-    .hero__tin {
-      gap: var(--k4);
-    }
-  }
-
   /* ---- 3. gioi thieu mang H1. Khong co vien tren: dai Ly do ngay tren da
        co vien duoi, hai duong ke sat nhau se thanh mot duong day. ---- */
   .gioi-thieu {
@@ -435,7 +275,7 @@ const moTa = catMoTa(
   .gioi-thieu__trong > * {
     min-width: 0;
   }
-  .gioi-thieu h2 {
+  .gioi-thieu h1 {
     font-size: var(--cs-h2);
     margin-bottom: var(--k4);
   }
