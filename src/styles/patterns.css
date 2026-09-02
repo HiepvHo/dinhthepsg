@@ -206,7 +206,7 @@ a.the:hover,
   margin: calc(var(--k5) * -1) calc(var(--k5) * -1) var(--k4);
   border-radius: var(--bo) var(--bo) 0 0;
   overflow: hidden;
-  background: var(--steel-050);
+  background: var(--nen-anh);
   aspect-ratio: 4 / 3;
 }
 /* Anh absolute - cung ly do nhu .khung-anh o tren */
@@ -274,27 +274,38 @@ a.the:hover,
   text-transform: uppercase;
   color: var(--muc-2);
 }
+/* Dau bang NHE, khong phai mot dai den dac.
+   Dai den doc ra nhu bang tinh Excel chu khong ra trang san pham; va no la mang
+   toi nhat trang, hut het mat khoi anh san pham o ngay tren. */
 .bang th {
   position: sticky;
   top: 0;
-  background: var(--steel-900);
-  color: var(--trang);
+  background: var(--nen-nhat);
+  color: var(--muc);
   text-align: left;
+  font-family: var(--font-hien);
   font-size: var(--cs-micro);
   font-weight: var(--w-nang);
   letter-spacing: var(--gc-micro);
   text-transform: uppercase;
-  padding: 12px var(--k4);
+  padding: 13px var(--k4);
   white-space: nowrap;
+  border-bottom: 2px solid var(--do-500);
+}
+/* Ke NGANG dat tren TR chu khong tren TD.
+   Do duoc: dat tren td thi mot bang 10 dong x 6 cot ve 60 cai vien, va do la
+   60 trong tong so 71 vien cua ca trang chu - tuc chinh cai bang lam trang doc
+   ra "cai gi cung la mot cai hop xam". Dat tren tr thi con 10, nhin y het. */
+.bang tr + tr {
+  border-top: var(--vien-mong);
 }
 .bang td {
-  padding: 13px var(--k4);
-  border-top: var(--vien-mong);
+  padding: 14px var(--k4);
   font-weight: var(--w-thuong);
   vertical-align: baseline;
 }
 .bang tbody tr:hover td {
-  background: var(--steel-050);
+  background: var(--nen-anh);
 }
 .bang td:first-child {
   font-weight: var(--w-nang);
@@ -412,7 +423,7 @@ a.the:hover,
 
 /* ------------------------------------------------------------- muc luc ----- */
 .muc-luc {
-  background: var(--steel-050);
+  background: var(--nen-anh);
   border-left: 3px solid var(--do-500);
   border-radius: 0 var(--bo) var(--bo) 0;
   padding: var(--k4) var(--k5);
@@ -512,7 +523,7 @@ a.the:hover,
   position: relative;
   border-radius: var(--bo);
   overflow: hidden;
-  background: var(--steel-050);
+  background: var(--nen-anh);
 }
 /* Anh trong khung ti le co dinh PHAI absolute.
      Ly do: `height:100%` tren con ma cha co chieu cao auto thi phan tram khong

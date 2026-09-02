@@ -68,6 +68,12 @@
   --nen-do: var(--do-500);          /* dai do - top bar, dai CTA */
   --nen-toi: var(--navy-900);       /* footer - navy sau, khong phai gan-den */
 
+  /* Nen anh cho: dung CUNG mot mau gan-trang voi nen xen ke. Truoc day
+     steel-050 (#F4F6F8, xam LANH) van con dung 11 cho lam nen anh, canh
+     #FBF4F2 (am) - hai mau gan-trang khac sac trong cung mot trang lam bang
+     mau doc ra khong ra he thong. */
+  --nen-anh: var(--nen-nhat);
+
   --vien: var(--steel-100);
   --vien-dam: var(--steel-200);
   --vien-nghich: rgba(255, 255, 255, 0.14);
@@ -102,10 +108,16 @@
   --cs-h1: 38px;
   --cs-h2: 29px;
   --cs-h3: 21px;
-  --cs-lead: 18px;
+  --cs-lead: 19px;
   --cs-than: 16.5px;
-  --cs-nho: 14.5px;
-  --cs-micro: 12.5px;
+  /* Nang san chu nho. Do duoc: 86% chu tren trang nam o 14,5 hoac 12,5px,
+     trong khi mamaflow chi 50%. Trang ma gan het chu deu nho va bang nhau thi
+     doc ra nhu bieu mau chu khong ra trang duoc thiet ke. */
+  --cs-nho: 15.5px;
+  --cs-micro: 13.5px;
+  /* Bac GIUA con thieu: tieu de the, ten san pham trong luoi. Truoc day cac cho
+     do phai muon --cs-than 16.5 nen chim lut vao than bai. */
+  --cs-the: 19px;
   --cs-so: 40px;      /* so lieu lon */
 
   --dc-chat: 1.15;    /* tieu de lon */
@@ -118,9 +130,11 @@
   --gc-than: 0;
   --gc-micro: 0.06em;
 
-  /* ---------- hinh khoi: BA gia tri, khong phai bay ---------- */
-  --bo-nho: 6px;
-  --bo: 10px;
+  /* ---------- hinh khoi: BA gia tri, khong phai bay ----------
+     Doi 6/10 -> 8/14. Do mamaflow: ho dung 8px (20 lan), 30px (8 lan), 50px.
+     6px o co the lon doc ra gan nhu goc vuong, lam moi khoi thanh mot cai hop. */
+  --bo-nho: 8px;
+  --bo: 14px;
   --bo-tron: 999px;
 
   --vien-mong: 1px solid var(--vien);

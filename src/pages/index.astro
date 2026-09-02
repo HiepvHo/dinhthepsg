@@ -46,6 +46,19 @@ const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhom = await getCollection('nhomSanPham');
 const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
+
+/**
+ * Trang chu chi hien NAM quy cach, khong hien ca muoi.
+ *
+ * Ly do do duoc: bang 10 dong x 6 cot ve 60 o co vien - chiem 60 trong tong so
+ * 71 cai vien cua ca trang, va cao 814px tuc 0,75 man hinh. Nguoi ta khong doc
+ * trang chu, ho luot; nhoi 10 dong thong so vao giua luong luot la di nguoc.
+ * Bang day du 24 quy cach van o /bang-gia-dinh-thep/ va trang tung nhom.
+ *
+ * Chon 5 ma phu deu dai: ngan - pho thong - dai.
+ */
+const MA_NOI_BAT = ['3F', '5F', '7F', '10F', '15F'];
+const quyCachNoiBat = dinhChi.data.quyCach.filter((q) => MA_NOI_BAT.includes(q.ma));
 const nhaMay = c.diaDiem[0];
 const soNam = new Date().getFullYear() - c.namThanhLap;
 const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
@@ -81,8 +94,38 @@ const moTa = catMoTa(
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/">
-  {/* ==== 1. BANG TRUOT ANH full-bleed cao 600px, khong chu de len ==== */}
-  <BannerSlider anh={anhBanner} giay={5.5} />
+  {/* ==== 1. HERO: bang truot anh + THE NOI DUNG dat de len ====
+      The dat DE LEN chu khong phu chu thang vao anh: anh nha may la thep xam
+      day chi tiet, chu trang de thang len se khong doc duoc du co phu lop toi.
+      The dat LECH TRAI chu khong can giua - hero can giua la mot trong nhung
+      dau hieu bi neu ten khi noi ve giao dien do AI sinh. */}
+  <div class="hero">
+    <BannerSlider anh={anhBanner} giay={5.5} />
+
+    <div class="hero__lop">
+      <div class="khung">
+        <div class="hero__the">
+          <span class="hero__nhan">Nhà máy sản xuất</span>
+          <h1>Đinh thép xây dựng</h1>
+          <p class="hero__phu">
+            {tongQuyCach} quy cách từ 20mm đến 150mm. Công bố đủ chiều dài và đường kính
+            thân theo phân, cm và mm.
+          </p>
+          <div class="hero__nut">
+            <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
+              Gọi báo giá {c.hotline}
+            </a>
+            <a class="nut nut--vien nut--lon" href="/bang-gia-dinh-thep/">Xem bảng giá</a>
+          </div>
+          <ul class="hero__tin">
+            <li><strong>{soNam}</strong> năm</li>
+            <li><strong>{c.diaDiem.length}</strong> địa điểm</li>
+            <li>MST <strong>{c.maSoThue}</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
   {/* ==== 2. Ly do chon chung toi - thay cho 4 chip mau dac cu ==== */}
   <LyDoChon soQuyCach={tongQuyCach} />
@@ -91,7 +134,7 @@ const moTa = catMoTa(
   <section class="gioi-thieu">
     <div class="khung gioi-thieu__trong">
       <div>
-        <h1>Đinh Thép Sài Gòn - Nhà máy sản xuất đinh thép xây dựng</h1>
+        <h2>Đinh Thép Sài Gòn - Nhà máy sản xuất đinh thép xây dựng</h2>
         <p>
           {c.tenPhapDinhHoa} là đơn vị <strong>sản xuất trực tiếp</strong> đinh thép xây dựng
           và lưới thép hàn, hoạt động từ năm {c.namThanhLap}, {soNam} năm trong ngành vật tư
@@ -161,43 +204,40 @@ const moTa = catMoTa(
       </div>
       <p class="hang__dan">
         Mã <strong>F</strong> trên bao đọc là <strong>phân</strong>, 1 phân = 1cm = 10mm.
-        Bảng dưới quy đổi sẵn cả bốn cách gọi.
+        Dưới đây là năm quy cách hay đặt nhất.
       </p>
       <div class="bang-cuon">
         <table class="bang">
-          <caption>Quy cách đinh chì do {c.tenThuongHieu} sản xuất</caption>
+          <caption>Quy cách đinh chì hay đặt nhất - {c.tenThuongHieu} sản xuất</caption>
           <thead>
             <tr>
               <th scope="col">Quy cách</th>
               <th scope="col">Mã</th>
               <th scope="col" class="so">Chiều dài</th>
               <th scope="col" class="so">Đường kính thân</th>
-              <th scope="col">Cách gọi khác</th>
-              <th scope="col">Giá</th>
             </tr>
           </thead>
           <tbody>
             {
-              dinhChi.data.quyCach.map((q) => (
+              quyCachNoiBat.map((q) => (
                 <tr>
                   <td><a href={`/san-pham/${q.slug}/`}>{tenChinh(dinhChi.data.ten, q)}</a></td>
                   <td>{q.ma}</td>
                   <td class="so">{q.daiMm} mm</td>
                   <td class="so">{q.duongKinhMm ? `${q.duongKinhMm} mm` : '-'}</td>
-                  <td>{quyDoi(q) ?? '-'}</td>
-                  <td>
-                    {coGia(q) ? (
-                      <span class="bang__gia">{dinhDangGia(q)}</span>
-                    ) : (
-                      <span class="bang__chua-co">gọi để báo giá</span>
-                    )}
-                  </td>
                 </tr>
               ))
             }
           </tbody>
         </table>
       </div>
+      {/* Mot dong thay cho mot cot 10 o "gọi để báo giá" giong het nhau.
+          Khi nhom-san-pham.yaml co gia thi tra lai cot Gia. */}
+      <p class="hang__gia-nhac">
+        Giá vật tư thay đổi theo ngày. Gọi <a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>
+        {' '}để nhận báo giá hôm nay, hoặc xem
+        {' '}<a href="/bang-gia-dinh-thep/">đầy đủ {tongQuyCach} quy cách của 6 nhóm</a>.
+      </p>
     </div>
   </section>
 
@@ -247,7 +287,104 @@ const moTa = catMoTa(
 </BaseLayout>
 
 <style>
-  /* Banner nam trong components/BannerSlider.astro */
+  /* ---------- HERO ----------
+     Banner nam trong components/BannerSlider.astro, chieu cao theo man hinh.
+     Lop noi dung phu len tren, chi rieng the la bam duoc. */
+  .hero {
+    position: relative;
+  }
+  .hero__lop {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-items: center;
+    pointer-events: none;
+  }
+  .hero__lop > .khung {
+    width: 100%;
+  }
+  .hero__the {
+    pointer-events: auto;
+    /* 540 chu khong 468: o 468 thi hai nut (270px + 150px + khe) khong du cho
+       tren mot hang nen bi xuong dong, an them 60px chieu cao va lam khoi nut
+       doc ra roi. */
+    max-width: 540px;
+    padding: var(--k6);
+    background: var(--trang);
+    border-radius: var(--bo);
+    box-shadow: 0 18px 44px rgba(22, 25, 28, 0.18);
+  }
+  .hero__nhan {
+    display: block;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--do-500);
+    margin-bottom: var(--k2);
+  }
+  .hero h1 {
+    font-size: var(--cs-display);
+    line-height: var(--dc-chat);
+    margin-bottom: var(--k3);
+  }
+  .hero__phu {
+    font-size: var(--cs-lead);
+    line-height: var(--dc-vua);
+    color: var(--muc-2);
+  }
+  .hero__nut {
+    display: flex;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    margin-top: var(--k5);
+  }
+  /* Ba so lieu tin cay ngay duoi nut - nghien cuu B2B: dat bang chung ngay
+     duoi hero, khong de xuong cuoi trang. */
+  .hero__tin {
+    display: flex;
+    gap: var(--k5);
+    flex-wrap: wrap;
+    margin-top: var(--k5);
+    padding-top: var(--k4);
+    border-top: var(--vien-mong);
+    font-size: var(--cs-micro);
+    color: var(--muc-2);
+  }
+  .hero__tin strong {
+    font-family: var(--font-hien);
+    font-size: var(--cs-h3);
+    font-weight: var(--w-nang);
+    color: var(--muc);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 900px) {
+    .hero__lop {
+      position: static;
+      display: block;
+      pointer-events: auto;
+    }
+    /* Duoi 900px the tut xuong DUOI anh thay vi de len: o be ngang do, the phu
+       kin anh nen anh thanh vo nghia. */
+    .hero__the {
+      max-width: none;
+      margin-top: calc(var(--k6) * -1);
+      position: relative;
+      z-index: 2;
+      padding: var(--k5);
+    }
+  }
+  @media (max-width: 560px) {
+    .hero__the {
+      padding: var(--k4);
+    }
+    .hero__nut .nut {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
 
   /* ---- 3. gioi thieu mang H1. Khong co vien tren: dai Ly do ngay tren da
        co vien duoi, hai duong ke sat nhau se thanh mot duong day. ---- */
@@ -263,7 +400,7 @@ const moTa = catMoTa(
   .gioi-thieu__trong > * {
     min-width: 0;
   }
-  .gioi-thieu h1 {
+  .gioi-thieu h2 {
     font-size: var(--cs-h2);
     margin-bottom: var(--k4);
   }
@@ -281,7 +418,7 @@ const moTa = catMoTa(
     aspect-ratio: 4 / 3;
     border-radius: var(--bo-nho);
     overflow: hidden;
-    background: var(--steel-050);
+    background: var(--nen-anh);
   }
   .gioi-thieu__anh :global(img) {
     position: absolute;
@@ -297,6 +434,15 @@ const moTa = catMoTa(
   }
   .hang--nhat {
     background: var(--nen-nhat);
+  }
+  .hang__gia-nhac {
+    margin-top: var(--k4);
+    padding: 12px var(--k4);
+    border-left: 3px solid var(--do-500);
+    background: var(--do-050);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-vua);
+    color: var(--do-700);
   }
   .hang__dan {
     font-size: var(--cs-nho);
@@ -322,7 +468,7 @@ const moTa = catMoTa(
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: var(--bo-nho);
-    background: var(--steel-050);
+    background: var(--nen-anh);
     border: var(--vien-mong);
   }
   .the-sp__anh :global(img) {
@@ -337,8 +483,9 @@ const moTa = catMoTa(
     transform: scale(1.04);
   }
   .the-sp h3 {
-    font-size: var(--cs-than);
-    font-weight: var(--w-dam);
+    font-family: var(--font-hien);
+    font-size: var(--cs-the);
+    font-weight: var(--w-nang);
   }
   .the-sp:hover h3 {
     color: var(--do-600);
@@ -359,7 +506,7 @@ const moTa = catMoTa(
     aspect-ratio: 4 / 3;
     border-radius: var(--bo-nho);
     overflow: hidden;
-    background: var(--steel-050);
+    background: var(--nen-anh);
   }
   .nm :global(img) {
     position: absolute;
