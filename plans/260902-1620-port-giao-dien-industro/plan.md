@@ -1,6 +1,6 @@
 # Port giao diện Industro vào dinhthepsg.com
 
-Trạng thái: **đã chốt, sẵn sàng thực thi**
+Trạng thái: **đã thực thi xong trang chủ** (03/09/2026)
 Lập ngày: 02/09/2026 | Sửa lần cuối: 03/09/2026
 
 ## Mục tiêu
@@ -187,19 +187,48 @@ Trích từ `css/style.css`:
 
 ## Các giai đoạn
 
-| # | Giai đoạn | Rủi ro |
+| # | Giai đoạn | Trạng thái |
 |---|---|---|
-| 01 | Token: đổi palette sang cam+navy, thêm biến cạnh vát và bóng toả | Trung bình - đụng mọi trang |
-| 02 | Port `style.css` sang `industro.css`, bố cục bằng token sẵn có | Thấp |
-| 03 | Topbar + Navbar cạnh vát | Trung bình - header vừa sửa nhiều vòng |
-| 04 | Hero: mũi tên tròn | Thấp |
-| 05 | Giới thiệu: 2 ảnh so le + khối số | Thấp |
-| 06 | Dải số liệu navy (mới) | Thấp |
-| 07 | Thẻ sản phẩm lật khi rê | Trung bình - đụng cả trang danh mục |
-| 08 | Mục nhà máy: ảnh nhô | Thấp |
-| 09 | Hiệu ứng cuộn + nút lên đầu trang (vanilla, không jQuery) | Thấp |
-| 10 | Áp sang trang sản phẩm, kiến thức, bảng giá | **Cao** - 30 trang |
-| 11 | Audit, đo lại, dọn CSS thừa | Thấp |
+| 01 | Token: đổi palette sang cam+navy, biến cạnh vát và bóng toả | **Xong** |
+| 02 | Port `style.css` sang `industro.css` | **Xong** |
+| 03 | Topbar + Navbar cạnh vát | **Xong** |
+| 04 | Hero: mũi tên tròn 86px | **Xong** |
+| 05 | Giới thiệu: 2 ảnh so le + khối số năm | **Xong** |
+| 06 | Dải số liệu navy (mục mới) | **Xong** |
+| 07 | Thẻ sản phẩm lật khi rê | **Xong** |
+| 08 | Mục nhà máy: ảnh nhô, hàng tràn mép | **Xong** |
+| 09 | Nút lên đầu trang (vanilla, không jQuery) | **Xong** |
+| 10 | Trang trong: bảng màu tự kế thừa, đã kiểm 9 trang | **Xong phần màu** |
+| 11 | Audit, đo lại | **Xong** - 0 lỗi |
+
+### Phần cố ý CHƯA làm ở giai đoạn 10
+
+Các trang trong (sản phẩm, bảng giá, kiến thức) mới kế thừa **bảng màu**, chưa
+áp thủ pháp thị giác của Industro (nhãn mục in hoa, tiêu đề cỡ display căn giữa,
+thẻ lật).
+
+Lý do: các trang đó là trang **tra thông số**, mật độ cao, người đọc vào để tìm
+một con số. Tiêu đề cỡ display căn giữa hợp trang chủ chào hàng chứ không hợp
+trang tra cứu - áp vào sẽ đẩy bảng số xuống thấp hơn một màn hình.
+
+Nếu muốn áp thì nói, nhưng đây là thay đổi về mục tiêu trang chứ không phải về
+thẩm mỹ.
+
+## Kết quả đo sau khi port
+
+| | Trước | Sau |
+|---|---|---|
+| CSS (nén) | 10 KB | **12,6 KB** |
+| HTML trang chủ (nén) | - | 11,4 KB |
+| File JS riêng | 0 | **0** |
+| Tài nguyên từ tên miền ngoài | 0 | **0** |
+| Số trang | 30 | 30 |
+| Link gãy | 0 | **0** |
+| Ảnh thiếu alt | 0 | **0** |
+| Tràn ngang 390px | không | **không** (9 trang) |
+
+**Cả đợt port tốn 2,6 KB nén.** Phương án nạp Bootstrap sẽ tốn 82 KB cho cùng
+kết quả thị giác.
 
 **Footer không có trong danh sách** - user chốt giữ nguyên.
 
