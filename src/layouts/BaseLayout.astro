@@ -137,13 +137,34 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
       {
         const goc = document.documentElement;
         let daCuon = false;
+        let daAnNav = false;
         let lanCuon = 0;
+        let yTruoc = window.scrollY;
+
         const xemCuon = () => {
-          const moi = window.scrollY > 300;
-          if (moi === daCuon) return;
-          daCuon = moi;
-          if (moi) goc.setAttribute('data-cuon', '');
-          else goc.removeAttribute('data-cuon');
+          const y = window.scrollY;
+          const dangXuong = y > yTruoc + 4; // 4px chong rung khi cuon rat cham
+          const dangLen = y < yTruoc - 4;
+          yTruoc = y;
+
+          // Bong duoi hang nav - chi khi da roi khoi dinh trang
+          const cuonRoi = y > 300;
+          if (cuonRoi !== daCuon) {
+            daCuon = cuonRoi;
+            goc.toggleAttribute('data-cuon', cuonRoi);
+          }
+
+          /* An nav khi CUON XUONG, hien lai khi CUON LEN.
+             Gan dinh trang (duoi 140px) thi luon hien: luc do header chua dan
+             nen an di se thay ca mot khoang trong. */
+          let an = daAnNav;
+          if (y <= 140) an = false;
+          else if (dangXuong) an = true;
+          else if (dangLen) an = false;
+          if (an !== daAnNav) {
+            daAnNav = an;
+            goc.toggleAttribute('data-an-nav', an);
+          }
         };
         window.addEventListener(
           'scroll',

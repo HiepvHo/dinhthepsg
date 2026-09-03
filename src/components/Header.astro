@@ -240,22 +240,47 @@ const navSau = [
      Header nay truot len khi cuon nen hang nav dinh lai se bi cat ngay. Bo
      duoc vi cac khoi cam khong con tran bang margin am nua (da doi sang
      padding tu vong truoc). */
-  /* DAN CA HEADER voi `top` AM bang dung chieu cao dai tren (46px).
-     Ket qua: dai tren truot khoi man hinh roi hang nav dung lai o y = 0.
+  /* HEADER TRUOT VAO / TRUOT RA khi cuon - do theo dung co che cua ho.
+     Ho: `.navbar.sticky-top { top: -100px; transition: .5s }`, roi jQuery doi
+     sang `top: 0` khi cuon qua 300px. Ta lam y het, chi khac la doi bang
+     thuoc tinh `data-cuon` thay vi style noi tuyen.
 
-     DA THU cach dat sticky rieng cho `.hang-nav` va HONG: sticky bi gioi han
-     trong hop cua CHA, ma `.dau-trang` chi cao 122px - cuon qua la ca hop
-     truot di, hang nav truot theo. Do duoc no o -1454px tai scrollTop 1500.
-     Ho lam cung kieu top am: `.navbar.sticky-top { top: -100px }` roi jQuery
-     dat lai `top: 0` khi cuon qua 300px. Ta khong can JS cho viec nay - mot
-     con so `top` am la du.
+     CHO TINH nhat, va la ly do ho lam vay chu khong lam cach khac: ANIMATE
+     `top`, KHONG animate chieu cao.
+     Da can nhac cach cho dai tren co chieu cao 46px ve 0. Cach do HONG: header
+     nam trong luong, co lai 46px thi toan bo noi dung ben duoi bi keo len 46px
+     va man hinh nhay mot cai giua luc dang doc. Doi `top` khong dung toi kich
+     thuoc nen khong co lan layout nao - chi la mot cu truot thuan thi giac.
 
-     46px la con so PHAI KHOP voi `min-height` cua `.thanh-tren__trong`. Doi
-     mot cho thi phai doi cho kia. */
+     -46px  = chi an dai tren, hang nav dung lai o y = 0  (mac dinh)
+     -122px = an ca header (dai tren 46 + hang nav 76)
+     Hai con so nay PHAI KHOP voi chieu cao that cua hai dai.
+
+     TA KHAC HO O DIEU KIEN AN/HIEN, va day la mot sua loi UX chu khong phai
+     so thich:
+       Ho an/hien theo VI TRI CUON - duoi 300px thi an, tren thi hien. Nghia la
+       dang o giua trang cuon NGUOC LEN, nav bien mat cho toi khi ve gan dinh.
+       Ma cuon len thuong chinh la luc nguoi ta muon dung nav.
+       Ta an/hien theo HUONG CUON: cuon xuong (dang doc) thi an di cho rong
+       cho, cuon len (dinh di cho khac) thi hien ra ngay.
+
+     MAC DINH la -46px tuc NAV HIEN. Neu JS hong thi nav luon co, khong bao
+     gio mat - chieu an toan dung huong. */
   .dau-trang {
     position: sticky;
     top: -46px;
     z-index: 100;
+    transition: top 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  :global(html[data-an-nav]) .dau-trang {
+    top: -122px;
+  }
+
+  /* Nguoi dat it-chuyen-dong: van an/hien nhung khong truot */
+  @media (prefers-reduced-motion: reduce) {
+    .dau-trang {
+      transition: none;
+    }
   }
 
   /* Bong chi hien khi da cuon - luc dang o dinh trang thi header va banner
@@ -739,6 +764,11 @@ const navSau = [
        nav luc nay la panel tuyet doi nen khong con trong hang flex nua.
        DOM van la logo - hamburger - nav - CTA (thu tu doc man hinh dung),
        chi dao vi tri BAY bang order. */
+    /* 111px = dai tren 46 + hang nav 65 (mobile). Phai khop, xem ghi chu o
+       luat `.dau-trang` phia tren. */
+    :global(html[data-an-nav]) .dau-trang {
+      top: -111px;
+    }
     .dau-trang__trong {
       min-height: 64px;
       gap: var(--k3);
