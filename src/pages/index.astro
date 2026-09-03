@@ -96,11 +96,19 @@ const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
  * Google phat va khach kiem chung duoc ngay.
  * Cau "hang dau" chi dat MOT LAN o slide 1; nhac lai bon lan nua thi doc ra
  * nhu dang co gang thuyet phuc chinh minh.
+ *
+ * 03/09 - DOI CHO HAI ANH cua slide 1 va 2, CHU GIU NGUYEN TAI CHO:
+ *   slide 1 (mang the H1) gio la anh CONG NHAN
+ *   slide 2 gio la anh DONG BAO
+ * Da hoi user va user chon doi ANH chu khong doi CHU, ly do: slide 1 luon mang
+ * the H1, nen doi chu se lam H1 thanh cau dinh vi "Don vi cung cap... hang
+ * dau" - yeu tu khoa hon cau "Nha may san xuat dinh thep xay dung".
+ * `alt` di THEO ANH vi no mo ta tam anh, khong mo ta khoi chu.
  */
 const anhBanner = [
   {
-    src: anhHero,
-    alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn, Đức Hòa, Long An',
+    src: anhCongNhan,
+    alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh',
     nhan: `Hơn ${soNam} năm kinh nghiệm`,
     tieuDe: 'Nhà máy sản xuất đinh thép xây dựng',
     phu: `${tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán thẳng từ xưởng ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, không qua trung gian.`,
@@ -110,8 +118,8 @@ const anhBanner = [
     ],
   },
   {
-    src: anhCongNhan,
-    alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh',
+    src: anhHero,
+    alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn, Đức Hòa, Long An',
     nhan: 'Chất lượng ổn định từ đầu vào',
     tieuDe: 'Đơn vị cung cấp đinh thép hàng đầu phía Nam',
     phu: 'Nguyên liệu chọn lọc, dập trên dây chuyền của chính nhà máy. Thân đinh thẳng, mũi nhọn đều, mũ chắc - đóng cốp pha hay gỗ cứng đều được.',
