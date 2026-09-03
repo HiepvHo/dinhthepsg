@@ -135,12 +135,13 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
          frame hay khong. Chi doi thuoc tinh khi trang thai THAT SU doi, nen no
          khong bat trinh duyet ve lai moi lan cuon. */
       /* ---- DANH DAU DA CUON ----
-         Gan `data-cuon` len <html> khi cuon qua 40px. Dung cho hai viec:
-           - dai tren cung mo dan roi mat
+         Gan `data-cuon` len <html> khi cuon qua 80px. Dung cho hai viec:
+           - dai tren cung TRUOT LEN mat (header doi top tu 0 sang -46px)
            - hang nav do bong xuong
-         40px chu khong 300px cua ho: dai tren cao 46px, cuon qua 40 la no gan
-         nhu da ra khoi man hinh - mo dan dung luc do thi hai chuyen dong khop
-         nhau. Dat 300px thi dai tren da mat tu lau, cu mo dan thanh vo nghia.
+         80px chu khong 300px cua ho: header cua ta gim ca hai dai tu dau nen
+         khong co doan nao mat nav; cuon 80px la du de biet nguoi dung that su
+         dang doc chu khong phai cham nhe banh xe. Ho phai de 300px vi trong
+         khoang do navbar cua ho an han, de gan hon thi no nhay ra nhay vao.
 
          Chan bang moc thoi gian chu khong rAF: rAF phu thuoc trinh duyet co ve
          frame hay khong. Chi doi thuoc tinh khi trang thai THAT SU doi, nen no
@@ -150,7 +151,7 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
         let daCuon = false;
         let lanCuon = 0;
         const xemCuon = () => {
-          const moi = window.scrollY > 40;
+          const moi = window.scrollY > 80;
           if (moi === daCuon) return;
           daCuon = moi;
           goc.toggleAttribute('data-cuon', moi);

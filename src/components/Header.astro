@@ -252,24 +252,37 @@ const navSau = [
      va man hinh nhay mot cai giua luc dang doc. Doi `top` khong dung toi kich
      thuoc nen khong co lan layout nao - chi la mot cu truot thuan thi giac.
 
-     `top: -46px` = dung bang chieu cao DAI TREN. Ket qua: dai tren truot
-     khoi man hinh, hang nav dung lai o y = 0 va NAM O DO SUOT, khong bao gio
-     an. Do la dung cau truc cua ho: dai `bg-dark` la the RIENG nam ngoai phan
-     sticky, chi `.navbar` moi mang `sticky-top`.
+     GOC la `top: 0` - GIM CA HAI DAI ngay tu dau. Khi cuon qua 80px thi
+     `top` chay ve -46px (dung chieu cao dai tren) va dai tren TRUOT LEN mat,
+     hang nav dung lai o y = 0. Cuon ve gan dinh thi chay nguoc lai.
+
+     DAY LA CHO TOI TUNG LAM SAI: de goc la `top: -46px`. Nhu vay dai tren
+     truot mat theo chinh cu cuon truoc khi co hieu ung nao kip chay - va cu
+     mo dan toi gan them o nguong 40px cung vo nghia, vi luc do dai tren chi
+     con 6px trong man hinh. Mo mot thu da ra khoi man hinh thi khong ai thay.
+     Ho lam nguoc: GOC la trang thai AN (`top: -100px`), roi JS doi sang hien.
+     Chinh vi goc khac trang thai dich nen moi co gi de chuyen dong.
+
+     KHONG animate CHIEU CAO: header nam trong luong, co lai 46px thi toan bo
+     noi dung ben duoi bi keo len 46px va man hinh nhay mot cai giua luc dang
+     doc. Doi `top` khong dung toi kich thuoc nen khong co lan tinh layout nao.
 
      46px PHAI KHOP voi `min-height` cua `.thanh-tren__trong`.
-
-     DA THU cach an ca hang nav khi cuon xuong roi BO: user chot hang nav phai
-     o lai. Chi dai tren cung an.
-
-     KHONG animate CHIEU CAO cua dai tren de "thu vao": header nam trong luong,
-     co lai 46px thi toan bo noi dung ben duoi bi keo len 46px va man hinh nhay
-     mot cai giua luc dang doc. Dai tren bien di bang chinh cu cuon (muot san),
-     va them mot cu mo dan de no doc ra la co y chu khong phai truot suong. */
+     420ms - ho de .5s; ta ngan hon mot chut vi doan di cua ta 46px con cua ho
+     100px. */
   .dau-trang {
     position: sticky;
-    top: -46px;
+    top: 0;
     z-index: 100;
+    transition: top 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  :global(html[data-cuon]) .dau-trang {
+    top: -46px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dau-trang {
+      transition: none;
+    }
   }
 
   /* Bong chi hien khi da cuon - luc dang o dinh trang thi header va banner
@@ -293,20 +306,6 @@ const navSau = [
     color: var(--trang);
     font-size: var(--cs-micro);
     font-weight: var(--w-vua);
-    /* Mo dan khi cuon qua 40px. Chi doi `opacity`, KHONG doi `height`:
-       opacity khong dung toi layout nen khong co lan tinh lai nao va noi dung
-       ben duoi khong nhay. */
-    transition: opacity 300ms var(--nhip);
-  }
-  :global(html[data-cuon]) .thanh-tren {
-    opacity: 0;
-  }
-
-  /* Nguoi dat it-chuyen-dong: an ngay, khong mo dan */
-  @media (prefers-reduced-motion: reduce) {
-    .thanh-tren {
-      transition: none;
-    }
   }
   /* TRAN HET BE NGANG, le 48px - do dung cua ho (`ps-5` / `pe-5` = 3rem).
      Truoc day hai hang header bo trong khung 1140 nen o man 1440 con thua
@@ -621,11 +620,15 @@ const navSau = [
     box-shadow: var(--noi-lon);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-4px);
+    /* Do theo ho: `top: 150%` -> `top: 100%`, tuc bang menu bat dau THAP hon
+       ~29px roi DANG LEN cho, kem hien dan, trong .5s.
+       Ta tung de `translateY(-4px)` trong 120ms - di 4px trong mot phan chin
+       giay thi mat khong kip thay gi. Doi sang 14px dang len trong 380ms. */
+    transform: translateY(14px);
     transition:
-      opacity var(--thoi) var(--nhip),
-      transform var(--thoi) var(--nhip),
-      visibility var(--thoi);
+      opacity 380ms var(--nhip),
+      transform 380ms var(--nhip),
+      visibility 380ms;
   }
   .co-tha:hover .tha,
   .co-tha:focus-within .tha {
@@ -660,11 +663,12 @@ const navSau = [
     box-shadow: var(--noi-lon);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-4px);
+    /* Cung nhip voi `.tha` - xem ghi chu o do */
+    transform: translateY(14px);
     transition:
-      opacity var(--thoi) var(--nhip),
-      transform var(--thoi) var(--nhip),
-      visibility var(--thoi);
+      opacity 380ms var(--nhip),
+      transform 380ms var(--nhip),
+      visibility 380ms;
   }
   .co-mega:hover .mega,
   .co-mega:focus-within .mega {
