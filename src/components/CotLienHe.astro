@@ -124,13 +124,21 @@ const dsZalo = [{ so: c.zalo, nhan: 'Zalo nhà máy' }];
     gap: 10px;
   }
 
-  /* Nut dang vien thuoc: o icon tron + so. So HIEN SAN chu khong doi re chuot
-     moi hien - user yeu cau "to ro, noi bat". */
+  /* Nut dang vien thuoc: o icon tron, so TRUOT RA khi re chuot.
+     TINH RA CON SO: vien thuoc hien san ca so va nhan rong 172px. De no khong
+     de len chu thi can
+       W - 14 - 172 > W/2 + 1140/2   ->   W > 1512px
+     tuc phai co man hinh rong hon 1512px. O 1440 - co man hinh pho bien nhat
+     - no DE LEN chu 36px, do duoc no phu ngay len dong "Bang quy cach day du"
+     o muc gioi thieu.
+     Chi de o icon tron (50px) thi nguong ha xuong 1268px, o 1440 con thua
+     86px. Nen: icon luon hien va van lac, so truot ra khi re.
+     Tu 1520px tro len thi hien san so - luc do du cho that. */
   .cot-lh__nut {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 5px 16px 5px 5px;
+    gap: 0;
+    padding: 5px;
     border-radius: var(--bo-tron);
     text-decoration: none;
     color: var(--trang);
@@ -162,14 +170,14 @@ const dsZalo = [{ so: c.zalo, nhan: 'Zalo nhà máy' }];
     display: grid;
     place-items: center;
     flex: none;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.22);
   }
   .cot-lh__o svg {
-    width: 21px;
-    height: 21px;
+    width: 23px;
+    height: 23px;
     fill: var(--trang);
     /* Lac 12 do roi tat dan, moi 3 giay mot lan. Lac lien tuc thi mat met va
        doc ra nhu quang cao rac; lac ngan roi nghi moi keo duoc chu y. */
@@ -191,10 +199,27 @@ const dsZalo = [{ so: c.zalo, nhan: 'Zalo nhà máy' }];
     animation-delay: var(--tre, 0s);
   }
 
+  /* Cum chu: rong 0 khi nghi, truot ra khi re. Dung max-width chu khong
+     display:none de co the chuyen dong duoc.
+     `white-space: nowrap` de so khong xuong dong trong luc dang truot. */
   .cot-lh__chu {
     display: grid;
     gap: 0;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
     line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      max-width 260ms var(--nhip),
+      opacity 180ms var(--nhip),
+      padding 260ms var(--nhip);
+  }
+  .cot-lh__nut:hover .cot-lh__chu,
+  .cot-lh__nut:focus-visible .cot-lh__chu {
+    max-width: 190px;
+    padding-inline: 10px 12px;
+    opacity: 1;
   }
   .cot-lh__chu b {
     font-family: var(--font-hien);
@@ -242,14 +267,13 @@ const dsZalo = [{ so: c.zalo, nhan: 'Zalo nhà máy' }];
     }
   }
 
-  /* Man hep khong hien cot nay: da co thanh CTA dinh day man hinh, va sau
-     vien thuoc se che mat noi dung. */
-  @media (max-width: 1180px) {
+  /* Tu 1520px tro len: hien san so, khong can re chuot.
+     Do la nguong tinh duoc o tren (1512px) cong mot chut du. */
+  @media (min-width: 1520px) {
     .cot-lh__chu {
-      display: none;
-    }
-    .cot-lh__nut {
-      padding: 5px;
+      max-width: 190px;
+      padding-inline: 10px 12px;
+      opacity: 1;
     }
   }
 

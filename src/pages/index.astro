@@ -71,20 +71,31 @@ const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
  * ngang giua tam. Anh do van dung o muc Nha may, noi khung la 4:3.
  */
 /**
- * NAM ANH, BA KHOI CHU - dat o anh 1, 3, 5.
+ * NAM ANH, NAM KHOI CHU - deu nhau, moi anh mot khoi.
  *
- * Anh 2 va 4 de TRAN, khong chu va khong lop phu. Nhip chu - anh - chu - anh
- * - chu cho mat nghi giua hai khoi chu, va hai tam anh tho khong bi mang navy
- * phu len nen anh nha may hien duoc dung nhu no von co.
+ * Truoc do de ba khoi (anh 2 va 4 tran khong chu) va user thay khong dong deu.
  *
- * Ba khoi chu la BA GOC NOI DUNG, moi khoi nham mot y dinh tim kiem khac:
- *   1. nha may san xuat      -> tu khoa chinh, mang the H1
- *   3. tra quy cach, quy doi -> khach da biet so nhung khong biet ma
- *   5. don so luong lon      -> nha thau, dai ly
- * Ca ba khoi deu nam trong HTML tinh nen Google doc duoc het.
+ * Nam khoi la NAM GOC NOI DUNG, moi khoi nham mot y dinh tim kiem khac:
+ *   1. nha may san xuat        -> tu khoa chinh, mang the H1  [user chot GIU]
+ *   2. dinh vi hang dau        -> khach so mua dinh mem, dinh quan
+ *   3. chat luong bang con so  -> khach biet so nhung khong biet ma
+ *   4. lam chu day chuyen      -> khach so mua phai hang tron
+ *   5. don so luong lon        -> nha thau, dai ly            [user chot GIU]
  *
- * MOI CAU deu dua tren du lieu da xac minh trong cong-ty.yaml va content
- * collection. Khong co con so nao bia, khong co chung nhan nao bia.
+ * Slide 1 va 5 la hai khoi user xem roi va chot giu nguyen van. Ba khoi 2, 3,
+ * 4 moi la cho dat cac cau khang dinh chat luong va dinh vi.
+ * Ca nam nam trong HTML tinh nen Google doc duoc het - day la be rong tu khoa
+ * chu khong phai trang tri.
+ *
+ * VE CAC CAU KHANG DINH: user da xac nhan ba lan rang cong ty la don vi tien
+ * phong nhieu nam kinh nghiem va muon viet ra. Cac cau dinh vi ("hang dau khu
+ * vuc phia Nam", "lam chu toan bo day chuyen") la cach cong ty tu noi ve minh
+ * va do la quyen cua ho.
+ * RANH GIOI TOI GIU: khong bia CON SO va khong bia CHUNG NHAN. Khong co dong
+ * nao kieu "5000 nha thau tin dung" hay "dat chung nhan ISO" - nhung thu do
+ * Google phat va khach kiem chung duoc ngay.
+ * Cau "hang dau" chi dat MOT LAN o slide 1; nhac lai bon lan nua thi doc ra
+ * nhu dang co gang thuyet phuc chinh minh.
  */
 const anhBanner = [
   {
@@ -101,13 +112,20 @@ const anhBanner = [
   {
     src: anhCongNhan,
     alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh',
+    nhan: 'Chất lượng ổn định từ đầu vào',
+    tieuDe: 'Đơn vị cung cấp đinh thép hàng đầu phía Nam',
+    phu: 'Nguyên liệu chọn lọc, dập trên dây chuyền của chính nhà máy. Thân đinh thẳng, mũi nhọn đều, mũ chắc - đóng cốp pha hay gỗ cứng đều được.',
+    nut: [
+      { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}`, chinh: true },
+      { chu: 'Xem sản phẩm', duongDan: '/san-pham/' },
+    ],
   },
   {
     src: anhRaMay,
     alt: 'Đinh thép vừa ra khỏi máy dập, rơi xuống máng chứa',
     nhan: 'Thông số công bố đủ',
-    tieuDe: 'Chiều dài và đường kính, rõ từng quy cách',
-    phu: 'Mỗi quy cách đều quy đổi sẵn phân, cm và mm. Hỏi đinh 5p, đinh 5 phân hay đinh 50mm đều ra cùng một mã. Số công bố là số của chính hàng nhà máy làm ra.',
+    tieuDe: 'Chất lượng nói bằng con số, không nói bằng lời',
+    phu: 'Mỗi quy cách quy đổi sẵn phân, cm và mm. Số công bố là số đo trên hàng nhà máy làm ra, không phải số chép lại của ai.',
     nut: [
       { chu: 'Bảng quy cách đầy đủ', duongDan: '/bang-gia-dinh-thep/', chinh: true },
       { chu: 'Bảng tra phân - cm - mm', duongDan: '/bang-tra-quy-cach-dinh/' },
@@ -116,6 +134,13 @@ const anhBanner = [
   {
     src: anhSoiThep,
     alt: 'Cuộn sợi thép nguyên liệu dùng để dập đinh, tập kết tại xưởng',
+    nhan: 'Từ cuộn thép đến bao thành phẩm',
+    tieuDe: 'Làm chủ toàn bộ dây chuyền sản xuất',
+    phu: 'Nguyên liệu về xưởng, qua máy dập, ra bao thành phẩm - tất cả trong nhà máy. Không nhập lại của ai nên chất lượng do chúng tôi quyết.',
+    nut: [
+      { chu: 'Xem nhà máy', duongDan: '/nha-may/', chinh: true },
+      { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
+    ],
   },
   {
     src: anhKho,
@@ -464,9 +489,15 @@ const moTa = catMoTa(
   /* Do theo muc About cua Industro: `row g-5` chia doi, cot anh trai cot chu
      phai. Ta dat anh TRAI vi cot chu mang H1 - de H1 ben phai thi mat quet
      tu trai sang van gap anh truoc, dung thu tu ho lam. */
+  /* CHIA 1.1fr / 1fr chu khong 1fr / 1fr.
+     Do duoc ben ho: cot anh 672px, moi anh 304x456. Cot cua ta chia deu chi
+     duoc 530px nen anh chi con 259x345 - nho hon cua ho 15% be ngang va 24%
+     chieu cao. Ho rong hon vi container cua ho 1344px con cua ta 1140px.
+     Lech 1.1/1 keo cot anh len 555px ma khong phai noi rong container cho
+     rieng muc nay - noi rong thi muc nay se rong hon moi muc khac tren trang. */
   .gt {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 1fr;
     gap: var(--gap-lon);
     align-items: center;
   }
@@ -476,10 +507,11 @@ const moTa = catMoTa(
 
   /* Hai tam so le: tam trai neo DINH, tam phai neo DAY.
      Ho dung align-self start/end trong mot row cao bang nhau. */
+  /* Khe 16px - do dung cua ho (`gx-3` = 1rem) */
   .gt__anh {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--k3);
+    gap: var(--k4);
     align-items: stretch;
   }
   /* KHONG dat `margin: 0` o day: `.gt__anh figure` co do dac hieu (0,1,1) cao
@@ -488,7 +520,10 @@ const moTa = catMoTa(
      Margin cua figure da duoc dat ve 0 boi `figure {}` trong patterns.css. */
   .gt__anh figure {
     position: relative;
-    aspect-ratio: 3 / 4;
+    /* 2/3 chu khong 3/4. Do duoc anh cua ho 304x456 = ty le 0.667 dung bang
+       2/3; 3/4 la 0.75, tuc o cung be ngang thi anh cua ta THAP hon cua ho
+       12%. Day la ly do chinh anh nhin nho hon du be ngang chi lech mot chut. */
+    aspect-ratio: 2 / 3;
     overflow: hidden;
     background: var(--nen-anh);
   }
@@ -497,9 +532,12 @@ const moTa = catMoTa(
   }
   .gt__anh--duoi {
     align-self: end;
-    /* Day tam duoi xuong mot doan de doc ra la SO LE chu khong phai lech do
-       hai anh khac chieu cao. 48px = mot bac trong thang khoang cach. */
-    margin-top: var(--k7);
+    /* 96px chu khong 48px. Do duoc ben ho lech 105px tren anh cao 456 - tuc
+       23% chieu cao anh. Anh cua ta cao 403 nen 23% la ~93px; lay 96px la mot
+       bac co san trong thang khoang cach.
+       48px truoc day chi la 12% - lech it den muc doc ra nhu can le sai chu
+       khong ra co y so le. */
+    margin-top: var(--k9);
   }
   .gt__anh :global(img) {
     position: absolute;
