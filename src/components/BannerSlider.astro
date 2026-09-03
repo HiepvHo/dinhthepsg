@@ -529,6 +529,39 @@ const dauThat = lap ? 1 : 0;
       }),
     );
 
+    /* ---- QUET NGANG tren dien thoai ----
+       Duoi 560px mui ten bi an (no che mat anh o man hep), nen truoc day
+       nguoi dung mobile KHONG CO cach nao chuyen anh - phai cho 6 giay mot
+       tam, nam tam la 30 giay moi xem het.
+
+       KHONG goi preventDefault va dat `passive: true`: chan su kien cham se
+       chan luon cuon doc: nguoi dung keo len xuong trong vung banner se thay
+       trang dung im.
+       Chi tinh la quet khi di ngang HON 40px VA di ngang nhieu hon di doc -
+       khong co dieu kien thu hai thi moi lan cuon doc qua banner deu bi hieu
+       nham thanh quet. */
+    let chamX = 0;
+    let chamY = 0;
+    bn.addEventListener(
+      'touchstart',
+      (e) => {
+        chamX = e.changedTouches[0].clientX;
+        chamY = e.changedTouches[0].clientY;
+        dung();
+      },
+      { passive: true },
+    );
+    bn.addEventListener(
+      'touchend',
+      (e) => {
+        const dx = e.changedTouches[0].clientX - chamX;
+        const dy = e.changedTouches[0].clientY - chamY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) tien(dx < 0 ? 1 : -1);
+        chay();
+      },
+      { passive: true },
+    );
+
     bn.addEventListener('mouseenter', dung);
     bn.addEventListener('mouseleave', chay);
     bn.addEventListener('focusin', dung);

@@ -460,8 +460,10 @@
   .len-dau {
     left: 16px;
     bottom: 76px;
-    width: 40px;
-    height: 40px;
+    /* 44px chu khong 40: 44 la vung cham toi thieu. Do duoc 40x40 la muc duy
+       nhat tren trang con duoi nguong. */
+    width: 44px;
+    height: 44px;
   }
 }
 

@@ -576,12 +576,12 @@ figcaption {
 .van-ban h2 {
   margin-top: var(--k7);
   margin-bottom: var(--k3);
-  scroll-margin-top: 90px;
+  scroll-margin-top: var(--neo-le);
 }
 .van-ban h3 {
   margin-top: var(--k5);
   margin-bottom: var(--k2);
-  scroll-margin-top: 90px;
+  scroll-margin-top: var(--neo-le);
 }
 .van-ban ul,
 .van-ban ol {

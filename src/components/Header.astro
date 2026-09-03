@@ -99,7 +99,9 @@ const navSau = [
     </div>
   </div>
 
-  <div class="dau-trang__trong">
+  {/* Chi HANG NAY dinh khi cuon, dai tren truot di - xem ghi chu o CSS */}
+  <div class="hang-nav">
+    <div class="dau-trang__trong">
     {/* Lockup thuong hieu: DAU HIEU + chu. Cong ty chua co file logo nao, ma mot
         dong chu dam khong doc ra la logo. Dau hieu la dung hinh cay dinh trong
         favicon - mot tai san, dung o hai cho, khong ve them cai moi. */}
@@ -216,6 +218,7 @@ const navSau = [
       Liên hệ ngay
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5.5-6 6 6-6 6"></path></svg>
     </a>
+    </div>
   </div>
 </header>
 
@@ -224,17 +227,46 @@ const navSau = [
      Dinh ca header vao dinh man hinh - 110px la muc chap nhan duoc.
      (Truoc day tach nav thanh dai navy rieng va dinh bang top am -118px; user
      chot dua nav ve chung hang logo nen bo cach do.) */
+  /* KHONG dinh ca header nua - chi dinh HANG NAV.
+     Truoc day ca hai dai deu dinh, do duoc chung an mat 122px tren MOI man
+     hinh suot qua trinh cuon. Dai tren chi mang email va hotline: doc mot lan
+     la du, khong dang chiem 46px vinh vien.
+     Ho lam dung the: dai `bg-dark` cua ho o luong binh thuong, chi `.navbar`
+     mang `sticky-top`. Sau khi sua, phan dinh con 75px - tra lai 46px, tuc 5%
+     man hinh 900px.
+
+     KHONG con `overflow-x: clip` o day: `clip` tao mot vung cat, va mot the
+     `sticky` ben trong vung cat se bi CAT MAT khi no thoat ra ngoai hop cha.
+     Header nay truot len khi cuon nen hang nav dinh lai se bi cat ngay. Bo
+     duoc vi cac khoi cam khong con tran bang margin am nua (da doi sang
+     padding tu vong truoc). */
+  /* DAN CA HEADER voi `top` AM bang dung chieu cao dai tren (46px).
+     Ket qua: dai tren truot khoi man hinh roi hang nav dung lai o y = 0.
+
+     DA THU cach dat sticky rieng cho `.hang-nav` va HONG: sticky bi gioi han
+     trong hop cua CHA, ma `.dau-trang` chi cao 122px - cuon qua la ca hop
+     truot di, hang nav truot theo. Do duoc no o -1454px tai scrollTop 1500.
+     Ho lam cung kieu top am: `.navbar.sticky-top { top: -100px }` roi jQuery
+     dat lai `top: 0` khi cuon qua 300px. Ta khong can JS cho viec nay - mot
+     con so `top` am la du.
+
+     46px la con so PHAI KHOP voi `min-height` cua `.thanh-tren__trong`. Doi
+     mot cho thi phai doi cho kia. */
   .dau-trang {
     position: sticky;
-    top: 0;
+    top: -46px;
     z-index: 100;
+  }
+
+  /* Bong chi hien khi da cuon - luc dang o dinh trang thi header va banner
+     lien mach, mot vet bong o day doc ra nhu mot duong ke thua. */
+  .hang-nav {
     background: var(--trang);
     border-bottom: var(--vien-mong);
-    /* Khoi cam (thuong hieu, hotline) TRAN ra mep man hinh bang box-shadow
-       100vw. Phai cat phan tran do, neu khong trang cuon ngang duoc.
-       Dung `clip` chu KHONG `hidden`: `hidden` mot truc se ep truc kia thanh
-       `auto` va nuot mat mega menu do xuong duoi. `clip` giu truc doc `visible`. */
-    overflow-x: clip;
+    transition: box-shadow 240ms var(--nhip);
+  }
+  :global(html[data-cuon]) .hang-nav {
+    box-shadow: 0 2px 14px rgba(2, 36, 91, 0.16);
   }
 
   /* Tang 1: dai NAVY, khoi hotline mau cam neo mep phai.
@@ -874,9 +906,30 @@ const navSau = [
      mot the rieng nam ngoai nav, CSS can biet trang thai tu cap header. */
   const nut = document.querySelector<HTMLButtonElement>('.nut-menu');
   const dau = document.querySelector<HTMLElement>('.dau-trang');
-  nut?.addEventListener('click', () => {
-    const mo = dau?.classList.toggle('mo');
-    nut.setAttribute('aria-expanded', String(!!mo));
-    nut.setAttribute('aria-label', mo ? 'Đóng menu' : 'Mở menu');
+
+  const datTrangThai = (mo: boolean) => {
+    dau?.classList.toggle('mo', mo);
+    nut?.setAttribute('aria-expanded', String(mo));
+    nut?.setAttribute('aria-label', mo ? 'Đóng menu' : 'Mở menu');
+  };
+
+  nut?.addEventListener('click', () => datTrangThai(!dau?.classList.contains('mo')));
+
+  /* Dong bang Escape. Mo mot bang menu ma khong dong duoc bang ban phim la
+     bat nguoi dung phai voi chuot len dung cai nut vua bam. */
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !dau?.classList.contains('mo')) return;
+    datTrangThai(false);
+    nut?.focus(); // tra focus ve nut, khong de focus troi giua trang
+  });
+
+  /* Dong khi bam ra ngoai. Day la ky vong mac dinh cua moi bang menu; khong co
+     thi nguoi dung bam vao noi dung mot cai va bang menu van che mat cho vua
+     bam. */
+  document.addEventListener('pointerdown', (e) => {
+    if (!dau?.classList.contains('mo')) return;
+    const t = e.target as Node;
+    if (dau.contains(t)) return; // bam trong header thi de nguyen
+    datTrangThai(false);
   });
 </script>

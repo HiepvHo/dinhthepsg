@@ -213,6 +213,16 @@
   --gap: 24px;
   --gap-lon: 40px;
 
+  /* ---------- chieu cao phan HEADER DAN LAI khi cuon ----------
+     Header cao 122px (dai tren 46 + hang nav 76) nhung chi HANG NAV dan lai:
+     `.dau-trang` dinh voi `top: -46px` nen dai tren truot khoi man hinh.
+     Moi cho can chua cho phan dan nay - `scroll-margin-top` cua tieu de co
+     link neo, dinh cot ben - deu phai dung con so nay.
+     TRUOC DAY co bon gia tri khac nhau (70, 90, 95, 110px) rai trong 8 file;
+     70px la SAI - do duoc tieu de bi nav che 6px khi bam link neo. */
+  --dinh-cao: 76px;
+  --neo-le: calc(var(--dinh-cao) + 16px); /* 92px - cong khoang tho */
+
   --khung: 1140px;      /* do duoc tu baogiathep, giu nguyen */
   --khung-rong: 1320px;
   --do-doc: 68ch;
@@ -237,6 +247,14 @@
     --cs-h2: 25px;
     --cs-so: 34px;
     --section-y: 56px;
+  }
+}
+
+@media (max-width: 980px) {
+  :root {
+    /* Hang nav o mobile cao 65px chu khong 76px - do duoc. Khong sua thi
+       `scroll-margin-top` du 11px, khong sai nhung khong dung. */
+    --dinh-cao: 65px;
   }
 }
 

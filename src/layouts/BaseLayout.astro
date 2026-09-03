@@ -127,6 +127,37 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
     <span id="moc-cuon" aria-hidden="true"></span>
 
     <script>
+      /* ---- DANH DAU DA CUON ----
+         Gan `data-cuon` len <html> khi cuon qua 300px. Dung de:
+           - hang nav do bong xuong (thay cho `shadow-sm` cua ho)
+         Ho dat nguong 300px, giu nguyen.
+         Chan bang moc thoi gian chu khong rAF: rAF phu thuoc trinh duyet co ve
+         frame hay khong. Chi doi thuoc tinh khi trang thai THAT SU doi, nen no
+         khong bat trinh duyet ve lai moi lan cuon. */
+      {
+        const goc = document.documentElement;
+        let daCuon = false;
+        let lanCuon = 0;
+        const xemCuon = () => {
+          const moi = window.scrollY > 300;
+          if (moi === daCuon) return;
+          daCuon = moi;
+          if (moi) goc.setAttribute('data-cuon', '');
+          else goc.removeAttribute('data-cuon');
+        };
+        window.addEventListener(
+          'scroll',
+          () => {
+            const t = Date.now();
+            if (t - lanCuon < 80) return;
+            lanCuon = t;
+            xemCuon();
+          },
+          { passive: true },
+        );
+        xemCuon();
+      }
+
       /* ---- HIEN DAN KHI CUON ----
          Thay cho wow.js (~4KB nen) cong animate.css (~2KB nen) cua ho.
 
