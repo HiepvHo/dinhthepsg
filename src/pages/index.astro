@@ -70,12 +70,64 @@ const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
  * banner 893x560 (1.59:1) se cat mat 53% chieu cao cua no, chi con mot lat
  * ngang giua tam. Anh do van dung o muc Nha may, noi khung la 4:3.
  */
+/**
+ * NAM ANH, BA KHOI CHU - dat o anh 1, 3, 5.
+ *
+ * Anh 2 va 4 de TRAN, khong chu va khong lop phu. Nhip chu - anh - chu - anh
+ * - chu cho mat nghi giua hai khoi chu, va hai tam anh tho khong bi mang navy
+ * phu len nen anh nha may hien duoc dung nhu no von co.
+ *
+ * Ba khoi chu la BA GOC NOI DUNG, moi khoi nham mot y dinh tim kiem khac:
+ *   1. nha may san xuat      -> tu khoa chinh, mang the H1
+ *   3. tra quy cach, quy doi -> khach da biet so nhung khong biet ma
+ *   5. don so luong lon      -> nha thau, dai ly
+ * Ca ba khoi deu nam trong HTML tinh nen Google doc duoc het.
+ *
+ * MOI CAU deu dua tren du lieu da xac minh trong cong-ty.yaml va content
+ * collection. Khong co con so nao bia, khong co chung nhan nao bia.
+ */
 const anhBanner = [
-  { src: anhHero, alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn, Đức Hòa, Long An' },
-  { src: anhCongNhan, alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh' },
-  { src: anhRaMay, alt: 'Đinh thép vừa ra khỏi máy dập, rơi xuống máng chứa' },
-  { src: anhSoiThep, alt: 'Cuộn sợi thép nguyên liệu dùng để dập đinh, tập kết tại xưởng' },
-  { src: anhKho, alt: 'Bao đinh thành phẩm xếp trong kho nhà máy' },
+  {
+    src: anhHero,
+    alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn, Đức Hòa, Long An',
+    nhan: `Hơn ${soNam} năm kinh nghiệm`,
+    tieuDe: 'Nhà máy sản xuất đinh thép xây dựng',
+    phu: `${tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán thẳng từ xưởng ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, không qua trung gian.`,
+    nut: [
+      { chu: 'Xem sản phẩm', duongDan: '/san-pham/', chinh: true },
+      { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
+    ],
+  },
+  {
+    src: anhCongNhan,
+    alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh',
+  },
+  {
+    src: anhRaMay,
+    alt: 'Đinh thép vừa ra khỏi máy dập, rơi xuống máng chứa',
+    nhan: 'Thông số công bố đủ',
+    tieuDe: 'Chiều dài và đường kính, rõ từng quy cách',
+    phu: 'Mỗi quy cách đều quy đổi sẵn phân, cm và mm. Hỏi đinh 5p, đinh 5 phân hay đinh 50mm đều ra cùng một mã. Số công bố là số của chính hàng nhà máy làm ra.',
+    nut: [
+      { chu: 'Bảng quy cách đầy đủ', duongDan: '/bang-gia-dinh-thep/', chinh: true },
+      { chu: 'Bảng tra phân - cm - mm', duongDan: '/bang-tra-quy-cach-dinh/' },
+    ],
+  },
+  {
+    src: anhSoiThep,
+    alt: 'Cuộn sợi thép nguyên liệu dùng để dập đinh, tập kết tại xưởng',
+  },
+  {
+    src: anhKho,
+    alt: 'Bao đinh thành phẩm xếp trong kho nhà máy',
+    nhan: 'Sẵn hàng tại kho nhà máy',
+    tieuDe: 'Nhận đơn số lượng lớn và quy cách riêng',
+    phu: `Nhà máy chạy theo đơn. Giao tận công trình khu vực TP.HCM, ${nhaMay.tinhThanh} và các tỉnh lân cận.`,
+    nut: [
+      { chu: 'Gửi yêu cầu báo giá', duongDan: '/lien-he/', chinh: true },
+      { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
+    ],
+  },
 ];
 
 const anhNhom: Record<string, { src: ImageMetadata; alt: string }> = {
@@ -99,25 +151,9 @@ const moTa = catMoTa(
       bo: khong ai yeu cau chu tren banner. Banner la anh, het.
       Chieu cao van tinh theo man hinh de dai ly do ngay duoi lot tron vao man
       hinh dau - xem BannerSlider.astro. */}
-  {/* Chu tren banner: NHAN + H1 + dong phu + hai nut, do theo caption cua ho.
-      MOI CAU deu dua tren du lieu da xac minh trong cong-ty.yaml va content
-      collection - nam thanh lap 2012, so quy cach dem tu du lieu, dia diem nha
-      may lay tu diaDiem[0].
-      KHONG viet "dan dau nganh" hay "so 1": khong co so lieu nao chung minh
-      duoc, va mot cau nhu vay tren trang ban vat tu vua khong thuyet phuc duoc
-      khach B2B vua la rui ro E-E-A-T. Cai thuyet phuc duoc dan mua vat tu la
-      NHA MAY THAT, SO QUY CACH THAT, BAN THANG KHONG QUA TRUNG GIAN. */}
-  <BannerSlider
-    anh={anhBanner}
-    giay={5.5}
-    nhan={`Hơn ${soNam} năm kinh nghiệm`}
-    tieuDe="Nhà máy sản xuất đinh thép xây dựng"
-    phu={`Đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán trực tiếp từ xưởng ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, không qua trung gian.`}
-    nut={[
-      { chu: 'Xem sản phẩm', duongDan: '/san-pham/', chinh: true },
-      { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
-    ]}
-  />
+  {/* Chu nam TRONG tung anh - xem mang anhBanner o tren. 6 giay mot anh chu
+      khong 5,5: khoi chu gio dai hon, can them thoi gian de doc het. */}
+  <BannerSlider anh={anhBanner} giay={6} />
 
   {/* ==== 2. Ly do chon chung toi - thay cho 4 chip mau dac cu ==== */}
   <LyDoChon soQuyCach={tongQuyCach} />

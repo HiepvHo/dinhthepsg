@@ -406,9 +406,12 @@
    Ho dung jQuery de an/hien. Ta dung mot lop `.hien` do IntersectionObserver
    bat, khong can thu vien.
    --------------------------------------------------------------------------- */
+/* Doi sang mep TRAI. Ho de ben phai, nhung goc phai cua ta da co cot lien he
+   4 so dien thoai cong Zalo - de them nut nay vao do la sau thu noi chong
+   trong mot goc. */
 .len-dau {
   position: fixed;
-  right: 30px;
+  left: 30px;
   bottom: 30px;
   z-index: 40;
   display: flex;
@@ -452,11 +455,11 @@
   pointer-events: none;
 }
 
-/* Duoi 560px nut de len cham nut goi/Zalo dang noi o goc phai - day len tren */
+/* Duoi 560px co thanh CTA dinh day man hinh - day nut len tren no */
 @media (max-width: 560px) {
   .len-dau {
-    right: 16px;
-    bottom: 96px;
+    left: 16px;
+    bottom: 76px;
     width: 40px;
     height: 40px;
   }

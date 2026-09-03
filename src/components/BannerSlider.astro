@@ -7,35 +7,29 @@ import { Image } from 'astro:assets';
  * SO DO HO (khung nhin 1440, do bang trinh duyet that):
  *   carousel cao 802px, MOT anh tran het be ngang (khong he lo hai ben)
  *   lop phu: linear-gradient(to right, rgb(2,36,91) 0%, rgba(2,36,91,0) 100%)
- *   nhan tren  20px weight 600 mau cam
- *   tieu de    80px weight 700 trang
- *   nut        padding 16px 48px nen cam
- *   vung bam mui ten: rong 15% (214px), CAO HET banner, opacity .5
- *   mui ten   : vong 56px (KHONG phai 86px - xem ghi chu o phan CSS),
- *               opacity .5 -> .9 khi re, chuyen trong 0.15s
- *   nhan tren : 20px/600, letter-spacing NORMAL, margin-bottom 16px
+ *   nhan tren : 20px/600, letter-spacing normal, margin-bottom 16px
  *   tieu de   : 80px/700, line-height 96px (=1.2), margin-bottom 48px
  *   nut       : 16px/500, padding 16px 48px
- *   cot chu   : x=163 rong 1100 - KHONG lui vao, va van khong dam vao mui ten
- *               vi vong mui ten chi 56px (ket thuc o x=135)
- *   ty le tieu de / nhan = 4,00 lan
+ *   vung bam mui ten: rong 15% (214px), CAO HET banner, opacity .5 -> .9
+ *   mui ten   : vong 56px (khong phai 86px - `box-sizing: border-box` nen
+ *               `width: 3.5rem` DA GOM vien 15px)
+ *   chu caption mang lop `animated slideInRight` - 1s, ease, ba dong cung luc
  *
- * TRUOC DAY ta lam theo mamaflow.vn: he lo 70% co hai anh khuyet hai ben,
- * khong co chu. User doi sang kieu Industro ngay 03/09.
+ * MOI ANH MOT KHOI CHU RIENG, giong ho: caption nam TRONG tung slide nen no
+ * truot cung anh. Nam khoi chu la nam goc noi dung khac nhau, moi khoi nham
+ * mot y dinh tim kiem khac - do la be rong chu de cho Google chu khong phai
+ * de trang trí.
  *
  * TA KHAC HO BA CHO, deu co ly do:
  *
- * 1. CHIEU CAO theo man hinh chu khong go cung 802px. Ho 802 cong header 121 =
- *    923px, tuc dai ly do ngay duoi bi day khoi man hinh dau. User da chot dai
- *    ly do phai nam gon trong man hinh dau nen giu cong thuc `100vh - 225px`.
+ * 1. CHI MOT THE <h1> tren ca trang. Slide dau dung <h1>, cac slide sau va TAT
+ *    CA ban sao dung <p class="bn__dau"> nhin y het. Ho de <h1> o CA HAI slide
+ *    nen trang chu cua ho co hai H1 - loi SEO cua chinh template.
  *
- * 2. MOT KHOI CHU CO DINH, khong doi theo tung anh. Ho de moi slide mot caption
- *    rieng, moi caption mot the <h1> - tuc trang co HAI H1, day la loi SEO cua
- *    chinh template. Ta de mot khoi chu duy nhat mang H1, anh chay phia sau.
- *    Duoc them: chu khong nhay moi lan doi anh.
+ * 2. CHIEU CAO theo man hinh chu khong go cung 802px.
  *
- * 3. TIEU DE dung clamp() chu khong go 80px. Cau tieng Viet cua ta dai hon
- *    "Industrial Solution Providing Company" nen 80px se thanh bon dong.
+ * 3. TIEU DE dung clamp() chu khong go 80px: chu tieng Viet co dau thanh chong
+ *    nen cung mot px chiem cao hon chu Latin.
  *
  * LAP VONG: nhan ban slide cuoi dat len dau va slide dau dat xuong cuoi, chay
  * toi ban sao roi NHAY khong hieu ung ve ban that. Ban sao khong ton byte:
@@ -43,24 +37,24 @@ import { Image } from 'astro:assets';
  *
  * Chieu cao co dinh de khong gay CLS.
  */
-interface Anh {
-  src: ImageMetadata;
-  alt: string;
-}
 interface Nut {
   chu: string;
   duongDan: string;
   chinh?: boolean;
 }
-interface Props {
-  anh: Anh[];
-  giay?: number;
+interface Anh {
+  src: ImageMetadata;
+  alt: string;
   nhan?: string;
   tieuDe?: string;
   phu?: string;
   nut?: Nut[];
 }
-const { anh, giay = 5.5, nhan, tieuDe, phu, nut = [] } = Astro.props;
+interface Props {
+  anh: Anh[];
+  giay?: number;
+}
+const { anh, giay = 6 } = Astro.props;
 
 /* [ban sao cuoi, ...that, ban sao dau] - chi khi co tu 2 anh tro len */
 const lap = anh.length > 1;
@@ -82,6 +76,9 @@ const dauThat = lap ? 1 : 0;
     {
       day.map((a, i) => {
         const banSao = lap && (i === 0 || i === day.length - 1);
+        /* Chi slide THAT dau tien moi mang H1. Cac slide sau va moi ban sao
+           dung <p> nhin y het - mot trang chi duoc mot H1. */
+        const laH1 = i === dauThat;
         return (
           <div
             class="bn__anh"
@@ -103,32 +100,38 @@ const dauThat = lap ? 1 : 0;
               loading={i <= dauThat + 1 ? 'eager' : 'lazy'}
               fetchpriority={i === dauThat ? 'high' : 'auto'}
             />
+
+            {a.tieuDe && (
+              <div class="bn__chu">
+                <div class="khung">
+                  {a.nhan && <p class="bn__nhan">{a.nhan}</p>}
+                  {laH1 ? (
+                    <h1 class="bn__dau">{a.tieuDe}</h1>
+                  ) : (
+                    <p class="bn__dau">{a.tieuDe}</p>
+                  )}
+                  {a.phu && <p class="bn__phu">{a.phu}</p>}
+                  {a.nut && a.nut.length > 0 && (
+                    <div class="bn__nut">
+                      {a.nut.map((n) => (
+                        <a
+                          class={n.chinh ? 'bn__n bn__n--chinh' : 'bn__n'}
+                          href={n.duongDan}
+                          tabindex={banSao ? -1 : undefined}
+                        >
+                          {n.chu}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
       })
     }
   </div>
-
-  {
-    tieuDe && (
-      <div class="bn__chu">
-        <div class="khung">
-          {nhan && <p class="bn__nhan">{nhan}</p>}
-          <h1 class="bn__dau">{tieuDe}</h1>
-          {phu && <p class="bn__phu">{phu}</p>}
-          {nut.length > 0 && (
-            <div class="bn__nut">
-              {nut.map((n) => (
-                <a class={n.chinh ? 'bn__n bn__n--chinh' : 'bn__n'} href={n.duongDan}>
-                  {n.chu}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
 
   {
     anh.length > 1 && (
@@ -150,14 +153,19 @@ const dauThat = lap ? 1 : 0;
 
 <style>
   .bn {
-    /* MOT anh tran het be ngang - giong ho. Truoc day de 70% de he lo hai ben
-       theo kieu mamaflow; kieu do khong con cho nao dat khoi chu. */
     --i: 0;
     position: relative;
     width: 100%;
-    /* Cao theo MAN HINH, va CHUA CHO cho dai ly do ngay duoi.
-       Tru 225px = header 121 + dai ly do 104. */
-    height: clamp(400px, calc(100vh - 225px), 760px);
+    /* CAO HON ban truoc (760 -> 820 tran, va tru 180 thay vi 225).
+       Ly do: khoi chu cua ta cao hon cua ho - ho chi co nhan, tieu de, nut;
+       ta co them mot dong phu. Cung mot chieu cao banner thi phan anh con
+       thay duoc it hon han, doc ra nhu anh bi bop.
+       DANH DOI: o man 900px, dai ly do ngay duoi khong con nam gon trong man
+       hinh dau nua, chi lo ra mot vach ~24px.
+       Tru 145px chu khong 180px: o 180px thi dai ly do lo 60px, va 60px la
+       cat DUNG GIUA dong chu thu hai - doc ra nhu trang bi loi. 24px thi chi
+       lo mep tren cua dai, ro rang la tin hieu "con noi dung ben duoi". */
+    height: clamp(460px, calc(100vh - 145px), 820px);
     overflow: hidden;
     background: var(--navy-900);
   }
@@ -210,14 +218,9 @@ const dauThat = lap ? 1 : 0;
   .bn__chu :global(a) {
     pointer-events: auto;
   }
-  /* KHONG lui chu vao. Do duoc cot chu cua ho bat dau o x=163 - dung bang
-     mep khung cua ta. Truoc day ta phai lui 8,333% vi vong mui ten cua ta to
-     86px nen dam vao chu; nhung 86px la SO SAI (xem ghi chu o phan mui ten).
-     Vong dung 56px thi ket thuc o x=135, cach chu 28px - khong can lui gi. */
 
   /* Ho: 20px/600, mau cam, margin-bottom 16px, letter-spacing NORMAL.
-     Ta tung dat gian chu 0,06em - no lam dong nhan loang ra va mat do net
-     chac. Ho de normal. Tren nen navy cam-500 duoc 4,88:1 - dat AA. */
+     Tren nen navy cam-500 duoc 4,88:1 - dat AA. */
   .bn__nhan {
     /* 8px chu khong 16px cua ho: nhan va tieu de la MOT cum y nghia, de sat
        nhau thi doc ra la mot khoi chu khong phai hai dong roi. */
@@ -229,27 +232,20 @@ const dauThat = lap ? 1 : 0;
     text-transform: uppercase;
     color: var(--cam-500);
   }
-  /* Ho: 80px/700, line-height 96px = 1.2, margin-bottom 48px.
-     TY LE la thu quyet dinh cam giac: 80/20 = DUNG 4 lan. Ta tung de 69px
-     (3,45 lan) nen buoc nhay giua nhan va tieu de khong du dut khoat - dung
-     cai user chi ra khi noi "cho can nho, can to".
-     Line-height 1.06 truoc day qua chat cho tieng Viet: dau thanh o dong tren
-     gan cham chan chu dong duoi. 1.2 la so cua ho va vua du cho dau.
-     KHONG dat max-width: cot chu cua ho rong 1100 va cau tu xuong dong khi
-     het cho - cau cua ta dai hon nen cung xuong hai dong nhu vay. */
+  /* Ho: 80px/700, line-height 1.2. Ta 72px vi chu tieng Viet co dau thanh
+     chong nen o cung mot px no chiem cao hon chu Latin.
+     TY LE tieu de / nhan = 3,6 lan (ho 4,00) - van du dut khoat. */
   .bn__dau {
     max-width: 20ch;
-    /* 72px chu khong 80px cua ho. Chu tieng Viet co dau thanh chong nen o cung
-       mot px no chiem cao hon chu Latin; 80px doc ra nang hon ben ho. */
+    margin: 0;
+    font-family: var(--font-hien);
     font-size: clamp(32px, 5vw, 72px);
+    font-weight: var(--w-dam);
     line-height: 1.18;
     letter-spacing: var(--gc-display);
+    text-wrap: balance;
     color: var(--trang);
   }
-  /* Ho KHONG co dong nay - caption cua ho chi co nhan, tieu de, nut.
-     Ta giu vi no mang thong tin that (sau loai san pham, ban truc tiep) va
-     do la thu khach B2B can. Nhung ha xuong 16,5px chu khong 19px: o 19px no
-     ngang co voi nut va lam phan cap bet lai thanh bon bac deu nhau. */
   .bn__phu {
     max-width: 50ch;
     margin-top: var(--k4);
@@ -260,7 +256,7 @@ const dauThat = lap ? 1 : 0;
 
   /* 48px = margin-bottom cua the h1 ben ho. Khe rong nay la mot phan lam
      caption cua ho doc ra thoang: tieu de rat lon roi mot khoang trong han
-     truoc mot cai nut rat nho. */
+     truoc mot cai nut. */
   .bn__nut {
     display: flex;
     flex-wrap: wrap;
@@ -269,10 +265,9 @@ const dauThat = lap ? 1 : 0;
   }
   /* Ho: padding 16px 48px, 16px/500, VUONG GOC.
      Ta de 19px IN DAM chu khong 16px/500 cua ho, va day la mot rang buoc ky
-     thuat chu khong phai so thich: nut chinh phai mang mau cam-500 song (user
-     yeu cau "de mau nhu mau"), ma chu trang tren cam-500 chi duoc 3,06:1.
-     WCAG tinh chu tu 18,66px IN DAM tro len la chu LON, nguong ha con 3:1 -
-     luc do 3,06:1 moi dat. Duoi co do thi phai dung cam-600 xin hon. */
+     thuat chu khong phai so thich: nut chinh phai mang mau cam-500 song, ma
+     chu trang tren cam-500 chi duoc 3,06:1. WCAG tinh chu tu 18,66px IN DAM
+     tro len la chu LON, nguong ha con 3:1 - luc do 3,06:1 moi dat. */
   .bn__n {
     display: inline-flex;
     align-items: center;
@@ -292,6 +287,7 @@ const dauThat = lap ? 1 : 0;
   .bn__n:hover {
     background: rgba(255, 255, 255, 0.16);
     color: var(--trang);
+    transform: translateY(1px);
   }
   /* cam-500 song - dung mau cua ho. Dat duoc nho chu 19px in dam o tren. */
   .bn__n--chinh {
@@ -305,9 +301,6 @@ const dauThat = lap ? 1 : 0;
     transform: translateY(1px);
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
   }
-  .bn__n:hover {
-    transform: translateY(1px);
-  }
   .bn__n:active,
   .bn__n--chinh:active {
     transform: translateY(2px);
@@ -319,36 +312,26 @@ const dauThat = lap ? 1 : 0;
      delay 0s cho CA BA (ba dong vao cung luc).
 
      TA DUNG Web Animations API trong JS, KHONG dung @keyframes cong lop CSS.
-
-     Da thu cach CSS truoc va HONG: bo lop roi doc offsetWidth roi gan lai lop
-     de bat lai animation. Do duoc bang animationstart/animationend rang
-     animation bat dau va ket thuc trong CUNG MOT mili giay, va the h1 bi ket
-     o opacity 0 suot 2,25 giay moi vong - lau gap 2,8 lan thoi luong 0,8s da
-     khai bao.
-
-     WAAPI hon o ba diem, va do la ly do doi han sang no:
-       1. `cancel()` xoa sach animation cu truoc khi chay cai moi - khong con
-          canh hai animation chong nhau
+     Da thu cach CSS truoc va hong: do duoc animation bat dau va ket thuc
+     trong CUNG MOT mili giay, va the h1 bi ket o opacity 0 suot 2,25 giay.
+     WAAPI hon o ba diem:
+       1. `cancel()` xoa sach animation cu truoc khi chay cai moi
        2. `fill: 'backwards'` chi giu trang thai DAU trong luc cho delay; chay
-          xong la the tra ve style tu nhien cua no. Khong the nao ket o
-          opacity 0 nhu `fill: both` cua CSS
-       3. KHONG co luat CSS nao an chu di, nen JS hong thi chu VAN HIEN. Cach
-          CSS thi `from { opacity: 0 }` cong `fill: both` co the de chu an
-          vinh vien
+          xong la the tra ve style tu nhien. Khong the ket o opacity 0 nhu
+          `fill: both` cua CSS
+       3. KHONG co luat CSS nao an chu di, nen JS hong thi chu VAN HIEN
 
      TA KHAC HO HAI CHO:
-     1. LECH NHIP 70ms giua cac dong thay vi vao cung luc. Ba dong vao cung
-        luc doc ra nhu mot khoi anh truot; lech nhip thi mat doc duoc thu tu
-        nhan -> tieu de -> dong phu -> nut, dung thu tu can doc.
+     1. LECH NHIP 70ms giua cac dong thay vi vao cung luc - mat doc duoc thu
+        tu nhan -> tieu de -> dong phu -> nut, dung thu tu can doc.
      2. DI 56px chu khong translateX(100%). 100% la 100% BE NGANG CUA CHINH
         THE: the h1 rong 900px thi no bay 900px vao, di qua ca man hinh. */
 
   /* ---------- mui ten: do nguyen van cua ho ----------
-     VUNG BAM rong 15% va CAO HET banner chu khong phai chi vong tron 86px.
+     VUNG BAM rong 15% va CAO HET banner chu khong phai chi vong tron.
      Vung rong nhu vay thi khong phai nham, va no de trong o GIUA cho anh tho.
      `opacity: .5` moi la chi tiet lam no tinh te: mui ten lui ve sau, ro han
-     len khi re. Truoc day ta de vong cam DAC 100% - no doc ra nang va tranh
-     mat voi chinh anh. Day la dung cai user chi ra. */
+     len khi re. */
   .bn__lai {
     position: absolute;
     top: 0;
@@ -368,18 +351,11 @@ const dauThat = lap ? 1 : 0;
   .bn__lai:focus-visible {
     opacity: 0.9;
   }
-  /* 56px - KHONG phai 86px.
-     Ho khai bao `width: 3.5rem; border: 15px solid`. Truoc day ta cong
-     56 + 15*2 = 86, nhung Bootstrap dat `box-sizing: border-box` toan cuc nen
-     56px DA GOM CA VIEN: vong that la 56px, o noi dung ben trong con 26px va
-     do la cho mui ten nam. Do lai bang getBoundingClientRect: 56 x 56.
-     Day la cai user chi ra hai lan khi noi mui ten van con to. */
   .bn__vong {
     display: grid;
     place-items: center;
-    /* 48px, nho hon 56px cua ho mot bac theo yeu cau. Anh cua ta la anh chup
-       nha may day chi tiet nen mot vong cam 56px tranh mat voi chinh anh; anh
-       cua ho la anh dan dung co mang trong. */
+    /* 48px, nho hon 56px cua ho mot bac. Anh cua ta la anh chup nha may day
+       chi tiet nen mot vong cam to tranh mat voi chinh anh. */
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -409,10 +385,9 @@ const dauThat = lap ? 1 : 0;
 
   @media (max-width: 980px) {
     .bn {
-      height: 460px;
+      height: 500px;
     }
-    /* Man hep thi 15% chi con ~60px, hep hon ca vong tron. Cho vung bam bang
-       dung vong tron cong mot chut le. */
+    /* Man hep thi 15% chi con ~60px, hep hon ca vong tron. */
     .bn__lai {
       width: 76px;
     }
@@ -444,14 +419,14 @@ const dauThat = lap ? 1 : 0;
     .bn {
       /* Co dinh, KHONG dung 100vh tren dien thoai: thanh dia chi an/hien lam
          100vh doi lien tuc va banner nhay giat khi cuon. */
-      height: 430px;
+      height: 450px;
     }
     .bn__nhan {
       font-size: var(--cs-nho);
-      margin-bottom: var(--k2);
+      margin-bottom: var(--k1);
     }
     .bn__phu {
-      display: none; /* het cho o 430px - giu tieu de va nut */
+      display: none; /* het cho o 450px - giu tieu de va nut */
     }
     .bn__nut {
       margin-top: var(--k4);
@@ -475,33 +450,33 @@ const dauThat = lap ? 1 : 0;
     const lap = bn.dataset.lap === '1';
     if (soThat < 2) return;
 
-    const chuKy = (Number(bn.dataset.giay) || 5.5) * 1000;
+    const chuKy = (Number(bn.dataset.giay) || 6) * 1000;
     const itChuyenDong = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coWaapi = typeof Element.prototype.animate === 'function';
 
     // i chay tren DOM (co ban sao)
     const dau = lap ? 1 : 0;
     let i = dau;
     let hen: number | undefined;
 
-    const dongChu = bn.querySelectorAll<HTMLElement>(
-      '.bn__nhan, .bn__dau, .bn__phu, .bn__nut',
-    );
-    const coWaapi = typeof Element.prototype.animate === 'function';
-
-    /* Truot tung dong chu vao, lech nhip 70ms. Goi lai duoc bao nhieu lan
-       cung duoc: cancel() don sach animation cu truoc khi chay cai moi. */
-    const truotChu = () => {
+    /* Truot tung dong chu CUA SLIDE DANG HIEN vao, lech nhip 70ms.
+       Goi lai duoc bao nhieu lan cung duoc: cancel() don sach animation cu. */
+    const truotChu = (k: number) => {
       if (!coWaapi || itChuyenDong) return;
-      dongChu.forEach((e, k) => {
-        e.getAnimations?.().forEach((a) => a.cancel());
-        e.animate(
-          [
-            { opacity: 0, transform: 'translateX(56px)' },
-            { opacity: 1, transform: 'none' },
-          ],
-          { duration: 800, delay: k * 70, easing: 'ease', fill: 'backwards' },
-        );
-      });
+      const slide = o[k];
+      if (!slide) return;
+      slide
+        .querySelectorAll<HTMLElement>('.bn__nhan, .bn__dau, .bn__phu, .bn__nut')
+        .forEach((e, vt) => {
+          e.getAnimations?.().forEach((a) => a.cancel());
+          e.animate(
+            [
+              { opacity: 0, transform: 'translateX(56px)' },
+              { opacity: 1, transform: 'none' },
+            ],
+            { duration: 800, delay: vt * 70, easing: 'ease', fill: 'backwards' },
+          );
+        });
     };
 
     const ve = () => {
@@ -534,7 +509,7 @@ const dauThat = lap ? 1 : 0;
     const tien = (h: number) => {
       const k = i + h;
       den(lap ? k : (k + soThat) % soThat);
-      truotChu();
+      truotChu(i);
     };
 
     const dung = () => {
@@ -564,9 +539,7 @@ const dauThat = lap ? 1 : 0;
     /* KHONG goi truotChu() o day - chi chay khi DOI ANH.
        Neu chay ca luc tai trang thi the H1 bi an 870ms dau tien: xau cho LCP
        (H1 la mot trong nhung thu Google do thoi diem hien) va nguoi dung phai
-       cho moi doc duoc dong quan trong nhat trang.
-       Ho chay ca luc tai vi caption cua ho mang lop `animated slideInRight`
-       tinh trong HTML - do la mot danh doi ho khong can nhac. */
+       cho moi doc duoc dong quan trong nhat trang. */
     chay();
   });
 </script>
