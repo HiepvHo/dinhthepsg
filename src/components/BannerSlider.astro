@@ -11,8 +11,14 @@ import { Image } from 'astro:assets';
  *   tieu de    80px weight 700 trang
  *   nut        padding 16px 48px nen cam
  *   vung bam mui ten: rong 15% (214px), CAO HET banner, opacity .5
- *   mui ten   : o 56px + vien 15px = vong 86px, doi opacity .5 -> .9 khi re,
- *               chuyen trong 0.15s
+ *   mui ten   : vong 56px (KHONG phai 86px - xem ghi chu o phan CSS),
+ *               opacity .5 -> .9 khi re, chuyen trong 0.15s
+ *   nhan tren : 20px/600, letter-spacing NORMAL, margin-bottom 16px
+ *   tieu de   : 80px/700, line-height 96px (=1.2), margin-bottom 48px
+ *   nut       : 16px/500, padding 16px 48px
+ *   cot chu   : x=163 rong 1100 - KHONG lui vao, va van khong dam vao mui ten
+ *               vi vong mui ten chi 56px (ket thuc o x=135)
+ *   ty le tieu de / nhan = 4,00 lan
  *
  * TRUOC DAY ta lam theo mamaflow.vn: he lo 70% co hai anh khuyet hai ben,
  * khong co chu. User doi sang kieu Industro ngay 03/09.
@@ -204,56 +210,68 @@ const dauThat = lap ? 1 : 0;
   .bn__chu :global(a) {
     pointer-events: auto;
   }
-  /* Lui chu vao 8,333% moi ben - chinh la `col-lg-10` can giua trong `container`
-     ma ho dung cho caption. Khong phai de cho dep: vung bam mui ten rong 15%
-     va vong tron cua no ket thuc o x=150, trong khi chu bat dau o x=163 - chi
-     cach 13px, doc ra nhu chu dam vao mui ten. Lui 8,333% thi chu bat dau o
-     x=265, cach vong tron 115px. */
-  .bn__chu > :global(.khung) {
-    padding-inline: calc(20px + 8.333%);
-  }
+  /* KHONG lui chu vao. Do duoc cot chu cua ho bat dau o x=163 - dung bang
+     mep khung cua ta. Truoc day ta phai lui 8,333% vi vong mui ten cua ta to
+     86px nen dam vao chu; nhung 86px la SO SAI (xem ghi chu o phan mui ten).
+     Vong dung 56px thi ket thuc o x=135, cach chu 28px - khong can lui gi. */
 
-  /* Ho: 20px weight 600 mau cam. Tren nen navy cam-500 duoc 4,88:1 - dat AA. */
+  /* Ho: 20px/600, mau cam, margin-bottom 16px, letter-spacing NORMAL.
+     Ta tung dat gian chu 0,06em - no lam dong nhan loang ra va mat do net
+     chac. Ho de normal. Tren nen navy cam-500 duoc 4,88:1 - dat AA. */
   .bn__nhan {
-    margin-bottom: var(--k3);
+    margin-bottom: var(--k4);
     font-family: var(--font-hien);
     font-size: 20px;
     font-weight: var(--w-vua);
-    letter-spacing: var(--gc-micro);
+    letter-spacing: normal;
     text-transform: uppercase;
     color: var(--cam-500);
   }
-  /* Ho go cung 80px. Cau tieng Viet cua ta dai hon nen dung clamp:
-     o 1440px ra ~69px, o mobile ra 34px. */
+  /* Ho: 80px/700, line-height 96px = 1.2, margin-bottom 48px.
+     TY LE la thu quyet dinh cam giac: 80/20 = DUNG 4 lan. Ta tung de 69px
+     (3,45 lan) nen buoc nhay giua nhan va tieu de khong du dut khoat - dung
+     cai user chi ra khi noi "cho can nho, can to".
+     Line-height 1.06 truoc day qua chat cho tieng Viet: dau thanh o dong tren
+     gan cham chan chu dong duoi. 1.2 la so cua ho va vua du cho dau.
+     KHONG dat max-width: cot chu cua ho rong 1100 va cau tu xuong dong khi
+     het cho - cau cua ta dai hon nen cung xuong hai dong nhu vay. */
   .bn__dau {
-    max-width: 18ch;
-    font-size: clamp(34px, 4.8vw, 69px);
-    line-height: 1.06;
+    max-width: 20ch;
+    font-size: clamp(34px, 5.6vw, 80px);
+    line-height: 1.2;
     letter-spacing: var(--gc-display);
     color: var(--trang);
   }
+  /* Ho KHONG co dong nay - caption cua ho chi co nhan, tieu de, nut.
+     Ta giu vi no mang thong tin that (sau loai san pham, ban truc tiep) va
+     do la thu khach B2B can. Nhung ha xuong 16,5px chu khong 19px: o 19px no
+     ngang co voi nut va lam phan cap bet lai thanh bon bac deu nhau. */
   .bn__phu {
     max-width: 50ch;
     margin-top: var(--k4);
-    font-size: var(--cs-lead);
-    line-height: 1.55;
-    color: #dbe4f2; /* trang nga tren navy - 11,3:1 */
+    font-size: var(--cs-than);
+    line-height: 1.6;
+    color: #c9d6ea; /* trang nga tren navy - 9,4:1 */
   }
 
+  /* 48px = margin-bottom cua the h1 ben ho. Khe rong nay la mot phan lam
+     caption cua ho doc ra thoang: tieu de rat lon roi mot khoang trong han
+     truoc mot cai nut rat nho. */
   .bn__nut {
     display: flex;
     flex-wrap: wrap;
     gap: var(--k3);
-    margin-top: var(--k6);
+    margin-top: var(--k7);
   }
-  /* Ho: padding 16px 48px, nen cam, chu weight 500 */
+  /* Ho: padding 16px 48px, 16px/500, VUONG GOC. Ta tung de 19px/700 - nut
+     to gan bang dong phu nen no gianh mat cho cua tieu de. */
   .bn__n {
     display: inline-flex;
     align-items: center;
     padding: 16px 40px;
     font-family: var(--font-hien);
-    font-size: var(--cs-the);
-    font-weight: var(--w-dam);
+    font-size: var(--cs-than);
+    font-weight: var(--w-vua);
     text-decoration: none;
     border: 2px solid var(--trang);
     color: var(--trang);
@@ -301,17 +319,23 @@ const dauThat = lap ? 1 : 0;
   .bn__lai:focus-visible {
     opacity: 0.9;
   }
+  /* 56px - KHONG phai 86px.
+     Ho khai bao `width: 3.5rem; border: 15px solid`. Truoc day ta cong
+     56 + 15*2 = 86, nhung Bootstrap dat `box-sizing: border-box` toan cuc nen
+     56px DA GOM CA VIEN: vong that la 56px, o noi dung ben trong con 26px va
+     do la cho mui ten nam. Do lai bang getBoundingClientRect: 56 x 56.
+     Day la cai user chi ra hai lan khi noi mui ten van con to. */
   .bn__vong {
     display: grid;
     place-items: center;
-    width: 86px; /* o 56px + vien 15px moi ben - dung so cua ho */
-    height: 86px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: var(--cam-500);
   }
   .bn__lai svg {
-    width: 30px;
-    height: 30px;
+    width: 26px; /* o noi dung con lai sau vien 15px cua ho */
+    height: 26px;
     fill: none;
     stroke: var(--trang);
     stroke-width: 2.2;
@@ -341,12 +365,12 @@ const dauThat = lap ? 1 : 0;
       width: 76px;
     }
     .bn__vong {
-      width: 56px;
-      height: 56px;
+      width: 44px;
+      height: 44px;
     }
     .bn__lai svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
     }
     /* Gradient doi tu NGANG sang DOC: o man hep, gradient ngang lam chu de len
        dung giua anh va khong con mang nhat nao de doc. */
@@ -362,11 +386,6 @@ const dauThat = lap ? 1 : 0;
     }
     .bn__dau {
       max-width: none;
-    }
-    /* Duoi 980px mui ten thu nho va lui vao mep, duoi 560px an han - khong con
-       ly do lui chu vao nua, tra lai le thuong cua khung. */
-    .bn__chu > :global(.khung) {
-      padding-inline: 20px;
     }
   }
   @media (max-width: 560px) {

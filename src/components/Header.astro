@@ -356,8 +356,17 @@ const navSau = [
     min-height: 75px; /* do duoc ben ho */
     padding-right: 48px;
   }
+  /* NAV DON SANG PHAI, dinh sat nut CTA.
+     Do duoc ben ho (khung 1440): logo 0..271 | khe 344px | nav 615..1223 |
+     khe 35px | nut 1223..1377. Tuc nav va nut la MOT cum neo mep phai, con
+     logo dung mot minh ben trai.
+     Truoc day ta lam nguoc lai (logo + nav dinh nhau ben trai, nut day ra xa)
+     va nut doc ra lac long - dung cai user chi ra.
+     Vi sao gio lam duoc ma truoc kia khong: khoi logo bay gio la mot khoi cam
+     DAC cao het hang, no du nang de giu ben trai. Hoi logo con la chu den tren
+     nen trang thi khoang trong 344px do that su doc ra nhu trang bi vo. */
   .dieu-huong {
-    margin-right: auto; /* day CTA sang phai, nav van dinh sat logo */
+    margin-left: auto;
   }
 
   /* Khoi thuong hieu = .navbar-brand cua ho: mot khoi mau DAC cao het hang,
@@ -419,27 +428,32 @@ const navSau = [
   }
 
   /* ---------- nut Lien he ngay ----------
-     Ban tham chieu: vien pill 999px, nen gradient, vien trang 2px, bong cung
-     4px duoi day. Ta BO cai bong cung do - no cho nut mot ve day dan hop trang
-     tre em, khong hop trang vat tu cong nghiep. Giu pill + gradient + bong mem
-     nhuom do thuong hieu. */
+     Do cua ho: `padding: 6px 16px`, 16px/500, `border-radius: 0`, nen cam
+     PHANG, khong gradient khong bong.
+     Ta bo pill + gradient + quang sang: ca header nay xay bang canh vat va goc
+     vuong, mot cai pill bo tron 999px co quang mau la mot ngon ngu khac han -
+     do la ly do no doc ra lac long chu khong chi vi no dat xa.
+     Ta de padding rong hon ho mot chut (11px 24px thay vi 6px 16px) de vung
+     cham dat 44px toi thieu tren thiet bi cham.
+     Nen cam-600 chu khong cam-500: chu trang co thuong tren cam-500 chi
+     3,06:1, truot AA; tren cam-600 la 4,52:1. */
   .nut-lh {
     display: inline-flex;
     align-items: center;
     gap: var(--k2);
     flex: none;
-    padding: 12px 22px;
-    border-radius: var(--bo-tron);
-    background: linear-gradient(180deg, var(--cam-500), var(--cam-600));
+    padding: 11px 24px;
+    border-radius: 0;
+    background: var(--cam-600);
     color: var(--trang);
     font-family: var(--font-hien);
-    font-size: 17px;
+    font-size: 16.5px;
     font-weight: var(--w-dam);
     text-decoration: none;
     white-space: nowrap;
-    box-shadow: 0 4px 14px rgba(213, 68, 0, 0.28);
     transition:
       transform var(--thoi) var(--nhip),
+      background var(--thoi) var(--nhip),
       box-shadow var(--thoi) var(--nhip);
   }
   .nut-lh svg {
@@ -451,9 +465,18 @@ const navSau = [
     stroke-linecap: round;
     stroke-linejoin: round;
   }
+  /* AN XUONG chu khong nhich len - user yeu cau.
+     Nhich len la ngon ngu cua the noi (card lifting); an xuong la ngon ngu cua
+     NUT BAM that, hop voi mot trang vat tu cong nghiep hon.
+     Bong INSET tao cam giac mat nut lom vao khi bi an. */
   .nut-lh:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(213, 68, 0, 0.36);
+    background: var(--cam-700);
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
+  }
+  .nut-lh:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.3);
   }
 
   .dieu-huong {
