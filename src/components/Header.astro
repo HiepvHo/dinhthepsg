@@ -653,9 +653,18 @@ const navSau = [
       gap: var(--k3);
       flex-wrap: nowrap;
     }
+    /* Khoi cam o mobile: thu hep NEM VAT lai. O man 1440 nem rong 50px la
+       vua, nhung o 390 thi 50px la 13% be ngang man hinh - no bop cot chu lai
+       den muc dong phu phai xuong ba dong va chu "STEEL" tran ra ngoai khoi.
+       Nem 34px thi ti le cheo van y het, chi nho lai. */
     .hieu {
       min-width: 0;
       gap: var(--k2);
+      padding-right: 34px;
+    }
+    .hieu.vat--phai::after {
+      width: 34px;
+      right: -17px;
     }
     .hieu__dau {
       width: 36px;
@@ -773,6 +782,11 @@ const navSau = [
     }
     .hieu__ten {
       font-size: 19px;
+    }
+    /* Duoi 560px bo dong phu. Ho cung chi de moi ten thuong hieu o mobile.
+       Ten phap dinh day du van co o footer va trang gioi thieu. */
+    .hieu__phu {
+      display: none;
     }
   }
 </style>

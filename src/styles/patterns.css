@@ -338,6 +338,19 @@ a.the:hover,
   padding: 12px 0;
   border-bottom: var(--vien-mong);
 }
+/* Cot 1 co san 130px + khe 16px; cot 2 khong hep hon tu dai nhat cua no duoc.
+   Tren the lien he o khung nhin 390px thi tong ba thu do vuot qua be ngang the
+   va day ca trang tran ngang 4px - do duoc bang kiem tra tu dong.
+   Duoi 560px xep DOC: nhan tren, gia tri duoi. */
+.dac-ta__hang > * {
+  min-width: 0;
+}
+@media (max-width: 560px) {
+  .dac-ta__hang {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
 .dac-ta dt {
   font-size: var(--cs-nho);
   color: var(--muc-2);
