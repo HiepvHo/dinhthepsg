@@ -252,35 +252,24 @@ const navSau = [
      va man hinh nhay mot cai giua luc dang doc. Doi `top` khong dung toi kich
      thuoc nen khong co lan layout nao - chi la mot cu truot thuan thi giac.
 
-     -46px  = chi an dai tren, hang nav dung lai o y = 0  (mac dinh)
-     -122px = an ca header (dai tren 46 + hang nav 76)
-     Hai con so nay PHAI KHOP voi chieu cao that cua hai dai.
+     `top: -46px` = dung bang chieu cao DAI TREN. Ket qua: dai tren truot
+     khoi man hinh, hang nav dung lai o y = 0 va NAM O DO SUOT, khong bao gio
+     an. Do la dung cau truc cua ho: dai `bg-dark` la the RIENG nam ngoai phan
+     sticky, chi `.navbar` moi mang `sticky-top`.
 
-     TA KHAC HO O DIEU KIEN AN/HIEN, va day la mot sua loi UX chu khong phai
-     so thich:
-       Ho an/hien theo VI TRI CUON - duoi 300px thi an, tren thi hien. Nghia la
-       dang o giua trang cuon NGUOC LEN, nav bien mat cho toi khi ve gan dinh.
-       Ma cuon len thuong chinh la luc nguoi ta muon dung nav.
-       Ta an/hien theo HUONG CUON: cuon xuong (dang doc) thi an di cho rong
-       cho, cuon len (dinh di cho khac) thi hien ra ngay.
+     46px PHAI KHOP voi `min-height` cua `.thanh-tren__trong`.
 
-     MAC DINH la -46px tuc NAV HIEN. Neu JS hong thi nav luon co, khong bao
-     gio mat - chieu an toan dung huong. */
+     DA THU cach an ca hang nav khi cuon xuong roi BO: user chot hang nav phai
+     o lai. Chi dai tren cung an.
+
+     KHONG animate CHIEU CAO cua dai tren de "thu vao": header nam trong luong,
+     co lai 46px thi toan bo noi dung ben duoi bi keo len 46px va man hinh nhay
+     mot cai giua luc dang doc. Dai tren bien di bang chinh cu cuon (muot san),
+     va them mot cu mo dan de no doc ra la co y chu khong phai truot suong. */
   .dau-trang {
     position: sticky;
     top: -46px;
     z-index: 100;
-    transition: top 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
-  }
-  :global(html[data-an-nav]) .dau-trang {
-    top: -122px;
-  }
-
-  /* Nguoi dat it-chuyen-dong: van an/hien nhung khong truot */
-  @media (prefers-reduced-motion: reduce) {
-    .dau-trang {
-      transition: none;
-    }
   }
 
   /* Bong chi hien khi da cuon - luc dang o dinh trang thi header va banner
@@ -304,6 +293,20 @@ const navSau = [
     color: var(--trang);
     font-size: var(--cs-micro);
     font-weight: var(--w-vua);
+    /* Mo dan khi cuon qua 40px. Chi doi `opacity`, KHONG doi `height`:
+       opacity khong dung toi layout nen khong co lan tinh lai nao va noi dung
+       ben duoi khong nhay. */
+    transition: opacity 300ms var(--nhip);
+  }
+  :global(html[data-cuon]) .thanh-tren {
+    opacity: 0;
+  }
+
+  /* Nguoi dat it-chuyen-dong: an ngay, khong mo dan */
+  @media (prefers-reduced-motion: reduce) {
+    .thanh-tren {
+      transition: none;
+    }
   }
   /* TRAN HET BE NGANG, le 48px - do dung cua ho (`ps-5` / `pe-5` = 3rem).
      Truoc day hai hang header bo trong khung 1140 nen o man 1440 con thua
@@ -764,11 +767,6 @@ const navSau = [
        nav luc nay la panel tuyet doi nen khong con trong hang flex nua.
        DOM van la logo - hamburger - nav - CTA (thu tu doc man hinh dung),
        chi dao vi tri BAY bang order. */
-    /* 111px = dai tren 46 + hang nav 65 (mobile). Phai khop, xem ghi chu o
-       luat `.dau-trang` phia tren. */
-    :global(html[data-an-nav]) .dau-trang {
-      top: -111px;
-    }
     .dau-trang__trong {
       min-height: 64px;
       gap: var(--k3);

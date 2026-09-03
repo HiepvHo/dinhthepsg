@@ -134,37 +134,26 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
          Chan bang moc thoi gian chu khong rAF: rAF phu thuoc trinh duyet co ve
          frame hay khong. Chi doi thuoc tinh khi trang thai THAT SU doi, nen no
          khong bat trinh duyet ve lai moi lan cuon. */
+      /* ---- DANH DAU DA CUON ----
+         Gan `data-cuon` len <html> khi cuon qua 40px. Dung cho hai viec:
+           - dai tren cung mo dan roi mat
+           - hang nav do bong xuong
+         40px chu khong 300px cua ho: dai tren cao 46px, cuon qua 40 la no gan
+         nhu da ra khoi man hinh - mo dan dung luc do thi hai chuyen dong khop
+         nhau. Dat 300px thi dai tren da mat tu lau, cu mo dan thanh vo nghia.
+
+         Chan bang moc thoi gian chu khong rAF: rAF phu thuoc trinh duyet co ve
+         frame hay khong. Chi doi thuoc tinh khi trang thai THAT SU doi, nen no
+         khong bat trinh duyet ve lai moi lan cuon. */
       {
         const goc = document.documentElement;
         let daCuon = false;
-        let daAnNav = false;
         let lanCuon = 0;
-        let yTruoc = window.scrollY;
-
         const xemCuon = () => {
-          const y = window.scrollY;
-          const dangXuong = y > yTruoc + 4; // 4px chong rung khi cuon rat cham
-          const dangLen = y < yTruoc - 4;
-          yTruoc = y;
-
-          // Bong duoi hang nav - chi khi da roi khoi dinh trang
-          const cuonRoi = y > 300;
-          if (cuonRoi !== daCuon) {
-            daCuon = cuonRoi;
-            goc.toggleAttribute('data-cuon', cuonRoi);
-          }
-
-          /* An nav khi CUON XUONG, hien lai khi CUON LEN.
-             Gan dinh trang (duoi 140px) thi luon hien: luc do header chua dan
-             nen an di se thay ca mot khoang trong. */
-          let an = daAnNav;
-          if (y <= 140) an = false;
-          else if (dangXuong) an = true;
-          else if (dangLen) an = false;
-          if (an !== daAnNav) {
-            daAnNav = an;
-            goc.toggleAttribute('data-an-nav', an);
-          }
+          const moi = window.scrollY > 40;
+          if (moi === daCuon) return;
+          daCuon = moi;
+          goc.toggleAttribute('data-cuon', moi);
         };
         window.addEventListener(
           'scroll',
