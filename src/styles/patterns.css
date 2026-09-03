@@ -690,3 +690,58 @@ figcaption {
   font-weight: var(--w-dam);
   white-space: nowrap;
 }
+
+/* ------------------------------------------------- nang thang chu -----------
+   Nang toan bo thang co chu len MOT BAC trong pham vi mot muc.
+
+   Dung o cac muc THAN TRANG (san pham, bang quy cach, nha may, doi tac, tin
+   tuc, CTA) theo yeu cau user. KHONG dung cho header, banner, muc gioi thieu
+   va dai so lieu - nhung muc do da chinh co chu rieng o vong truoc.
+
+   VI SAO LAM BANG BIEN CHU KHONG SUA TUNG LUAT: cac muc do co hon 30 luat
+   font-size rai trong bon file. Doi bien thi moi luat dung `var(--cs-*)` tu
+   theo, va lan sau muon tang giam nua thi chi sua mot cho.
+
+   BIEN CHU KE THUA qua DOM chu khong theo pham vi CSS, nen dat o file toan cuc
+   nay van an vao ben trong style co pham vi cua tung component.
+
+   Bac 15,5 va 16,5 trong thang goc chi cach nhau 6% - qua sat de doc ra la
+   mot bac. Nen bac duoi cung nang manh hon mot chut. */
+.nang-chu {
+  /* PHAI dat lai font-size o day, khong chi doi bien.
+     `body` khai `font-size: var(--cs-than)` va bien do duoc GIAI o body, noi
+     ma --cs-than con la 16,5px. Cac the ben trong khong tu khai co chu se ke
+     thua GIA TRI DA TINH 16,5px do, khong phai bien.
+     Do duoc: nut "Xem quy cach" giu nguyen 16,5 trong khi moi thu khac da len.
+     Dat lai o day thi ca nhanh DOM duoi no lay 18px lam co nen. */
+  font-size: var(--cs-than);
+
+  --cs-micro: 15.5px; /* 13,5 -> +15% */
+  --cs-nho: 17px; /* 15,5 -> +10% */
+  --cs-than: 18px; /* 16,5 ->  +9% */
+  --cs-lead: 21px; /* 19   -> +11% */
+  --cs-the: 21px; /* 19   -> +11% */
+  --cs-h3: 24px; /* 21   -> +14% */
+  --cs-h2: 33px; /* 29   -> +14% */
+}
+
+/* PHAI lap lai theo khung nhin: bien dat tren `.nang-chu` nam SAU sau `:root`
+   trong DOM nen no de len ca cac media query thu nho chu o `:root`. Khong lap
+   lai thi chu tren dien thoai giu nguyen co man hinh lon. */
+@media (max-width: 1100px) {
+  .nang-chu {
+    --cs-h2: 28px; /* goc 25 */
+    --cs-h3: 23px; /* goc 21 */
+  }
+}
+@media (max-width: 760px) {
+  .nang-chu {
+    --cs-micro: 14px; /* goc 13,5 */
+    --cs-nho: 15.5px; /* goc 14   */
+    --cs-than: 17px; /* goc 16   */
+    --cs-lead: 18px; /* goc 16,5 */
+    --cs-the: 19px; /* goc 19   */
+    --cs-h3: 21px; /* goc 19   */
+    --cs-h2: 26px; /* goc 23   */
+  }
+}
