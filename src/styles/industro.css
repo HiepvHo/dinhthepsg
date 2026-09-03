@@ -185,7 +185,13 @@
   box-shadow: var(--toa);
   background: var(--trang);
 }
-.the-lat__anh-nen {
+/* Anh nen: nam trong luong bt de CHO CHIEU CAO cho ca the - giong ho, ho de
+   mot <img class="img-fluid"> tran o day the. Mat thuong khong thay no vi lop
+   tieu de trang phu kin; no chi lo ra qua lop navy 70% khi re. */
+.the-lat__nen {
+  display: block;
+}
+.the-lat__nen img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -302,10 +308,23 @@
    mot ::before cao 30px skewY(-5deg) o dinh de mep tren cheo nhe.
    Ca cum nam trong mot khung overflow hidden nen phan tran ra bi cat.
    --------------------------------------------------------------------------- */
+/* CO CHE (do tren template goc dang chay, khong doan):
+     - nghi: hang cao 445, item cao 445, thanh tieu de o `bottom: -110px` nam
+       han duoi hang nen bi hang cat di
+     - re : anh `margin-top: -60px` -> anh troi len, va vi anh nam trong luong
+       binh thuong nen ITEM CO LAI con 385. Thanh tieu de o `bottom: -60px` so
+       voi item da co -> no dang len chiem dung 80px day cua hang.
+     Hang GIU NGUYEN 445 suot qua trinh vi ba item con lai van cao 445.
+
+   BA DIEU KIEN phai dung, thieu mot la hong:
+     1. item KHONG duoc overflow hidden - neu khong thanh tieu de bi cat ngay
+        tai item va khong bao gio hien ra duoc
+     2. HANG moi la cho cat
+     3. item KHONG duoc bi keo cao bang hang (`align-items: start`) - neu bi
+        keo thi `bottom` tinh theo chieu cao da keo va item khong co lai duoc */
 .anh-nho {
   position: relative;
   display: block;
-  overflow: hidden;
   text-decoration: none;
 }
 .anh-nho img {
@@ -421,6 +440,16 @@
 }
 .len-dau:hover {
   background: var(--cam-700);
+}
+
+/* Moc do vi tri cuon - cao het man hinh dau, khong ve gi ca */
+#moc-cuon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100vh;
+  pointer-events: none;
 }
 
 /* Duoi 560px nut de len cham nut goi/Zalo dang noi o goc phai - day len tren */

@@ -103,5 +103,36 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
       <a href={`tel:${c.hotlineTel}`}>Gọi {c.hotline}</a>
       <a href={`https://zalo.me/${c.zalo}`} rel="noopener">Nhắn Zalo</a>
     </div>
+
+    {/* Nut len dau trang - .back-to-top cua Industro.
+        Ho dung jQuery: `$(window).scroll()` roi `fadeIn/fadeOut`, va
+        `$('html,body').animate({scrollTop: 0}, 1500)`.
+        Ta dung IntersectionObserver de bat khi nao cuon qua man hinh dau va
+        `scrollTo({behavior:'smooth'})` de cuon - khong can thu vien nao. */}
+    <button class="len-dau" type="button" aria-label="Lên đầu trang">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"></path></svg>
+    </button>
+    <span id="moc-cuon" aria-hidden="true"></span>
+
+    <script>
+      // Moc dat o cuoi man hinh dau. Khi no ra khoi khung nhin tuc la nguoi
+      // dung da cuon qua mot man hinh - luc do moi hien nut.
+      // IntersectionObserver re hon nghe su kien scroll: trinh duyet chi goi
+      // lai dung mot lan moi khi trang thai doi, khong goi moi frame cuon.
+      const nut = document.querySelector('.len-dau');
+      const moc = document.getElementById('moc-cuon');
+      if (nut && moc) {
+        new IntersectionObserver(
+          ([o]) => nut.classList.toggle('hien', !o.isIntersecting),
+          { threshold: 0 },
+        ).observe(moc);
+
+        nut.addEventListener('click', () => {
+          // Ton trong prefers-reduced-motion: nhay thang thay vi cuon muot
+          const it = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top: 0, behavior: it ? 'auto' : 'smooth' });
+        });
+      }
+    </script>
   </body>
 </html>

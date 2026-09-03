@@ -106,8 +106,33 @@ const moTa = catMoTa(
 
   {/* ============ 3. Gioi thieu, mang H1 ============ */}
   <section class="gioi-thieu">
-    <div class="khung gioi-thieu__trong">
-      <div>
+    <div class="khung gt">
+      {/* Cot anh: hai tam SO LE - tam trai neo dinh, tam phai neo day.
+          Do theo Industro: `col-6 align-self-start` va `col-6 align-self-end`.
+          So le la thu lam cum anh nay khong doc ra nhu mot o anh don. */}
+      <div class="gt__anh">
+        <figure class="gt__anh--tren">
+          <Image
+            src={anhCongNhan}
+            alt="Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh"
+            widths={[320, 620]}
+            sizes="(max-width: 900px) 46vw, 270px"
+            loading="lazy"
+          />
+        </figure>
+        <figure class="gt__anh--duoi">
+          <Image
+            src={anhCan}
+            alt="Cân đinh thành phẩm tại xưởng trước khi đóng bao"
+            widths={[320, 620]}
+            sizes="(max-width: 900px) 46vw, 270px"
+            loading="lazy"
+          />
+        </figure>
+      </div>
+
+      <div class="gt__chu">
+        <p class="nhan-muc">Nhà máy sản xuất đinh</p>
         <h1>Đinh Thép Sài Gòn - Nhà máy sản xuất đinh thép xây dựng</h1>
         <p>
           {c.tenPhapDinhHoa} là đơn vị <strong>sản xuất trực tiếp</strong> đinh thép xây dựng
@@ -123,19 +148,80 @@ const moTa = catMoTa(
           Ngoài đinh, công ty còn gia công tole và phân phối vật tư kim khí qua hệ thống
           {' '}{c.diaDiem.length} địa điểm tại TP.HCM, Long An và Cần Thơ.
         </p>
-        <p class="gioi-thieu__goi">
-          Liên hệ nhận <a href="/bang-gia-dinh-thep/">bảng giá đinh thép hôm nay</a>
-        </p>
+        {/* Khoi so nam + danh sach tich. Do theo Industro:
+            `flex-shrink-0 bg-primary p-4` chua `display-2` roi cot tich ben canh.
+            So nam TINH TU namThanhLap chu khong go cung. */}
+        <div class="gt__nam">
+          <div class="gt__khoi">
+            <span class="gt__so">{soNam}</span>
+            <span class="gt__nhan">Năm</span>
+            <span class="gt__nhan">kinh nghiệm</span>
+          </div>
+          <ul class="gt__tich">
+            {
+              nhom.map((n) => (
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+                  {n.data.ten}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        {/* Hai o lien he - do theo cap `btn-lg-square rounded-circle bg-primary`
+            cua ho o cuoi muc About. */}
+        <div class="gt__lh">
+          <a class="gt__o" href={`tel:${c.hotlineTel}`}>
+            <span class="o-icon o-icon--tron o-icon--cam" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z" /></svg>
+            </span>
+            <span>
+              <em>Gọi nhà máy</em>
+              <strong>{c.hotline}</strong>
+            </span>
+          </a>
+          <a class="gt__o" href="/bang-gia-dinh-thep/">
+            <span class="o-icon o-icon--tron o-icon--cam" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 3.5h14v17H5zM8.5 8h7M8.5 12h7M8.5 16h4" /></svg>
+            </span>
+            <span>
+              <em>Tra thông số</em>
+              <strong>Bảng quy cách đầy đủ</strong>
+            </span>
+          </a>
+        </div>
       </div>
-      <figure class="gioi-thieu__anh">
-        <Image
-          src={anhCongNhan}
-          alt="Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh"
-          widths={[420, 760]}
-          sizes="(max-width: 900px) 92vw, 460px"
-          loading="lazy"
-        />
-      </figure>
+    </div>
+  </section>
+
+  {/* ==== Dai so lieu - muc MOI, do theo `.facts` cua Industro ====
+      Bon con so, KHONG bia so nao: nam kinh nghiem tinh tu namThanhLap, so quy
+      cach va so nhom dem tu content collection, so dia diem dem tu cong-ty.yaml.
+      Ho co "957 Happy Clients" va "1839 Projects Done" - ta khong co so that
+      nao tuong duong nen khong dat o do. */}
+  <section class="dai-so" aria-label="Số liệu nhà máy">
+    <div class="dai-so__luoi">
+      <div class="dai-so__o">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.8 9.6 6.2 2.8h11.6l-2.6 6.8" /><circle cx="12" cy="15" r="6" /><circle cx="12" cy="15" r="2.4" /></svg>
+        <span class="dai-so__so">{soNam}</span>
+        <span class="dai-so__nhan">Năm trong ngành</span>
+      </div>
+      <div class="dai-so__o">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8" width="19" height="8" rx="1" /><path d="M7 8v3.4M11 8v4.4M15 8v3.4M19 8v4.4" /></svg>
+        <span class="dai-so__so">{tongQuyCach}</span>
+        <span class="dai-so__nhan">Quy cách sản xuất</span>
+      </div>
+      <div class="dai-so__o">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 20.6 7v10L12 21.2 3.4 17V7L12 2.8Z" /><path d="M3.4 7 12 11.4 20.6 7M12 11.4v9.8" /></svg>
+        <span class="dai-so__so">{nhom.length}</span>
+        <span class="dai-so__nhan">Nhóm sản phẩm</span>
+      </div>
+      <div class="dai-so__o">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" /><circle cx="12" cy="10" r="2.6" /></svg>
+        <span class="dai-so__so">{c.diaDiem.length}</span>
+        <span class="dai-so__nhan">Địa điểm hoạt động</span>
+      </div>
     </div>
   </section>
 
@@ -150,17 +236,48 @@ const moTa = catMoTa(
         {c.tenThuongHieu} sản xuất và phân phối trực tiếp {tongQuyCach} quy cách đinh và
         vật tư liên kết, giao tận công trình khu vực TP.HCM, Long An và các tỉnh lân cận.
       </p>
+      {/* The LAT KHI RE - do theo `.service-item` cua Industro.
+          Ho dung mot <div> boc, ben trong co mot <a class="btn">. Ta lam ca the
+          thanh MOT the <a> va nut chi la <span>: link long link la HTML khong
+          hop le, va mot vung bam duy nhat bang ca the thi de bam hon nhieu.
+          Anh dung HAI lan giong ho: mot lam nen, mot trong o vuong nho len. */}
       <div class="the-hang">
         {
           nhom.map((n) => {
             const a = anhNhom[n.id];
             return (
-              <a class="the-sp" href={`/san-pham/${n.data.slug}/`}>
-                <div class="the-sp__anh">
-                  <Image src={a.src} alt={a.alt} widths={[260, 500]} sizes="(max-width: 900px) 46vw, 255px" loading="lazy" />
-                </div>
-                <h3>{n.data.ten}</h3>
-                <span class="the-sp__so">{n.data.quyCach.length} quy cách</span>
+              <a class="the-lat" href={`/san-pham/${n.data.slug}/`}>
+                {/* CA HAI anh deu la TRANG TRI: ten nhom trong `.the-lat__ten`
+                    moi la thu mang nghia, va no la ten cua chinh link nay.
+                    De anh mang alt khong an di thi trinh doc man hinh se doc
+                    ten nhom BA lan (alt nen + alt o vuong + chu).
+
+                    Nhung KHONG truyen alt="" duoc: Astro bo han thuoc tinh alt
+                    ra khoi the img khi chuoi rong - da do duoc 6 the img thieu
+                    alt sau lan sua truoc. Nen giu alt THAT roi boc trong mot
+                    span aria-hidden: trinh doc bo qua, con Google van doc duoc
+                    alt de hieu anh. Cung cach da dung cho ban sao o BannerSlider. */}
+                <span class="the-lat__nen" aria-hidden="true">
+                  <Image
+                    src={a.src}
+                    alt={a.alt}
+                    widths={[260, 500]}
+                    sizes="(max-width: 900px) 46vw, 255px"
+                    loading="lazy"
+                  />
+                </span>
+                <span class="the-lat__huy" aria-hidden="true">
+                  <Image src={a.src} alt={a.alt} widths={[130, 260]} sizes="106px" loading="lazy" />
+                </span>
+                <span class="the-lat__khung">
+                  <span class="the-lat__dau">
+                    <span class="the-lat__ke" aria-hidden="true"></span>
+                    <span class="the-lat__ten">{n.data.ten}</span>
+                    <span class="the-lat__so">{n.data.quyCach.length} quy cách</span>
+                  </span>
+                  <span class="the-lat__mo">{n.data.moTaNgan}</span>
+                </span>
+                <span class="the-lat__nut">Xem quy cách</span>
               </a>
             );
           })
@@ -216,18 +333,35 @@ const moTa = catMoTa(
   </section>
 
   {/* ============ 6. Nha may ============ */}
-  <section class="hang hang--nhat">
+  {/* Do theo muc Project cua Industro: nen navy, tieu de can giua, hang anh
+      TRAN SAT MEP khong khe (`row g-0`), moi anh nho len khi re va thanh tieu de
+      navy dang len. Hang anh nam NGOAI .khung de tran duoc het be ngang. */}
+  <section class="nm-muc">
+    <div class="khung nm-muc__dau">
+      <p class="nhan-muc nhan-muc--nghich">Nhà máy sản xuất</p>
+      <h2>Hàng bán ra là hàng chúng tôi làm ra</h2>
+    </div>
+
+    <div class="nm">
+      <a class="anh-nho" href="/nha-may/">
+        <Image src={anhDayChuyen} alt="Dây chuyền máy dập đinh tại nhà máy" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
+        <span class="anh-nho__dau"><span>Dây chuyền dập đinh</span></span>
+      </a>
+      <a class="anh-nho" href="/nha-may/">
+        <Image src={anhRaMay} alt="Đinh ra khỏi máy dập xuống máng chứa" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
+        <span class="anh-nho__dau"><span>Đinh ra khỏi máy</span></span>
+      </a>
+      <a class="anh-nho" href="/nha-may/">
+        <Image src={anhSoiThep} alt="Cuộn sợi thép nguyên liệu tại xưởng" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
+        <span class="anh-nho__dau"><span>Sợi thép nguyên liệu</span></span>
+      </a>
+      <a class="anh-nho" href="/nha-may/">
+        <Image src={anhKho} alt="Bao đinh thành phẩm xếp trong kho" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
+        <span class="anh-nho__dau"><span>Kho thành phẩm</span></span>
+      </a>
+    </div>
+
     <div class="khung">
-      <div class="hang__dau">
-        <h2>Nhà máy sản xuất</h2>
-        <a href="/nha-may/">Xem nhà máy</a>
-      </div>
-      <div class="nm">
-        <figure><Image src={anhDayChuyen} alt="Dây chuyền máy dập đinh tại nhà máy" widths={[280, 540]} sizes="(max-width: 900px) 46vw, 265px" loading="lazy" /></figure>
-        <figure><Image src={anhRaMay} alt="Đinh ra khỏi máy dập xuống máng chứa" widths={[280, 540]} sizes="(max-width: 900px) 46vw, 265px" loading="lazy" /></figure>
-        <figure><Image src={anhSoiThep} alt="Cuộn sợi thép nguyên liệu tại xưởng" widths={[280, 540]} sizes="(max-width: 900px) 46vw, 265px" loading="lazy" /></figure>
-        <figure><Image src={anhKho} alt="Bao đinh thành phẩm xếp trong kho" widths={[280, 540]} sizes="(max-width: 900px) 46vw, 265px" loading="lazy" /></figure>
-      </div>
       <ul class="nm__y">
         <li><strong>Thông số là của chính hàng chúng tôi làm ra</strong>, không phải số chép lại.</li>
         <li><strong>Đặt được số lượng lớn và quy cách riêng</strong>, nhà máy chạy theo đơn.</li>
@@ -266,41 +400,147 @@ const moTa = catMoTa(
   .gioi-thieu {
     padding-block: var(--k7);
   }
-  .gioi-thieu__trong {
+  /* Do theo muc About cua Industro: `row g-5` chia doi, cot anh trai cot chu
+     phai. Ta dat anh TRAI vi cot chu mang H1 - de H1 ben phai thi mat quet
+     tu trai sang van gap anh truoc, dung thu tu ho lam. */
+  .gt {
     display: grid;
-    grid-template-columns: 1fr 460px;
+    grid-template-columns: 1fr 1fr;
     gap: var(--gap-lon);
-    align-items: start;
+    align-items: center;
   }
-  .gioi-thieu__trong > * {
+  .gt > * {
     min-width: 0;
   }
-  .gioi-thieu h1 {
-    font-size: var(--cs-h2);
-    margin-bottom: var(--k4);
+
+  /* Hai tam so le: tam trai neo DINH, tam phai neo DAY.
+     Ho dung align-self start/end trong mot row cao bang nhau. */
+  .gt__anh {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--k3);
+    align-items: stretch;
   }
-  .gioi-thieu p {
-    color: var(--muc-2);
-    max-width: var(--do-doc);
-  }
-  .gioi-thieu__goi {
-    margin-top: var(--k4);
-    font-weight: var(--w-dam);
-  }
-  .gioi-thieu__anh {
+  /* KHONG dat `margin: 0` o day: `.gt__anh figure` co do dac hieu (0,1,1) cao
+     hon `.gt__anh--duoi` (0,1,0), nen no NUOT mat margin-top so le ben duoi.
+     Da do duoc: marginTop tinh ra 0px du da khai bao 48px.
+     Margin cua figure da duoc dat ve 0 boi `figure {}` trong patterns.css. */
+  .gt__anh figure {
     position: relative;
-    margin: 0;
-    aspect-ratio: 4 / 3;
-    border-radius: var(--bo-nho);
+    aspect-ratio: 3 / 4;
     overflow: hidden;
     background: var(--nen-anh);
   }
-  .gioi-thieu__anh :global(img) {
+  .gt__anh--tren {
+    align-self: start;
+  }
+  .gt__anh--duoi {
+    align-self: end;
+    /* Day tam duoi xuong mot doan de doc ra la SO LE chu khong phai lech do
+       hai anh khac chieu cao. 48px = mot bac trong thang khoang cach. */
+    margin-top: var(--k7);
+  }
+  .gt__anh :global(img) {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .gioi-thieu h1 {
+    font-size: var(--cs-h1);
+    margin-bottom: var(--k4);
+  }
+  .gioi-thieu p {
+    color: var(--muc-2);
+  }
+
+  /* Khoi so nam + cot tich. Ho: `d-flex` voi khoi mau `flex-shrink-0 p-4`. */
+  .gt__nam {
+    display: flex;
+    align-items: center;
+    gap: var(--k5);
+    margin-top: var(--k5);
+  }
+  .gt__khoi {
+    display: grid;
+    flex: none;
+    padding: var(--k4) var(--k5);
+    background: var(--cam-500);
+    color: var(--trang);
+    text-align: center;
+  }
+  /* Co display in dam tren nen cam: 3,06:1, dat nguong CHU LON */
+  .gt__so {
+    font-family: var(--font-hien);
+    font-size: var(--cs-display);
+    font-weight: var(--w-nang);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .gt__nhan {
+    font-size: var(--cs-nho);
+    font-weight: var(--w-vua);
+    line-height: 1.3;
+  }
+  .gt__tich {
+    display: grid;
+    gap: 5px;
+  }
+  .gt__tich li {
+    display: flex;
+    align-items: center;
+    gap: var(--k2);
+    font-size: var(--cs-nho);
+    font-weight: var(--w-vua);
+  }
+  .gt__tich svg {
+    width: 17px;
+    height: 17px;
+    flex: none;
+    fill: none;
+    stroke: var(--cam-700);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .gt__lh {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--k4);
+    margin-top: var(--k6);
+  }
+  .gt__o {
+    display: flex;
+    align-items: center;
+    gap: var(--k3);
+    text-decoration: none;
+    color: inherit;
+  }
+  .gt__o svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .gt__o em {
+    display: block;
+    font-style: normal;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-thuong);
+    color: var(--muc-2);
+  }
+  .gt__o strong {
+    font-family: var(--font-hien);
+    font-size: var(--cs-the);
+    font-weight: var(--w-dam);
+  }
+  .gt__o:hover strong {
+    color: var(--cam-700);
   }
 
   /* ---- 4-6. hang noi dung ---- */
@@ -326,89 +566,81 @@ const moTa = catMoTa(
     margin-bottom: var(--k5);
   }
 
+  /* Luoi 3 cot chu khong 4: the lat cua ho co anh vuong 130px nho len giua
+     dinh the, o 4 cot the chi rong ~255px nen o vuong chiem qua nua be ngang
+     va cum lai. Ho cung dung 3 cot (`col-lg-4`).
+     Khoang cach hang phai rong hon cot: 65px anh nho len an vao hang tren. */
   .the-hang {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
   }
-  .the-sp {
-    display: grid;
-    gap: var(--k3);
-    text-decoration: none;
-    color: inherit;
-    text-align: center;
+  /* Ke ngang hai ben ten - do theo cap <hr class="w-25"> cua ho */
+  .the-lat__ke {
+    display: block;
+    width: 25%;
+    height: 1px;
+    background: var(--vien-dam);
   }
-  .the-sp__anh {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    border-radius: var(--bo-nho);
-    background: var(--nen-anh);
-    border: var(--vien-mong);
-  }
-  .the-sp__anh :global(img) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--thoi) var(--nhip);
-  }
-  .the-sp:hover .the-sp__anh :global(img) {
-    transform: scale(1.04);
-  }
-  .the-sp h3 {
+  .the-lat__ten {
     font-family: var(--font-hien);
-    font-size: var(--cs-the);
-    font-weight: var(--w-nang);
+    font-size: var(--cs-h3);
+    font-weight: var(--w-dam);
+    line-height: var(--dc-vua);
+    color: var(--muc);
   }
-  .the-sp:hover h3 {
-    color: var(--cam-600);
-  }
-  .the-sp__so {
+  .the-lat__so {
     font-size: var(--cs-micro);
+    font-weight: var(--w-vua);
     color: var(--muc-2);
   }
 
+  .nm-muc {
+    padding-block: var(--k7) 0;
+    background: var(--navy-900);
+    color: var(--muc-nghich);
+  }
+  .nm-muc__dau {
+    text-align: center;
+    margin-bottom: var(--k6);
+  }
+  .nm-muc__dau h2 {
+    color: var(--trang);
+    font-size: var(--cs-display);
+  }
+  /* g-0 cua ho: bon anh sat nhau khong khe, tran het be ngang.
+     `overflow: hidden` PHAI o day chu khong o tung anh - xem chu thich co che
+     trong industro.css.
+     `align-items: start` de item khong bi keo cao bang hang: co keo thi no
+     khong co lai duoc khi re va thanh tieu de khong dang len. */
   .nm {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-  }
-  .nm figure {
-    position: relative;
-    margin: 0;
-    aspect-ratio: 4 / 3;
-    border-radius: var(--bo-nho);
+    align-items: start;
     overflow: hidden;
-    background: var(--nen-anh);
-  }
-  .nm :global(img) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
   .nm__y {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--gap);
-    margin-top: var(--k6);
+    padding-block: var(--k7);
   }
   .nm__y li {
     padding-left: var(--k4);
     border-left: 3px solid var(--cam-500);
     font-size: var(--cs-nho);
-    color: var(--muc-2);
+    color: var(--muc-nghich-2);
   }
   .nm__y strong {
-    color: var(--muc);
+    color: var(--trang);
   }
 
   /* ---- 7. CTA ---- */
+  /* Nen cam-600 chu KHONG cam-500: doan chu duoi tieu de la chu co thuong
+     mau trang, tren cam-500 chi duoc 3,06:1 - truot AA. Tren cam-600 la
+     4,52:1, dat. */
   .cta {
-    background: var(--cam-500);
+    background: var(--cam-600);
     color: var(--trang);
     padding-block: var(--k6);
   }
@@ -444,13 +676,27 @@ const moTa = catMoTa(
   }
 
   @media (max-width: 980px) {
-    .the-hang,
+    .the-hang {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
     .nm {
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
     }
-    .gioi-thieu__trong {
+    .gt {
       grid-template-columns: 1fr;
+    }
+    /* Duoi 980px bo so le di: hai tam le nhau tren mot cot hep doc ra nhu loi
+       can le chu khong ra chu y. */
+    .gt__anh--duoi {
+      margin-top: 0;
+    }
+    .gt__nam {
+      flex-wrap: wrap;
+    }
+    .gt__lh {
+      grid-template-columns: 1fr;
+      gap: var(--k4);
     }
     .nm__y {
       grid-template-columns: 1fr;

@@ -556,41 +556,6 @@ figcaption {
   color: var(--muc-2);
 }
 
-/* --------------------------------------------------------- dai so lieu ----- */
-.dai-so {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--gap);
-}
-.so-lieu__n {
-  display: block;
-  font-size: var(--cs-so);
-  font-weight: var(--w-nang);
-  line-height: 1.05;
-  font-variant-numeric: tabular-nums;
-  color: var(--cam-500);
-}
-.section--do .so-lieu__n,
-.section--toi .so-lieu__n {
-  color: var(--trang);
-}
-.so-lieu__nhan {
-  display: block;
-  margin-top: var(--k2);
-  font-size: var(--cs-nho);
-  color: var(--muc-2);
-  max-width: 22ch;
-}
-.section--do .so-lieu__nhan,
-.section--toi .so-lieu__nhan {
-  color: var(--muc-nghich-2);
-}
-@media (max-width: 760px) {
-  .dai-so {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 /* ------------------------------------------------------------- bai viet ---- */
 .van-ban {
   max-width: var(--do-doc);

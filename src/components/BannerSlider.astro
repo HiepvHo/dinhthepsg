@@ -159,38 +159,40 @@ const dauThat = lap ? 1 : 0;
     object-fit: cover;
   }
 
-  /* ---------- mui ten ---------- */
+  /* ---------- mui ten: do theo Industro ----------
+     Ho: `width: 3.5rem; border: 15px solid var(--primary); border-radius: 3.5rem`
+     tuc o icon 56px cong vien 15px moi ben = vong cam 86px.
+     Ta dung han 86px va bo vien di - cung ket qua thi giac, mot thuoc tinh
+     thay vi hai.
+     Tuong phan: mui ten trang tren cam-500 duoc 3,06:1. Icon la doi tuong
+     DO HOA chu khong phai chu nen nguong la 3:1 - dat. */
   .bn__lai {
     position: absolute;
     top: 50%;
     z-index: 2;
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 86px;
+    height: 86px;
     padding: 0;
     transform: translateY(-50%);
     border: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: var(--noi);
+    background: var(--cam-500);
     cursor: pointer;
     transition: background var(--thoi) var(--nhip);
   }
   .bn__lai svg {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     fill: none;
-    stroke: var(--muc);
+    stroke: var(--trang);
     stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .bn__lai:hover {
-    background: var(--cam-500);
-  }
-  .bn__lai:hover svg {
-    stroke: var(--trang);
+    background: var(--cam-600);
   }
   .bn__lai--truoc {
     left: 18px;
@@ -215,8 +217,12 @@ const dauThat = lap ? 1 : 0;
       height: 420px;
     }
     .bn__lai {
-      width: 36px;
-      height: 36px;
+      width: 56px;
+      height: 56px;
+    }
+    .bn__lai svg {
+      width: 22px;
+      height: 22px;
     }
     .bn__lai--truoc {
       left: 8px;
