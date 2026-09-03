@@ -1,8 +1,10 @@
 /* ============================================================================
    Entry stylesheet. Thu tu import co y nghia:
-   fonts -> tokens -> base (reset + the HTML) -> patterns (khoi dung lai).
+   fonts -> tokens -> base (reset + the HTML) -> patterns (khoi dung lai)
+   -> industro (thu phap thi giac port tu template).
    ============================================================================ */
 @import "./fonts.css";
 @import "./tokens.css";
 @import "./base.css";
 @import "./patterns.css";
+@import "./industro.css";

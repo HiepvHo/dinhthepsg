@@ -62,12 +62,6 @@ const navSau = [
 <header class="dau-trang">
   <div class="thanh-tren">
     <div class="khung thanh-tren__trong">
-      <span class="thanh-tren__muc">
-        <a href={`mailto:${c.email}`}>{c.email}</a>
-      </span>
-      <span class="thanh-tren__muc thanh-tren__muc--manh">
-        <a href={`tel:${c.hotlineTel}`}>Hotline {c.hotline}</a>
-      </span>
       <span class="thanh-tren__xh an-mobile">
         <a href={`tel:${c.hotlineTel}`} aria-label="Gọi hotline">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"></path></svg>
@@ -82,6 +76,21 @@ const navSau = [
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
         </a>
       </span>
+
+      <span class="thanh-tren__muc an-mobile">
+        <a href={`mailto:${c.email}`}>{c.email}</a>
+      </span>
+
+      {/* Khoi goi: nen cam, canh vat ben trai, tran ra mep phai man hinh.
+          Do theo .topbar-right cua Industro. Chu o 19px in dam - phai tu
+          18,66px in dam tro len thi trang tren cam moi dat nguong chu lon
+          (3:1); duoi co do la truot chuan. */}
+      <span class="thanh-tren__goi vat vat--trai">
+        <svg viewBox="0 0 24 24" aria-hidden="true"
+          ><path d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"
+        ></path></svg>
+        <a href={`tel:${c.hotlineTel}`}>Hotline {c.hotline}</a>
+      </span>
     </div>
   </div>
 
@@ -89,7 +98,7 @@ const navSau = [
     {/* Lockup thuong hieu: DAU HIEU + chu. Cong ty chua co file logo nao, ma mot
         dong chu dam khong doc ra la logo. Dau hieu la dung hinh cay dinh trong
         favicon - mot tai san, dung o hai cho, khong ve them cai moi. */}
-    <a class="hieu" href="/" aria-label={`${c.tenThuongHieu} - trang chủ`}>
+    <a class="hieu vat vat--phai" href="/" aria-label={`${c.tenThuongHieu} - trang chủ`}>
       <span class="hieu__dau" aria-hidden="true">
         <svg viewBox="0 0 48 48">
           <rect x="11" y="9.5" width="26" height="6" rx="1.5"></rect>
@@ -216,11 +225,20 @@ const navSau = [
     z-index: 100;
     background: var(--trang);
     border-bottom: var(--vien-mong);
+    /* Khoi cam (thuong hieu, hotline) TRAN ra mep man hinh bang box-shadow
+       100vw. Phai cat phan tran do, neu khong trang cuon ngang duoc.
+       Dung `clip` chu KHONG `hidden`: `hidden` mot truc se ep truc kia thanh
+       `auto` va nuot mat mega menu do xuong duoi. `clip` giu truc doc `visible`. */
+    overflow-x: clip;
   }
 
-  /* Tang 1: dai do. Do la #C4161C - MOT do duy nhat, khac ho dung hai. */
+  /* Tang 1: dai NAVY, khoi hotline mau cam neo mep phai.
+     Do theo Industro: `.container-fluid bg-dark` cho ca dai, rieng
+     `.topbar-right` nen `--primary` co canh vat trai. Truoc day ta de ca dai
+     mau nhan - mot mang mau bao hoa 100% chay het be ngang man hinh, doc ra
+     nang va khong con cho de nhan manh hotline. */
   .thanh-tren {
-    background: var(--do-500);
+    background: var(--navy-900);
     color: var(--trang);
     font-size: var(--cs-micro);
     font-weight: var(--w-vua);
@@ -229,8 +247,46 @@ const navSau = [
     display: flex;
     align-items: center;
     gap: var(--k5);
-    min-height: 34px;
-    flex-wrap: wrap;
+    min-height: 40px;
+  }
+
+  /* Khoi hotline: nen cam, mep trai cheo, TRAN ra mep phai man hinh.
+     CACH TRAN: margin am 100vw keo mep hop ra ngoai, padding 100vw day noi
+     dung ve cho cu. Tong be ngang khong doi nen bo cuc flex khong xe dich.
+     DA THU `box-shadow: 100vw 0 0` va HONG: bong khong co spread chi DOI hop
+     di chu khong keo dai no, nen ca vet mau nam han ngoai man hinh. */
+  .thanh-tren__goi {
+    display: flex;
+    align-items: center;
+    gap: var(--k2);
+    margin-left: auto;
+    margin-right: -100vw;
+    padding: 5px 100vw 5px var(--k5);
+    background: var(--cam-500);
+  }
+  .thanh-tren__goi svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    fill: none;
+    stroke: var(--trang);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* 19px IN DAM - duoi 18,66px in dam thi trang tren cam truot ca nguong
+     chu lon. Ho dung fs-5 fw-bold (20px) o dung cho nay. */
+  .thanh-tren__goi a {
+    font-family: var(--font-hien);
+    font-size: 19px;
+    font-weight: var(--w-nang);
+    line-height: 1.2;
+    color: var(--trang);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .thanh-tren__goi a:hover {
+    text-decoration: underline;
   }
   .thanh-tren__muc a {
     color: var(--trang);
@@ -242,11 +298,7 @@ const navSau = [
   .thanh-tren__muc--manh {
     font-weight: var(--w-nang);
   }
-  .thanh-tren__muc:last-child,
-  .thanh-tren__xh {
-    margin-left: auto;
-  }
-  /* Icon xa hoi ben phai top bar - giong bo cuc top bar cua baogiathep */
+  /* Icon xa hoi ben TRAI top bar - Industro dat "Follow Us:" o cot trai */
   .thanh-tren__xh {
     display: flex;
     align-items: center;
@@ -287,23 +339,33 @@ const navSau = [
     margin-right: auto; /* day CTA sang phai, nav van dinh sat logo */
   }
 
+  /* Khoi thuong hieu = .navbar-brand cua ho: mot khoi mau DAC cao het hang,
+     mep phai cheo, tran ra mep trai man hinh.
+     Ho: height 75px, padding-right 50px, ::after rong 50px lech phai -25px.
+     Ta giu nguyen ba con so do. */
   .hieu {
     display: flex;
     align-items: center;
     gap: var(--k3);
+    align-self: stretch;
+    /* Tran ra mep TRAI man hinh - cung ky thuat voi khoi hotline o tren.
+       50px ben phai la con so cua ho (.navbar-brand padding-right 50px), chua
+       cho cho mep cheo ::after rong 50px lech ra -25px. */
+    margin-left: -100vw;
+    padding: 0 50px 0 100vw;
+    background: var(--cam-500);
     text-decoration: none;
     line-height: 1.05;
   }
   /* Dau hieu: o bo goc do, cay dinh trang - cung hinh voi favicon */
+  /* Dau hieu gio nam TREN nen cam nen bo o nen va bo bong: mot o cam tren
+     nen cam la mot duong vien thua. Chi con hinh cay dinh mau trang. */
   .hieu__dau {
     display: grid;
     place-items: center;
     flex: none;
     width: 42px;
     height: 42px;
-    border-radius: 9px;
-    background: var(--do-500);
-    box-shadow: var(--noi-do);
   }
   .hieu__dau svg {
     width: 26px;
@@ -314,19 +376,26 @@ const navSau = [
     display: grid;
     gap: 1px;
   }
+  /* 26px in dam - dat nguong CHU LON (3:1) tren nen cam, do duoc 3,06:1. */
   .hieu__ten {
     font-family: var(--font-hien);
     font-size: 26px;
     font-weight: var(--w-dam);
     letter-spacing: -0.005em;
-    color: var(--do-500);
+    color: var(--trang);
   }
+  /* Dong phu nang tu 10,5 len 12px va doi sang trang duc.
+     Luu y: o co nay chu KHONG con la "chu lon" nen ti le 3,06:1 cua trang tren
+     cam-500 la KHONG dat AA. Chap nhan co y thi sai; thay vao do dong nay
+     KHONG mang thong tin nao ma cho khac chua co - ten phap dinh day du nam o
+     footer va trang gioi thieu. No la nhan phu tro thuan tuy. */
   .hieu__phu {
-    font-size: 10.5px;
+    font-size: 12px;
     font-weight: var(--w-vua);
     letter-spacing: 0.045em;
     text-transform: uppercase;
-    color: var(--muc-2);
+    color: var(--trang);
+    opacity: 0.92;
   }
 
   /* ---------- nut Lien he ngay ----------
@@ -341,14 +410,14 @@ const navSau = [
     flex: none;
     padding: 12px 22px;
     border-radius: var(--bo-tron);
-    background: linear-gradient(180deg, var(--do-500), var(--do-600));
+    background: linear-gradient(180deg, var(--cam-500), var(--cam-600));
     color: var(--trang);
     font-family: var(--font-hien);
     font-size: 17px;
     font-weight: var(--w-dam);
     text-decoration: none;
     white-space: nowrap;
-    box-shadow: 0 4px 14px rgba(196, 22, 28, 0.28);
+    box-shadow: 0 4px 14px rgba(213, 68, 0, 0.28);
     transition:
       transform var(--thoi) var(--nhip),
       box-shadow var(--thoi) var(--nhip);
@@ -364,7 +433,7 @@ const navSau = [
   }
   .nut-lh:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(196, 22, 28, 0.36);
+    box-shadow: 0 6px 18px rgba(213, 68, 0, 0.36);
   }
 
   .dieu-huong {
@@ -384,18 +453,21 @@ const navSau = [
     display: flex;
     align-items: center;
     gap: 4px;
-    min-height: 80px;
+    min-height: 76px;
     font-family: var(--font-hien);
-    font-size: 17px;
-    font-weight: var(--w-vua);
-    color: var(--muc);
+    /* Do duoc ben ho: .nav-link font-size 18px, font-weight 500, mau --dark.
+       Ta doi mau chu sang navy-900 (chinh la --dark cua ho) chu khong de mau
+       chu chung: nav tren nen trang canh mot khoi cam dac thi navy noi hon. */
+    font-size: 18px;
+    font-weight: var(--w-thuong);
+    color: var(--navy-900);
     text-decoration: none;
     border-bottom: 2px solid transparent;
   }
   .dieu-huong__cap1 > li > a:hover,
   .dieu-huong__cap1 > li > a[aria-current='page'] {
-    color: var(--do-500);
-    border-bottom-color: var(--do-500);
+    color: var(--cam-500);
+    border-bottom-color: var(--cam-500);
   }
 
   /* ---------- tha xuong nho (Bang gia) ----------
@@ -426,7 +498,7 @@ const navSau = [
     background: var(--trang);
     border: var(--vien-mong);
     border-top: 0;
-    border-bottom: 3px solid var(--do-500);
+    border-bottom: 3px solid var(--cam-500);
     box-shadow: var(--noi-lon);
     opacity: 0;
     visibility: hidden;
@@ -452,7 +524,7 @@ const navSau = [
   }
   .tha a:hover {
     background: var(--nen-nhat);
-    color: var(--do-500);
+    color: var(--cam-500);
   }
 
   /* ---------- mega menu ---------- */
@@ -465,7 +537,7 @@ const navSau = [
     z-index: 2;
     background: var(--trang);
     border-top: var(--vien-mong);
-    border-bottom: 3px solid var(--do-500);
+    border-bottom: 3px solid var(--cam-500);
     box-shadow: var(--noi-lon);
     opacity: 0;
     visibility: hidden;
@@ -508,7 +580,7 @@ const navSau = [
     border-bottom: var(--vien-mong);
   }
   a.mega__dau:hover {
-    color: var(--do-500);
+    color: var(--cam-500);
   }
   .mega__ds {
     display: grid;
@@ -523,7 +595,7 @@ const navSau = [
     text-decoration: none;
   }
   .mega__ds a:hover {
-    color: var(--do-500);
+    color: var(--cam-500);
   }
   .mega__mm {
     color: var(--muc-3);
@@ -534,7 +606,7 @@ const navSau = [
   .mega__cot--kt {
     padding: var(--k4);
     background: var(--nen-nhat);
-    border-left: 3px solid var(--do-500);
+    border-left: 3px solid var(--cam-500);
     border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
   }
   .mega__cot--kt .mega__ds a {
@@ -542,7 +614,7 @@ const navSau = [
     color: var(--muc);
   }
   .mega__cot--kt .mega__ds a:hover {
-    color: var(--do-500);
+    color: var(--cam-500);
   }
   .mega__mota {
     font-size: var(--cs-micro);
@@ -649,7 +721,7 @@ const navSau = [
     .dieu-huong__cap1 > li > a:hover,
     .dieu-huong__cap1 > li > a[aria-current='page'] {
       border-bottom-color: var(--vien);
-      color: var(--do-500);
+      color: var(--cam-500);
     }
     .mega {
       position: static;

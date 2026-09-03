@@ -64,7 +64,7 @@ ol {
   outline-offset: var(--le-focus);
 }
 ::selection {
-  background: var(--do-500);
+  background: var(--cam-500);
   color: var(--trang);
 }
 

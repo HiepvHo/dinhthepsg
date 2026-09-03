@@ -9,7 +9,7 @@
    |--------------|---------------------------------|-----------------------------|
    | Font         | Roboto + Roboto Condensed (2)   | Be Vietnam Pro (1)          |
    | Co chu lon nhat | 25.6px (than bai 16px = 1.6x)| 44px (than 16.5px = 2.7x)   |
-   | Do           | #C4161C VA #FF0000 (hai do)     | mot do #C4161C              |
+   | Mau nhan     | #C4161C VA #FF0000 (hai do)     | mot cam #FF5E14             |
    | Bo goc       | 7 gia tri (5,10,12,15,20,25,999)| 3 gia tri (6,10,999)        |
    | Chu phu      | xam rgba(102,102,102,.85)       | steel #55606B (co sac)      |
    | Container    | 1140px                          | 1140px (giu nguyen)         |
@@ -22,11 +22,25 @@
 :root {
   /* ---------- mau: HAI HE, khong phai bon nhu ho ---------- */
 
-  /* Do thuong hieu. Lay tu bao bi "DINH SAI GON" va trung voi do cua baogiathep. */
-  --do-500: #c4161c;
-  --do-600: #a51218;
-  --do-700: #7f0e13;
-  --do-050: #fbeded;
+  /* Mau nhan: CAM #FF5E14, lay tu template Industro (HTML Codex).
+     KHONG phai mau thuong hieu - cong ty khong co mau thuong hieu dang ky.
+     Truoc day dung do #C4161C, do la mau TOI TU SUY tu anh bao bi, va no
+     trung het voi baogiathep.net - mot doi thu truc tiep. User da xac nhan
+     khong co mau thuong hieu va khong thich do.
+     Thang mau dung tu hsl(19, 100%, 54%) cua #FF5E14.
+
+     BA BAC, MOI BAC MOT VIEC - chia theo NGUONG TUONG PHAN do duoc, khong
+     phai chia cho dep. Bang mau goc cua Industro TRUOT chuan AA o hai cho va
+     phai sua, chi tiet trong bang duoi. */
+  --cam-500: #ff5e14;   /* hsl(19,100%,54%) - mau goc cua ho. CHI dung lam
+                           NEN va cho chu LON: trang tren no chi 3,06:1, dat
+                           nguong chu lon (3:1) chu KHONG dat chu thuong (4,5). */
+  --cam-600: #d54400;   /* hsl(19,100%,42%) - NEN NUT mang chu trang co thuong.
+                           Day la cam SANG NHAT o hue 19 ma chu trang van dat
+                           AA: 4,52:1. Sang hon mot chut la truot. */
+  --cam-700: #b83a00;   /* hsl(19,100%,36%) - CHU cam tren nen trang: 5,76:1.
+                           Lien ket trong than bai dung bac nay. */
+  --cam-050: #fff1eb;   /* hsl(19,100%,96%) - nen vong icon */
 
   /* Steel: mau cua chinh san pham (thep ma kem trong anh nha may).
      Day la he thay cho xam vo huong - chu phu van mang sac cong nghiep. */
@@ -39,13 +53,31 @@
   --steel-050: #f4f6f8;
   --trang: #ffffff;
 
-  /* Navy sau - nen toi cua trang. Do tu footer hoclaptrinhrobotics.com
-     (#052859, cao 1012px). Truoc day dung #16191C gan-den: den thuan doc ra
-     "xam ban", navy sau co chieu sau va sang trong hon o cung do toi. */
-  --navy-900: #052859;
-  --navy-800: #0a3570;
-  --navy-600: #0648a9;   /* badge so, gach chan tieu de - do tu badge tron 43px cua ho */
-  --navy-400: #4a7fc4;
+  /* Navy sau - nen toi cua trang. Lay --dark: #02245B cua Industro
+     (truoc do la #052859, gan giong nhung khong khop). Thang dung tu
+     hsl(217, 96%, 18%). Cap cam + navy nay la cap goc cua template:
+     cam bao hoa 100% tren navy 18% cho tuong phan rat manh ma khong choi. */
+  --navy-900: #02245b;   /* hsl(217,96%,18%) - mau goc cua ho */
+  --navy-800: #022f78;   /* hsl(217,96%,24%) */
+  --navy-600: #0343aa;   /* hsl(217,96%,34%) - badge so, gach chan tieu de */
+  --navy-400: #3f76cf;   /* hsl(217,60%,53%) - chu phu tren nen toi */
+
+  /* BANG TUONG PHAN do ngay 03/09/2026 (WCAG 2.1, nguong AA 4,5:1 chu thuong
+     va 3:1 chu lon tu 24px hoac 18,66px in dam):
+
+     | cap mau                 | ti le | ket luan            |
+     |-------------------------|-------|---------------------|
+     | cam-500 tren trang      | 3,06  | chi chu LON         |
+     | trang tren cam-500      | 3,06  | chi chu LON         |
+     | trang tren cam-600      | 4,52  | DAT chu thuong      |
+     | cam-700 tren trang      | 5,76  | DAT chu thuong      |
+     | navy-900 tren trang     | 14,94 | DAT                 |
+     | trang tren navy-900     | 14,94 | DAT                 |
+     | cam-500 tren navy-900   | 4,88  | DAT - cap manh nhat |
+     | navy-400 tren navy-900  | 3,35  | chi chu LON         |
+
+     Cho cam-500 tren navy 4,88:1 la ly do dai so lieu cua ho dung so mau cam
+     tren nen navy: cap do vua manh vua dat chuan. */
 
   /* Mot mau tin hieu duy nhat, chi dung cho trang thai "con hang" */
   --xanh-500: #1a7f4b;
@@ -61,11 +93,13 @@
   --nen-trang: var(--trang);
   /* Nen xen ke. Truoc day dung steel-050 (#F4F6F8) - xam LANH, khong lien quan
      gi toi do thuong hieu nen cac dai xen ke doc ra roi rac.
-     Doi sang tint AM lay tu chinh do #C4161C: cung goc mau, do bao hoa keo xuong
-     con ~5%. Day la cach mamaflow.vn tao su hoa hop ma user thich - trang +
-     mot mau bao hoa + tint rat nhat CUA CHINH mau do. */
-  --nen-nhat: #fbf4f2;
-  --nen-do: var(--do-500);          /* dai do - top bar, dai CTA */
+     Doi sang tint AM lay tu chinh cam #FF5E14: cung goc mau (hsl 19), do bao
+     hoa keo xuong con ~6%. Day la cach mamaflow.vn tao su hoa hop ma user
+     thich - trang + mot mau bao hoa + tint rat nhat CUA CHINH mau do.
+     KHONG lay --light: #F5F5F5 cua Industro: xam vo huong canh mot mau cam
+     bao hoa 100% thi doc ra hai he mau roi rac. */
+  --nen-nhat: #fdf6f1;   /* hsl(19,60%,97%) */
+  --nen-cam: var(--cam-500);        /* dai cam - topbar, dai CTA */
   --nen-toi: var(--navy-900);       /* footer - navy sau, khong phai gan-den */
 
   /* Nen anh cho: dung CUNG mot mau gan-trang voi nen xen ke. Truoc day
@@ -78,13 +112,13 @@
   --vien-dam: var(--steel-200);
   --vien-nghich: rgba(255, 255, 255, 0.14);
 
-  --thuong-hieu: var(--do-500);
-  --hanh-dong: var(--do-500);        /* nut CTA chinh */
-  --hanh-dong-nhan: var(--do-600);
+  --thuong-hieu: var(--cam-500);     /* nen khoi logo, vien, icon - khong phai chu */
+  --hanh-dong: var(--cam-600);       /* nut CTA: chu trang co thuong -> phai 600 */
+  --hanh-dong-nhan: var(--cam-700);
   --hanh-dong-muc: var(--trang);
-  --lien-ket: var(--do-600);
-  --lien-ket-hover: var(--do-700);
-  --focus: var(--do-500);
+  --lien-ket: var(--cam-700);        /* chu tren nen trang -> phai 700 */
+  --lien-ket-hover: var(--navy-900); /* doi han sang navy: thay ro hon mot bac cam */
+  --focus: var(--cam-600);
 
   /* ---------- chu ----------
      HAI ho font, moi ho mot viec (xem ly do chon trong fonts.css):
@@ -145,7 +179,19 @@
   --noi-nho: 0 1px 4px rgba(22, 25, 28, 0.06);
   --noi: 0 2px 10px rgba(22, 25, 28, 0.08);
   --noi-lon: 0 6px 24px rgba(22, 25, 28, 0.1);
-  --noi-do: 0 2px 10px rgba(196, 22, 28, 0.18);
+  --noi-cam: 0 2px 10px rgba(255, 94, 20, 0.22);
+  /* Bong toa rong cua Industro - chu ky thu hai cua template sau canh vat.
+     Ban khong co mau, ban khong co vien: chi mot quang toi rat nhat toa 45px.
+     Day la thu thay the cho 55 cai vien xam ma trang nay tung co. */
+  --toa: 0 0 45px rgba(0, 0, 0, 0.07);
+  --toa-dam: 0 0 45px rgba(0, 0, 0, 0.09);
+
+  /* ---------- canh vat cheo: chu ky so mot cua Industro ----------
+     Khoi mau khong cat vuong ma cat cheo. Dung qua pseudo-element de
+     phan chu ben trong khong bi nghieng theo. */
+  --vat-doc: skewX(-30deg);    /* topbar, khoi logo - canh doc cheo */
+  --vat-ngang: skewY(-12deg);  /* the san pham - mep tren cheo */
+  --vat-nhe: skewY(-5deg);     /* thanh tieu de anh - cheo nhe */
 
   --vong-focus: 3px solid var(--focus);
   --le-focus: 2px;
@@ -172,8 +218,15 @@
   --do-doc: 68ch;
   --cham: 44px;         /* vung cham toi thieu tren mobile */
 
-  /* ---------- chuyen dong: nhanh, khong hieu ung ---------- */
+  /* ---------- chuyen dong ----------
+     HAI toc do, khong phai mot:
+       --thoi     120ms: doi mau, doi vien - phan hoi tuc thi khi ro chuot
+       --thoi-lat 500ms: cac khoi TRUOT qua nhau (the lat, anh nho, thanh dang)
+     500ms la so do duoc trong style.css cua Industro - moi hieu ung truot cua
+     ho deu dat `.5s`. Cham la co y: mat phai kip doc khoi nao di dau. Ep xuong
+     120ms thi hieu ung doc ra nhu giat chu khong ra truot. */
   --thoi: 120ms;
+  --thoi-lat: 500ms;
   --nhip: ease-out;
 }
 
@@ -206,5 +259,6 @@
 @media (prefers-reduced-motion: reduce) {
   :root {
     --thoi: 0ms;
+    --thoi-lat: 0ms;
   }
 }

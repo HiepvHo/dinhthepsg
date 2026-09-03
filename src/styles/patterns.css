@@ -27,7 +27,7 @@
   background: var(--nen-nhat);
 }
 .section--do {
-  background: var(--nen-do);
+  background: var(--nen-cam);
   color: var(--muc-nghich);
 }
 .section--do h1,
@@ -62,7 +62,7 @@
   font-weight: var(--w-nang);
   letter-spacing: var(--gc-micro);
   text-transform: uppercase;
-  color: var(--do-500);
+  color: var(--cam-500);
 }
 .section--do .nhan-tren,
 .section--toi .nhan-tren {
@@ -153,8 +153,8 @@
   color: var(--muc);
 }
 .nut--vien:hover {
-  border-color: var(--do-500);
-  color: var(--do-500);
+  border-color: var(--cam-500);
+  color: var(--cam-500);
 }
 .nut--toi {
   background: var(--steel-900);
@@ -169,11 +169,11 @@
 .nut--tren-do {
   background: var(--trang);
   border-color: var(--trang);
-  color: var(--do-600);
+  color: var(--cam-600);
 }
 .nut--tren-do:hover {
-  background: var(--do-050);
-  color: var(--do-700);
+  background: var(--cam-050);
+  color: var(--cam-700);
 }
 .nut--lon {
   min-height: 52px;
@@ -198,7 +198,7 @@
 }
 a.the:hover,
 .the--bam:hover {
-  border-color: var(--do-500);
+  border-color: var(--cam-500);
   box-shadow: var(--noi);
 }
 .the__anh {
@@ -225,8 +225,8 @@ a.the:hover,
   min-height: 26px;
   padding: 0 10px;
   border-radius: var(--bo-nho);
-  background: var(--do-050);
-  color: var(--do-600);
+  background: var(--cam-050);
+  color: var(--cam-600);
   font-size: var(--cs-micro);
   font-weight: var(--w-nang);
   letter-spacing: 0.02em;
@@ -290,7 +290,7 @@ a.the:hover,
   text-transform: uppercase;
   padding: 13px var(--k4);
   white-space: nowrap;
-  border-bottom: 2px solid var(--do-500);
+  border-bottom: 2px solid var(--cam-500);
 }
 /* Ke NGANG dat tren TR chu khong tren TD.
    Do duoc: dat tren td thi mot bang 10 dong x 6 cot ve 60 cai vien, va do la
@@ -313,7 +313,7 @@ a.the:hover,
 }
 .bang__gia {
   font-weight: var(--w-nang);
-  color: var(--do-600);
+  color: var(--cam-600);
   white-space: nowrap;
 }
 .bang__chua-co {
@@ -351,7 +351,7 @@ a.the:hover,
 .gia {
   font-size: var(--cs-h2);
   font-weight: var(--w-nang);
-  color: var(--do-600);
+  color: var(--cam-600);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
@@ -361,7 +361,7 @@ a.the:hover,
   color: var(--muc-2);
 }
 .hop-gia {
-  background: var(--do-050);
+  background: var(--cam-050);
   border: 1px solid #f2d4d5;
   border-radius: var(--bo);
   padding: var(--k5);
@@ -386,7 +386,7 @@ a.the:hover,
   height: 20px;
   margin-top: 2px;
   border-radius: var(--bo-tron);
-  background: var(--do-500);
+  background: var(--cam-500);
   color: var(--trang);
   display: grid;
   place-items: center;
@@ -408,7 +408,7 @@ a.the:hover,
   text-decoration: none;
 }
 .vun-banh a:hover {
-  color: var(--do-600);
+  color: var(--cam-600);
   text-decoration: underline;
 }
 .vun-banh li {
@@ -424,7 +424,7 @@ a.the:hover,
 /* ------------------------------------------------------------- muc luc ----- */
 .muc-luc {
   background: var(--nen-anh);
-  border-left: 3px solid var(--do-500);
+  border-left: 3px solid var(--cam-500);
   border-radius: 0 var(--bo) var(--bo) 0;
   padding: var(--k4) var(--k5);
 }
@@ -474,7 +474,7 @@ a.the:hover,
   text-decoration: none;
 }
 .thanh-day a + a {
-  background: var(--do-500);
+  background: var(--cam-500);
 }
 @media (max-width: 900px) {
   .thanh-day {
@@ -507,7 +507,7 @@ a.the:hover,
   text-decoration: none;
 }
 .cot-lien-he__goi {
-  background: var(--do-500);
+  background: var(--cam-500);
 }
 .cot-lien-he__zalo {
   background: #0068ff;
@@ -568,7 +568,7 @@ figcaption {
   font-weight: var(--w-nang);
   line-height: 1.05;
   font-variant-numeric: tabular-nums;
-  color: var(--do-500);
+  color: var(--cam-500);
 }
 .section--do .so-lieu__n,
 .section--toi .so-lieu__n {
@@ -618,7 +618,7 @@ figcaption {
 .van-ban blockquote {
   margin: var(--k5) 0;
   padding-left: var(--k4);
-  border-left: 3px solid var(--do-500);
+  border-left: 3px solid var(--cam-500);
   color: var(--muc-2);
 }
 
@@ -632,7 +632,7 @@ figcaption {
   font-weight: var(--w-dam);
 }
 .truong label span {
-  color: var(--do-500);
+  color: var(--cam-500);
 }
 .truong input,
 .truong select,
@@ -652,7 +652,7 @@ figcaption {
 .truong input:focus,
 .truong select:focus,
 .truong textarea:focus {
-  border-color: var(--do-500);
+  border-color: var(--cam-500);
 }
 .truong input::placeholder,
 .truong textarea::placeholder {
@@ -701,7 +701,7 @@ figcaption {
   flex-wrap: wrap;
   padding-bottom: var(--k3);
   margin-bottom: var(--k4);
-  border-bottom: 2px solid var(--do-500);
+  border-bottom: 2px solid var(--cam-500);
 }
 .hang__dau h2 {
   font-size: var(--cs-h2);
