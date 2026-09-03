@@ -368,6 +368,13 @@ const navSau = [
   .dieu-huong {
     margin-left: auto;
   }
+  /* Day cum nav+CTA VAO GIUA mot doan. Neo sat mep phai thi khoang trong giua
+     khoi logo va nav len toi 346px - giua man hinh la cho mat nhin dau tien ma
+     lai trong khong. Lui 5% (72px o khung 1440) cong voi viec nav va nut deu
+     to len, khoang trong do co lai con khoang 210px. */
+  .nut-lh {
+    margin-right: 5%;
+  }
 
   /* Khoi thuong hieu = .navbar-brand cua ho: mot khoi mau DAC cao het hang,
      mep phai cheo, tran ra mep trai man hinh.
@@ -433,21 +440,28 @@ const navSau = [
      Ta bo pill + gradient + quang sang: ca header nay xay bang canh vat va goc
      vuong, mot cai pill bo tron 999px co quang mau la mot ngon ngu khac han -
      do la ly do no doc ra lac long chu khong chi vi no dat xa.
-     Ta de padding rong hon ho mot chut (11px 24px thay vi 6px 16px) de vung
-     cham dat 44px toi thieu tren thiet bi cham.
-     Nen cam-600 chu khong cam-500: chu trang co thuong tren cam-500 chi
-     3,06:1, truot AA; tren cam-600 la 4,52:1. */
+     Ta de padding rong hon ho (13px 30px thay vi 6px 16px): nut cua ho chi la
+     "Buy Pro Version" phu tro, con day la loi keu hanh dong chinh cua trang.
+
+     MAU: tra ve cam-500 song, KHONG dung cam-600 nua.
+     Truoc day dat cam-600 (#D54400) vi chu trang tren cam-500 chi duoc 3,06:1,
+     truot nguong AA cho chu co thuong. Nhung dat canh khoi logo cam-500 thi
+     cam-600 doc ra nhu mot mau khac bi xin di - dung cai user goi la "mo nhat,
+     mau bi lech".
+     Cach thoat: nang chu len 19px IN DAM. WCAG tinh chu tu 18,66px in dam tro
+     len la CHU LON, nguong chi con 3:1 - va 3,06:1 dat. Vua song mau vua dung
+     chuan, khong phai chon mot trong hai. */
   .nut-lh {
     display: inline-flex;
     align-items: center;
     gap: var(--k2);
     flex: none;
-    padding: 11px 24px;
+    padding: 13px 30px;
     border-radius: 0;
-    background: var(--cam-600);
+    background: var(--cam-500);
     color: var(--trang);
     font-family: var(--font-hien);
-    font-size: 16.5px;
+    font-size: 19px;
     font-weight: var(--w-dam);
     text-decoration: none;
     white-space: nowrap;
@@ -457,8 +471,8 @@ const navSau = [
       box-shadow var(--thoi) var(--nhip);
   }
   .nut-lh svg {
-    width: 17px;
-    height: 17px;
+    width: 19px;
+    height: 19px;
     fill: none;
     stroke: currentColor;
     stroke-width: 2.2;
@@ -470,7 +484,7 @@ const navSau = [
      NUT BAM that, hop voi mot trang vat tu cong nghiep hon.
      Bong INSET tao cam giac mat nut lom vao khi bi an. */
   .nut-lh:hover {
-    background: var(--cam-700);
+    background: var(--cam-600);
     transform: translateY(1px);
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
   }
@@ -486,7 +500,7 @@ const navSau = [
   .dieu-huong__cap1 {
     display: flex;
     align-items: center;
-    gap: var(--k5);
+    gap: var(--k6);
   }
   /* Nav dung font hien thi o 17px. Be Vietnam Pro o 17px se lam nav rong them
      ~12% va het cho cho nut CTA; Barlow hep hon nen dat to duoc. */
@@ -498,11 +512,13 @@ const navSau = [
     gap: 4px;
     min-height: 75px;
     font-family: var(--font-hien);
-    /* Do duoc ben ho: .nav-link font-size 18px, font-weight 500, mau --dark.
-       Ta doi mau chu sang navy-900 (chinh la --dark cua ho) chu khong de mau
-       chu chung: nav tren nen trang canh mot khoi cam dac thi navy noi hon. */
-    font-size: 18px;
-    font-weight: var(--w-thuong);
+    /* Ho de 18px/500. Ta nang len 20px va weight 600: nav cua ho co 6 muc chu
+       Latin ngan, nav cua ta 5 muc tieng Viet - o 18px cum nav khong du be
+       ngang de lap khoang trong giua man hinh.
+       Mau navy-900 (chinh la --dark cua ho) chu khong mau chu chung: nav tren
+       nen trang canh mot khoi cam dac thi navy noi hon. */
+    font-size: 20px;
+    font-weight: var(--w-vua);
     color: var(--navy-900);
     text-decoration: none;
     border-bottom: 2px solid transparent;
@@ -727,6 +743,7 @@ const navSau = [
     .nut-lh {
       order: 2;
       margin-left: auto;
+      margin-right: 0; /* bo luat day vao giua cua ban desktop */
       padding: 9px 16px;
       font-size: 15px;
     }

@@ -35,6 +35,18 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
 <!doctype html>
 <html lang="vi">
   <head>
+    {/* Gan lop `co-js` NGAY trong <head>, truoc khi trinh duyet ve lan dau.
+        Toan bo luat "hien dan khi cuon" trong industro.css deu nam duoi lop
+        nay, nen:
+          - co JS  -> cac muc bat dau o trang thai mo va truot len khi cuon toi
+          - khong JS -> khong co lop, moi thu hien binh thuong ngay
+        wow.js cua template lam nguoc lai: no dat visibility:hidden bang CSS
+        cho ca 21 muc, JS hong mot cai la noi dung bien mat vinh vien.
+        Dat trong <head> chu khong o cuoi <body> vi neu gan sau khi ve xong thi
+        noi dung se nhay mot cai (hien roi bien roi hien lai). */}
+    <script is:inline>
+      document.documentElement.classList.add('co-js');
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -115,6 +127,60 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
     <span id="moc-cuon" aria-hidden="true"></span>
 
     <script>
+      /* ---- HIEN DAN KHI CUON ----
+         Thay cho wow.js (~4KB nen) cong animate.css (~2KB nen) cua ho.
+
+         VI SAO KHONG DUNG IntersectionObserver: da viet bang no truoc va
+         KHONG kiem chung duoc. Do duoc hai loi that:
+           1. Nhay thang xuong cuoi trang mot phat thi cac muc di tu "duoi
+              khung nhin" sang "tren khung nhin" trong cung mot frame, va
+              observer khong lan nao bao chung isIntersecting -> chung o
+              opacity 0 vinh vien. Chuyen nay xay ra that: bam link neo, trinh
+              duyet khoi phuc vi tri cuon, hoac cuon nhanh.
+           2. Do duoc observer chi giao mot lan roi dung, con 11/18 muc khong
+              bao gio hien.
+         Che do hong o day la NOI DUNG AN VINH VIEN - nang hon han viec khong
+         co hieu ung. Nen chon cach tat dinh, kiem duoc, thay vi cach "dung
+         hon ve ly thuyet".
+
+         Cach nay: mot ham quet, mot dieu kien duy nhat - mep tren cua muc da
+         len qua 92% chieu cao khung nhin chua. Dieu kien do dung CA cho muc
+         vua vao khung VA muc da bi cuon vuot qua, nen khong con truong hop
+         nao bi bo sot.
+         Chi phi: doc getBoundingClientRect cho toi 18 muc, 10 lan mot giay,
+         va NGUNG HAN khi da hien du - go ca hai listener. */
+      const conCho = Array.from(document.querySelectorAll('.hien-dan'));
+      if (conCho.length) {
+        let lanCuoi = 0;
+
+        const quet = () => {
+          const nguong = window.innerHeight * 0.92;
+          for (let k = conCho.length - 1; k >= 0; k--) {
+            if (conCho[k].getBoundingClientRect().top < nguong) {
+              conCho[k].classList.add('da-hien');
+              conCho.splice(k, 1);
+            }
+          }
+          if (!conCho.length) {
+            window.removeEventListener('scroll', hen);
+            window.removeEventListener('resize', hen);
+          }
+        };
+
+        // Chan 10 lan/giay bang moc thoi gian chu khong bang rAF: rAF phu
+        // thuoc trinh duyet co ve frame hay khong, moc thoi gian thi khong.
+        const hen = () => {
+          const t = Date.now();
+          if (t - lanCuoi < 100) return;
+          lanCuoi = t;
+          quet();
+        };
+
+        window.addEventListener('scroll', hen, { passive: true });
+        window.addEventListener('resize', hen, { passive: true });
+        quet(); // lan dau ngay khi tai: hien nhung muc da nam trong khung nhin
+      }
+
       // Moc dat o cuoi man hinh dau. Khi no ra khoi khung nhin tuc la nguoi
       // dung da cuon qua mot man hinh - luc do moi hien nut.
       // IntersectionObserver re hon nghe su kien scroll: trinh duyet chi goi

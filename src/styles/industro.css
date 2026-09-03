@@ -461,3 +461,55 @@
     height: 40px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   9. HIEN DAN KHI CUON - thay cho wow.js + animate.css cua ho
+
+   DO DUOC BEN HO (03/09/2026):
+     21 muc mang lop `wow`, dung ba kieu: fadeInUp (13), fadeIn (7),
+     fadeInDown (1). Tre so le 0.1s / 0.3s / 0.5s / 0.7s. Thoi luong 1s, nhip
+     ease. fadeInUp = opacity 0 -> 1 cong translateY(100%) -> 0.
+
+   TA KHAC HO BA CHO:
+
+   1. MAC DINH HIEN, khong mac dinh an. wow.js dat `visibility: hidden` cho ca
+      21 muc ngay khi tai trang roi moi bo dan ra khi cuon toi - do duoc dung
+      21/21 muc dang bi an. Nghia la JS hong mot cai thi noi dung bien mat
+      vinh vien. Ta lam nguoc: CSS chi an khi the <html> co lop `co-js`, ma lop
+      do do mot script trong <head> gan vao. Khong co JS thi khong co lop, moi
+      thu hien binh thuong. Them mot chot an toan trong JS: het 2,5 giay thi
+      hien tat, du observer co van de gi.
+
+   2. DI CHUYEN 40px chu khong translateY(100%). 100% la 100% CHIEU CAO CUA
+      CHINH KHOI - voi mot muc cao 600px thi no bay 600px, doc ra nhu trang bi
+      giat chu khong ra hien dan.
+
+   3. TON TRONG prefers-reduced-motion - ho khong ton trong.
+   --------------------------------------------------------------------------- */
+.co-js .hien-dan {
+  opacity: 0;
+}
+.co-js .hien-dan--len {
+  transform: translateY(40px);
+}
+.co-js .hien-dan--xuong {
+  transform: translateY(-40px);
+}
+.co-js .hien-dan.da-hien {
+  opacity: 1;
+  transform: none;
+  /* 800ms - ho de 1s. Ngan hon mot chut vi khoang di cua ta chi 40px chu
+     khong phai ca chieu cao khoi. */
+  transition:
+    opacity 800ms ease,
+    transform 800ms ease;
+  transition-delay: var(--tre, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .co-js .hien-dan {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -110,11 +110,11 @@ const moTa = catMoTa(
   <BannerSlider
     anh={anhBanner}
     giay={5.5}
-    nhan={`Tự sản xuất từ ${c.namThanhLap} - ${tongQuyCach} quy cách`}
+    nhan={`Hơn ${soNam} năm kinh nghiệm`}
     tieuDe="Nhà máy sản xuất đinh thép xây dựng"
     phu={`Đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán trực tiếp từ xưởng ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, không qua trung gian.`}
     nut={[
-      { chu: 'Xem bảng quy cách', duongDan: '/bang-gia-dinh-thep/', chinh: true },
+      { chu: 'Xem sản phẩm', duongDan: '/san-pham/', chinh: true },
       { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
     ]}
   />
@@ -129,7 +129,7 @@ const moTa = catMoTa(
           Do theo Industro: `col-6 align-self-start` va `col-6 align-self-end`.
           So le la thu lam cum anh nay khong doc ra nhu mot o anh don. */}
       <div class="gt__anh">
-        <figure class="gt__anh--tren">
+        <figure class="gt__anh--tren hien-dan hien-dan--len">
           <Image
             src={anhCongNhan}
             alt="Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh"
@@ -138,7 +138,7 @@ const moTa = catMoTa(
             loading="lazy"
           />
         </figure>
-        <figure class="gt__anh--duoi">
+        <figure class="gt__anh--duoi hien-dan hien-dan--xuong">
           <Image
             src={anhCan}
             alt="Cân đinh thành phẩm tại xưởng trước khi đóng bao"
@@ -149,7 +149,7 @@ const moTa = catMoTa(
         </figure>
       </div>
 
-      <div class="gt__chu">
+      <div class="gt__chu hien-dan" style="--tre: 0.25s">
         {/* H2 chu khong H1: H1 da chuyen len banner. Mot trang chi duoc mot
             H1 - chinh template Industro mac loi nay, moi slide cua ho mot the
             <h1> nen trang chu cua ho co hai. */}
@@ -223,22 +223,22 @@ const moTa = catMoTa(
       nao tuong duong nen khong dat o do. */}
   <section class="dai-so" aria-label="Số liệu nhà máy">
     <div class="dai-so__luoi">
-      <div class="dai-so__o">
+      <div class="dai-so__o hien-dan hien-dan--len" style="--tre: 0.1s">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.8 9.6 6.2 2.8h11.6l-2.6 6.8" /><circle cx="12" cy="15" r="6" /><circle cx="12" cy="15" r="2.4" /></svg>
         <span class="dai-so__so">{soNam}</span>
         <span class="dai-so__nhan">Năm trong ngành</span>
       </div>
-      <div class="dai-so__o">
+      <div class="dai-so__o hien-dan hien-dan--len" style="--tre: 0.2s">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8" width="19" height="8" rx="1" /><path d="M7 8v3.4M11 8v4.4M15 8v3.4M19 8v4.4" /></svg>
         <span class="dai-so__so">{tongQuyCach}</span>
         <span class="dai-so__nhan">Quy cách sản xuất</span>
       </div>
-      <div class="dai-so__o">
+      <div class="dai-so__o hien-dan hien-dan--len" style="--tre: 0.3s">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 20.6 7v10L12 21.2 3.4 17V7L12 2.8Z" /><path d="M3.4 7 12 11.4 20.6 7M12 11.4v9.8" /></svg>
         <span class="dai-so__so">{nhom.length}</span>
         <span class="dai-so__nhan">Nhóm sản phẩm</span>
       </div>
-      <div class="dai-so__o">
+      <div class="dai-so__o hien-dan hien-dan--len" style="--tre: 0.4s">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" /><circle cx="12" cy="10" r="2.6" /></svg>
         <span class="dai-so__so">{c.diaDiem.length}</span>
         <span class="dai-so__nhan">Địa điểm hoạt động</span>
@@ -264,10 +264,14 @@ const moTa = catMoTa(
           Anh dung HAI lan giong ho: mot lam nen, mot trong o vuong nho len. */}
       <div class="the-hang">
         {
-          nhom.map((n) => {
+          nhom.map((n, k) => {
             const a = anhNhom[n.id];
             return (
-              <a class="the-lat" href={`/san-pham/${n.data.slug}/`}>
+              <a
+                class="the-lat hien-dan hien-dan--len"
+                style={`--tre: ${(k % 3) * 0.15}s`}
+                href={`/san-pham/${n.data.slug}/`}
+              >
                 {/* CA HAI anh deu la TRANG TRI: ten nhom trong `.the-lat__ten`
                     moi la thu mang nghia, va no la ten cua chinh link nay.
                     De anh mang alt khong an di thi trinh doc man hinh se doc
@@ -358,25 +362,25 @@ const moTa = catMoTa(
       TRAN SAT MEP khong khe (`row g-0`), moi anh nho len khi re va thanh tieu de
       navy dang len. Hang anh nam NGOAI .khung de tran duoc het be ngang. */}
   <section class="nm-muc">
-    <div class="khung nm-muc__dau">
+    <div class="khung nm-muc__dau hien-dan hien-dan--len">
       <p class="nhan-muc nhan-muc--nghich">Nhà máy sản xuất</p>
       <h2>Hàng bán ra là hàng chúng tôi làm ra</h2>
     </div>
 
     <div class="nm">
-      <a class="anh-nho" href="/nha-may/">
+      <a class="anh-nho hien-dan hien-dan--len" style="--tre: 0.00s" href="/nha-may/">
         <Image src={anhDayChuyen} alt="Dây chuyền máy dập đinh tại nhà máy" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
         <span class="anh-nho__dau"><span>Dây chuyền dập đinh</span></span>
       </a>
-      <a class="anh-nho" href="/nha-may/">
+      <a class="anh-nho hien-dan hien-dan--len" style="--tre: 0.12s" href="/nha-may/">
         <Image src={anhRaMay} alt="Đinh ra khỏi máy dập xuống máng chứa" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
         <span class="anh-nho__dau"><span>Đinh ra khỏi máy</span></span>
       </a>
-      <a class="anh-nho" href="/nha-may/">
+      <a class="anh-nho hien-dan hien-dan--len" style="--tre: 0.24s" href="/nha-may/">
         <Image src={anhSoiThep} alt="Cuộn sợi thép nguyên liệu tại xưởng" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
         <span class="anh-nho__dau"><span>Sợi thép nguyên liệu</span></span>
       </a>
-      <a class="anh-nho" href="/nha-may/">
+      <a class="anh-nho hien-dan hien-dan--len" style="--tre: 0.36s" href="/nha-may/">
         <Image src={anhKho} alt="Bao đinh thành phẩm xếp trong kho" widths={[280, 560]} sizes="(max-width: 900px) 50vw, 25vw" loading="lazy" />
         <span class="anh-nho__dau"><span>Kho thành phẩm</span></span>
       </a>

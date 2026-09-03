@@ -219,7 +219,9 @@ const dauThat = lap ? 1 : 0;
      Ta tung dat gian chu 0,06em - no lam dong nhan loang ra va mat do net
      chac. Ho de normal. Tren nen navy cam-500 duoc 4,88:1 - dat AA. */
   .bn__nhan {
-    margin-bottom: var(--k4);
+    /* 8px chu khong 16px cua ho: nhan va tieu de la MOT cum y nghia, de sat
+       nhau thi doc ra la mot khoi chu khong phai hai dong roi. */
+    margin-bottom: var(--k2);
     font-family: var(--font-hien);
     font-size: 20px;
     font-weight: var(--w-vua);
@@ -237,8 +239,10 @@ const dauThat = lap ? 1 : 0;
      het cho - cau cua ta dai hon nen cung xuong hai dong nhu vay. */
   .bn__dau {
     max-width: 20ch;
-    font-size: clamp(34px, 5.6vw, 80px);
-    line-height: 1.2;
+    /* 72px chu khong 80px cua ho. Chu tieng Viet co dau thanh chong nen o cung
+       mot px no chiem cao hon chu Latin; 80px doc ra nang hon ben ho. */
+    font-size: clamp(32px, 5vw, 72px);
+    line-height: 1.18;
     letter-spacing: var(--gc-display);
     color: var(--trang);
   }
@@ -263,36 +267,81 @@ const dauThat = lap ? 1 : 0;
     gap: var(--k3);
     margin-top: var(--k7);
   }
-  /* Ho: padding 16px 48px, 16px/500, VUONG GOC. Ta tung de 19px/700 - nut
-     to gan bang dong phu nen no gianh mat cho cua tieu de. */
+  /* Ho: padding 16px 48px, 16px/500, VUONG GOC.
+     Ta de 19px IN DAM chu khong 16px/500 cua ho, va day la mot rang buoc ky
+     thuat chu khong phai so thich: nut chinh phai mang mau cam-500 song (user
+     yeu cau "de mau nhu mau"), ma chu trang tren cam-500 chi duoc 3,06:1.
+     WCAG tinh chu tu 18,66px IN DAM tro len la chu LON, nguong ha con 3:1 -
+     luc do 3,06:1 moi dat. Duoi co do thi phai dung cam-600 xin hon. */
   .bn__n {
     display: inline-flex;
     align-items: center;
-    padding: 16px 40px;
+    padding: 15px 34px;
     font-family: var(--font-hien);
-    font-size: var(--cs-than);
-    font-weight: var(--w-vua);
+    font-size: 19px;
+    font-weight: var(--w-dam);
     text-decoration: none;
     border: 2px solid var(--trang);
     color: var(--trang);
     transition:
       background var(--thoi) var(--nhip),
-      border-color var(--thoi) var(--nhip);
+      border-color var(--thoi) var(--nhip),
+      transform var(--thoi) var(--nhip),
+      box-shadow var(--thoi) var(--nhip);
   }
   .bn__n:hover {
     background: rgba(255, 255, 255, 0.16);
     color: var(--trang);
   }
-  /* Nut chinh: nen cam-600 chu KHONG cam-500 - chu trang co thuong tren
-     cam-500 chi duoc 3,06:1, truot AA. Tren cam-600 la 4,52:1. */
+  /* cam-500 song - dung mau cua ho. Dat duoc nho chu 19px in dam o tren. */
   .bn__n--chinh {
+    background: var(--cam-500);
+    border-color: var(--cam-500);
+  }
+  /* An xuong khi re, giong nut o header - khong nhich len */
+  .bn__n--chinh:hover {
     background: var(--cam-600);
     border-color: var(--cam-600);
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
   }
-  .bn__n--chinh:hover {
-    background: var(--cam-700);
-    border-color: var(--cam-700);
+  .bn__n:hover {
+    transform: translateY(1px);
   }
+  .bn__n:active,
+  .bn__n--chinh:active {
+    transform: translateY(2px);
+  }
+
+  /* ---------- chu truot vao moi lan doi anh ----------
+     Ho dat `class="animated slideInRight"` cho ca ba the trong caption: do
+     duoc animation-name slideInRight, duration 1s, fill both, timing ease,
+     delay 0s cho CA BA (ba dong vao cung luc).
+
+     TA DUNG Web Animations API trong JS, KHONG dung @keyframes cong lop CSS.
+
+     Da thu cach CSS truoc va HONG: bo lop roi doc offsetWidth roi gan lai lop
+     de bat lai animation. Do duoc bang animationstart/animationend rang
+     animation bat dau va ket thuc trong CUNG MOT mili giay, va the h1 bi ket
+     o opacity 0 suot 2,25 giay moi vong - lau gap 2,8 lan thoi luong 0,8s da
+     khai bao.
+
+     WAAPI hon o ba diem, va do la ly do doi han sang no:
+       1. `cancel()` xoa sach animation cu truoc khi chay cai moi - khong con
+          canh hai animation chong nhau
+       2. `fill: 'backwards'` chi giu trang thai DAU trong luc cho delay; chay
+          xong la the tra ve style tu nhien cua no. Khong the nao ket o
+          opacity 0 nhu `fill: both` cua CSS
+       3. KHONG co luat CSS nao an chu di, nen JS hong thi chu VAN HIEN. Cach
+          CSS thi `from { opacity: 0 }` cong `fill: both` co the de chu an
+          vinh vien
+
+     TA KHAC HO HAI CHO:
+     1. LECH NHIP 70ms giua cac dong thay vi vao cung luc. Ba dong vao cung
+        luc doc ra nhu mot khoi anh truot; lech nhip thi mat doc duoc thu tu
+        nhan -> tieu de -> dong phu -> nut, dung thu tu can doc.
+     2. DI 56px chu khong translateX(100%). 100% la 100% BE NGANG CUA CHINH
+        THE: the h1 rong 900px thi no bay 900px vao, di qua ca man hinh. */
 
   /* ---------- mui ten: do nguyen van cua ho ----------
      VUNG BAM rong 15% va CAO HET banner chu khong phai chi vong tron 86px.
@@ -328,14 +377,17 @@ const dauThat = lap ? 1 : 0;
   .bn__vong {
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
+    /* 48px, nho hon 56px cua ho mot bac theo yeu cau. Anh cua ta la anh chup
+       nha may day chi tiet nen mot vong cam 56px tranh mat voi chinh anh; anh
+       cua ho la anh dan dung co mang trong. */
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: var(--cam-500);
   }
   .bn__lai svg {
-    width: 26px; /* o noi dung con lai sau vien 15px cua ho */
-    height: 26px;
+    width: 22px;
+    height: 22px;
     fill: none;
     stroke: var(--trang);
     stroke-width: 2.2;
@@ -431,6 +483,27 @@ const dauThat = lap ? 1 : 0;
     let i = dau;
     let hen: number | undefined;
 
+    const dongChu = bn.querySelectorAll<HTMLElement>(
+      '.bn__nhan, .bn__dau, .bn__phu, .bn__nut',
+    );
+    const coWaapi = typeof Element.prototype.animate === 'function';
+
+    /* Truot tung dong chu vao, lech nhip 70ms. Goi lai duoc bao nhieu lan
+       cung duoc: cancel() don sach animation cu truoc khi chay cai moi. */
+    const truotChu = () => {
+      if (!coWaapi || itChuyenDong) return;
+      dongChu.forEach((e, k) => {
+        e.getAnimations?.().forEach((a) => a.cancel());
+        e.animate(
+          [
+            { opacity: 0, transform: 'translateX(56px)' },
+            { opacity: 1, transform: 'none' },
+          ],
+          { duration: 800, delay: k * 70, easing: 'ease', fill: 'backwards' },
+        );
+      });
+    };
+
     const ve = () => {
       bn.style.setProperty('--i', String(i));
       o.forEach((e, k) => e.toggleAttribute('data-giua', k === i));
@@ -461,6 +534,7 @@ const dauThat = lap ? 1 : 0;
     const tien = (h: number) => {
       const k = i + h;
       den(lap ? k : (k + soThat) % soThat);
+      truotChu();
     };
 
     const dung = () => {
@@ -487,6 +561,12 @@ const dauThat = lap ? 1 : 0;
     document.addEventListener('visibilitychange', () => (document.hidden ? dung() : chay()));
 
     ve();
+    /* KHONG goi truotChu() o day - chi chay khi DOI ANH.
+       Neu chay ca luc tai trang thi the H1 bi an 870ms dau tien: xau cho LCP
+       (H1 la mot trong nhung thu Google do thoi diem hien) va nguoi dung phai
+       cho moi doc duoc dong quan trong nhat trang.
+       Ho chay ca luc tai vi caption cua ho mang lop `animated slideInRight`
+       tinh trong HTML - do la mot danh doi ho khong can nhac. */
     chay();
   });
 </script>
