@@ -2,32 +2,38 @@
 import { Image } from 'astro:assets';
 
 /**
- * BANNER DANG "HE LO" (peek carousel) - do theo mamaflow.vn ngay 01/09/2026.
+ * BANNER - do theo #header-carousel cua template Industro ngay 03/09/2026.
  *
- * SO DO HO (khung nhin 1425px):
- *   slide rong 745px = 52% khung, khe 10px, 3 anh that + 4 ban sao de lap vong
- *   anh nguon 1200x650, KHONG lam mo hai ben, KHONG bo goc
- *   => nhin thay: 330px khuyet | 745px du | 330px khuyet
+ * SO DO HO (khung nhin 1440, do bang trinh duyet that):
+ *   carousel cao 802px, MOT anh tran het be ngang (khong he lo hai ben)
+ *   lop phu: linear-gradient(to right, rgb(2,36,91) 0%, rgba(2,36,91,0) 100%)
+ *   nhan tren  20px weight 600 mau cam
+ *   tieu de    80px weight 700 trang
+ *   nut        padding 16px 48px nen cam
+ *   vung bam mui ten: rong 15% (214px), CAO HET banner, opacity .5
+ *   mui ten   : o 56px + vien 15px = vong 86px, doi opacity .5 -> .9 khi re,
+ *               chuyen trong 0.15s
+ *
+ * TRUOC DAY ta lam theo mamaflow.vn: he lo 70% co hai anh khuyet hai ben,
+ * khong co chu. User doi sang kieu Industro ngay 03/09.
  *
  * TA KHAC HO BA CHO, deu co ly do:
  *
- * 1. SLIDE RONG 70% CHU KHONG 52%, cao 600px.
- *    Anh cua ho la ANH THIET KE 1200x650 (1.85:1) ve san cho khung do. Anh cua ta
- *    la ANH CHUP nha may 1280x960 (4:3). O 52% khung thanh 745x404 = 1.84:1, cat
- *    mat 28% chieu cao anh goc. O 70% duoc 998x600 = 1.66:1, cat 20%.
+ * 1. CHIEU CAO theo man hinh chu khong go cung 802px. Ho 802 cong header 121 =
+ *    923px, tuc dai ly do ngay duoi bi day khoi man hinh dau. User da chot dai
+ *    ly do phai nam gon trong man hinh dau nen giu cong thuc `100vh - 225px`.
  *
- * 2. LAM MO HAI BEN (opacity .5). Ho khong lam vi slide cua ho la do hoa nen
- *    hong/trang, tu no lui ra sau. Anh cua ta la thep xam day chi tiet - de ba
- *    tam ro net ngang nhau thi mat khong biet nhin dau.
+ * 2. MOT KHOI CHU CO DINH, khong doi theo tung anh. Ho de moi slide mot caption
+ *    rieng, moi caption mot the <h1> - tuc trang co HAI H1, day la loi SEO cua
+ *    chinh template. Ta de mot khoi chu duy nhat mang H1, anh chay phia sau.
+ *    Duoc them: chu khong nhay moi lan doi anh.
  *
- * 3. KHONG CO CHAM DIEU HUONG - giong ho. Da tung co cham roi user bo: tren mot
- *    banner anh nha may, day cham nam de len anh doc ra nhu mot mon do gan them.
- *    Van con hai mui ten o hai mep de nguoi dung chu dong xem duoc.
+ * 3. TIEU DE dung clamp() chu khong go 80px. Cau tieng Viet cua ta dai hon
+ *    "Industrial Solution Providing Company" nen 80px se thanh bon dong.
  *
  * LAP VONG: nhan ban slide cuoi dat len dau va slide dau dat xuong cuoi, chay
- * toi ban sao roi NHAY khong hieu ung ve ban that. Khong nhan ban thi o anh dau
- * ben trai se trong mot mang 19% - dung loi ma peek carousel nao cung mac.
- * Ban sao khong ton byte: Astro sinh cung URL anh nen trinh duyet dung lai cache.
+ * toi ban sao roi NHAY khong hieu ung ve ban that. Ban sao khong ton byte:
+ * Astro sinh cung URL anh nen trinh duyet dung lai cache.
  *
  * Chieu cao co dinh de khong gay CLS.
  */
@@ -35,11 +41,20 @@ interface Anh {
   src: ImageMetadata;
   alt: string;
 }
+interface Nut {
+  chu: string;
+  duongDan: string;
+  chinh?: boolean;
+}
 interface Props {
   anh: Anh[];
   giay?: number;
+  nhan?: string;
+  tieuDe?: string;
+  phu?: string;
+  nut?: Nut[];
 }
-const { anh, giay = 5.5 } = Astro.props;
+const { anh, giay = 5.5, nhan, tieuDe, phu, nut = [] } = Astro.props;
 
 /* [ban sao cuoi, ...that, ban sao dau] - chi khi co tu 2 anh tro len */
 const lap = anh.length > 1;
@@ -71,14 +86,14 @@ const dauThat = lap ? 1 : 0;
             aria-label={banSao ? undefined : `${i - dauThat + 1} trên ${anh.length}`}
           >
             {/* Ban sao VAN GIU alt that. Truyen chuoi rong thi Astro bo han
-                thuoc tinh alt ra khoi the img (do duoc: 2 the img khong co alt),
-                va trinh doc man hinh se doc ten file thay cho mo ta.
-                Trung lap khong thanh van de vi the bao ngoai da aria-hidden. */}
+                thuoc tinh alt ra khoi the img (da do duoc), va trinh doc man
+                hinh se doc ten file thay cho mo ta. Trung lap khong thanh van
+                de vi the bao ngoai da aria-hidden. */}
             <Image
               src={a.src}
               alt={a.alt}
-              widths={[560, 900, 1200]}
-              sizes="(max-width: 560px) 90vw, (max-width: 980px) 84vw, 62vw"
+              widths={[900, 1400, 1920]}
+              sizes="100vw"
               loading={i <= dauThat + 1 ? 'eager' : 'lazy'}
               fetchpriority={i === dauThat ? 'high' : 'auto'}
             />
@@ -89,13 +104,38 @@ const dauThat = lap ? 1 : 0;
   </div>
 
   {
+    tieuDe && (
+      <div class="bn__chu">
+        <div class="khung">
+          {nhan && <p class="bn__nhan">{nhan}</p>}
+          <h1 class="bn__dau">{tieuDe}</h1>
+          {phu && <p class="bn__phu">{phu}</p>}
+          {nut.length > 0 && (
+            <div class="bn__nut">
+              {nut.map((n) => (
+                <a class={n.chinh ? 'bn__n bn__n--chinh' : 'bn__n'} href={n.duongDan}>
+                  {n.chu}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  {
     anh.length > 1 && (
       <Fragment>
         <button type="button" class="bn__lai bn__lai--truoc" data-huong="-1" aria-label="Ảnh trước">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+          <span class="bn__vong" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7" /></svg>
+          </span>
         </button>
         <button type="button" class="bn__lai bn__lai--sau" data-huong="1" aria-label="Ảnh tiếp theo">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7" /></svg>
+          <span class="bn__vong" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m9.5 5 7 7-7 7" /></svg>
+          </span>
         </button>
       </Fragment>
     )
@@ -104,34 +144,22 @@ const dauThat = lap ? 1 : 0;
 
 <style>
   .bn {
-    /* 70% khung. Ho 52%; ta rong hon vi anh cua ta la ANH CHUP 4:3 chu khong
-       phai do hoa 1.85:1 ve san - khung cang hep thi cat cang nhieu.
-       O 1425px: slide 998px, con 201px he lo moi ben. */
-    --rong-slide: 70%;
-    --khe: 12px;
+    /* MOT anh tran het be ngang - giong ho. Truoc day de 70% de he lo hai ben
+       theo kieu mamaflow; kieu do khong con cho nao dat khoi chu. */
     --i: 0;
     position: relative;
     width: 100%;
     /* Cao theo MAN HINH, va CHUA CHO cho dai ly do ngay duoi.
-       Tru 225px = header 115 + dai ly do 110. Muc tieu: mot man hinh dau tien
-       phai thay DU sau muc ly do, khong bi cat mat dong nao.
-       Da thu tru moi 115px va do duoc no hong: o khung nhin that (1080 tru thanh
-       trinh duyet con ~990) thi header + banner = 935, dai ly do het o 1037 -
-       tran ra ngoai 47px. */
-    height: clamp(360px, calc(100vh - 225px), 720px);
+       Tru 225px = header 121 + dai ly do 104. */
+    height: clamp(400px, calc(100vh - 225px), 760px);
     overflow: hidden;
-    background: var(--trang);
+    background: var(--navy-900);
   }
 
-  /* Tam giua slide thu --i: day ray sang trai sao cho tam no trung tam khung.
-     (100% - rong)/2 la le trai con lai; moi buoc la mot slide cong mot khe. */
   .bn__ray {
     display: flex;
-    gap: var(--khe);
     height: 100%;
-    transform: translateX(
-      calc((100% - var(--rong-slide)) / 2 - (var(--rong-slide) + var(--khe)) * var(--i))
-    );
+    transform: translateX(calc(-100% * var(--i)));
     transition: transform 620ms cubic-bezier(0.22, 0.61, 0.36, 1);
     will-change: transform;
   }
@@ -141,15 +169,8 @@ const dauThat = lap ? 1 : 0;
 
   .bn__anh {
     position: relative;
-    flex: 0 0 var(--rong-slide);
+    flex: 0 0 100%;
     height: 100%;
-    opacity: 0.5;
-    transition: opacity 620ms var(--nhip);
-    cursor: pointer;
-  }
-  .bn__anh[data-giua] {
-    opacity: 1;
-    cursor: default;
   }
   .bn__anh :global(img) {
     position: absolute;
@@ -159,28 +180,134 @@ const dauThat = lap ? 1 : 0;
     object-fit: cover;
   }
 
-  /* ---------- mui ten: do theo Industro ----------
-     Ho: `width: 3.5rem; border: 15px solid var(--primary); border-radius: 3.5rem`
-     tuc o icon 56px cong vien 15px moi ben = vong cam 86px.
-     Ta dung han 86px va bo vien di - cung ket qua thi giac, mot thuoc tinh
-     thay vi hai.
-     Tuong phan: mui ten trang tren cam-500 duoc 3,06:1. Icon la doi tuong
-     DO HOA chu khong phai chu nen nguong la 3:1 - dat. */
+  /* ---------- khoi chu ----------
+     Lop phu CHINH LA nen cua khoi chu: gradient navy dac ben trai nhat dan
+     sang phai - do nguyen van cua ho.
+     Ta keo diem tat ve 85% chu khong 100%, va giu mot lop mo o giua: anh cua
+     ta la anh CHUP nha may day chi tiet khap khung, con anh cua ho la anh dan
+     dung co san mot mang toi ben trai. */
+  .bn__chu {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(
+      to right,
+      rgba(2, 36, 91, 0.94) 0%,
+      rgba(2, 36, 91, 0.72) 42%,
+      rgba(2, 36, 91, 0) 85%
+    );
+    /* De lot chuot xuong duoi cho bam duoc mui ten; rieng nut thi nhan lai */
+    pointer-events: none;
+  }
+  .bn__chu :global(a) {
+    pointer-events: auto;
+  }
+  /* Lui chu vao 8,333% moi ben - chinh la `col-lg-10` can giua trong `container`
+     ma ho dung cho caption. Khong phai de cho dep: vung bam mui ten rong 15%
+     va vong tron cua no ket thuc o x=150, trong khi chu bat dau o x=163 - chi
+     cach 13px, doc ra nhu chu dam vao mui ten. Lui 8,333% thi chu bat dau o
+     x=265, cach vong tron 115px. */
+  .bn__chu > :global(.khung) {
+    padding-inline: calc(20px + 8.333%);
+  }
+
+  /* Ho: 20px weight 600 mau cam. Tren nen navy cam-500 duoc 4,88:1 - dat AA. */
+  .bn__nhan {
+    margin-bottom: var(--k3);
+    font-family: var(--font-hien);
+    font-size: 20px;
+    font-weight: var(--w-vua);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--cam-500);
+  }
+  /* Ho go cung 80px. Cau tieng Viet cua ta dai hon nen dung clamp:
+     o 1440px ra ~69px, o mobile ra 34px. */
+  .bn__dau {
+    max-width: 18ch;
+    font-size: clamp(34px, 4.8vw, 69px);
+    line-height: 1.06;
+    letter-spacing: var(--gc-display);
+    color: var(--trang);
+  }
+  .bn__phu {
+    max-width: 50ch;
+    margin-top: var(--k4);
+    font-size: var(--cs-lead);
+    line-height: 1.55;
+    color: #dbe4f2; /* trang nga tren navy - 11,3:1 */
+  }
+
+  .bn__nut {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--k3);
+    margin-top: var(--k6);
+  }
+  /* Ho: padding 16px 48px, nen cam, chu weight 500 */
+  .bn__n {
+    display: inline-flex;
+    align-items: center;
+    padding: 16px 40px;
+    font-family: var(--font-hien);
+    font-size: var(--cs-the);
+    font-weight: var(--w-dam);
+    text-decoration: none;
+    border: 2px solid var(--trang);
+    color: var(--trang);
+    transition:
+      background var(--thoi) var(--nhip),
+      border-color var(--thoi) var(--nhip);
+  }
+  .bn__n:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--trang);
+  }
+  /* Nut chinh: nen cam-600 chu KHONG cam-500 - chu trang co thuong tren
+     cam-500 chi duoc 3,06:1, truot AA. Tren cam-600 la 4,52:1. */
+  .bn__n--chinh {
+    background: var(--cam-600);
+    border-color: var(--cam-600);
+  }
+  .bn__n--chinh:hover {
+    background: var(--cam-700);
+    border-color: var(--cam-700);
+  }
+
+  /* ---------- mui ten: do nguyen van cua ho ----------
+     VUNG BAM rong 15% va CAO HET banner chu khong phai chi vong tron 86px.
+     Vung rong nhu vay thi khong phai nham, va no de trong o GIUA cho anh tho.
+     `opacity: .5` moi la chi tiet lam no tinh te: mui ten lui ve sau, ro han
+     len khi re. Truoc day ta de vong cam DAC 100% - no doc ra nang va tranh
+     mat voi chinh anh. Day la dung cai user chi ra. */
   .bn__lai {
     position: absolute;
-    top: 50%;
+    top: 0;
+    bottom: 0;
     z-index: 2;
     display: grid;
     place-items: center;
-    width: 86px;
-    height: 86px;
+    width: 15%;
     padding: 0;
-    transform: translateY(-50%);
     border: 0;
+    background: none;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+  }
+  .bn__lai:hover,
+  .bn__lai:focus-visible {
+    opacity: 0.9;
+  }
+  .bn__vong {
+    display: grid;
+    place-items: center;
+    width: 86px; /* o 56px + vien 15px moi ben - dung so cua ho */
+    height: 86px;
     border-radius: 50%;
     background: var(--cam-500);
-    cursor: pointer;
-    transition: background var(--thoi) var(--nhip);
   }
   .bn__lai svg {
     width: 30px;
@@ -191,32 +318,29 @@ const dauThat = lap ? 1 : 0;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .bn__lai:hover {
-    background: var(--cam-600);
-  }
   .bn__lai--truoc {
-    left: 18px;
+    left: 0;
   }
   .bn__lai--sau {
-    right: 18px;
+    right: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bn__ray,
-    .bn__anh {
+    .bn__ray {
       transition: none;
     }
   }
 
-  /* Duoi 980px phan he lo hep lai: man cang hep thi 19% moi ben cang an mat
-     phan chinh cua anh. */
   @media (max-width: 980px) {
     .bn {
-      --rong-slide: 88%;
-      --khe: 10px;
-      height: 420px;
+      height: 460px;
     }
+    /* Man hep thi 15% chi con ~60px, hep hon ca vong tron. Cho vung bam bang
+       dung vong tron cong mot chut le. */
     .bn__lai {
+      width: 76px;
+    }
+    .bn__vong {
       width: 56px;
       height: 56px;
     }
@@ -224,24 +348,49 @@ const dauThat = lap ? 1 : 0;
       width: 22px;
       height: 22px;
     }
-    .bn__lai--truoc {
-      left: 8px;
+    /* Gradient doi tu NGANG sang DOC: o man hep, gradient ngang lam chu de len
+       dung giua anh va khong con mang nhat nao de doc. */
+    .bn__chu {
+      align-items: flex-end;
+      padding-bottom: var(--k6);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 36, 91, 0.55) 0%,
+        rgba(2, 36, 91, 0.88) 58%,
+        rgba(2, 36, 91, 0.96) 100%
+      );
     }
-    .bn__lai--sau {
-      right: 8px;
+    .bn__dau {
+      max-width: none;
+    }
+    /* Duoi 980px mui ten thu nho va lui vao mep, duoi 560px an han - khong con
+       ly do lui chu vao nua, tra lai le thuong cua khung. */
+    .bn__chu > :global(.khung) {
+      padding-inline: 20px;
     }
   }
   @media (max-width: 560px) {
     .bn {
-      --rong-slide: 90%;
-      --khe: 8px;
       /* Co dinh, KHONG dung 100vh tren dien thoai: thanh dia chi an/hien lam
          100vh doi lien tuc va banner nhay giat khi cuon. */
-      height: 300px;
+      height: 430px;
     }
-    /* Mui ten che mat anh tren man hep - bo, chi con cham */
+    .bn__nhan {
+      font-size: var(--cs-nho);
+      margin-bottom: var(--k2);
+    }
+    .bn__phu {
+      display: none; /* het cho o 430px - giu tieu de va nut */
+    }
+    .bn__nut {
+      margin-top: var(--k4);
+    }
+    .bn__n {
+      padding: 12px 22px;
+      font-size: var(--cs-nho);
+    }
     .bn__lai {
-      display: none;
+      display: none; /* mui ten che mat anh tren man hep - de tu chay */
     }
   }
 </style>
@@ -273,9 +422,9 @@ const dauThat = lap ? 1 : 0;
       ve();
     };
 
-    /* Chay toi ban sao thi doi hieu ung xong roi nhay khong hieu ung ve ban that.
-       Doi bang transitionend chu khong bang setTimeout de khong lech nhip khi may
-       cham hoac khi tab vua duoc mo lai. */
+    /* Chay toi ban sao thi doi hieu ung xong roi nhay khong hieu ung ve ban
+       that. Doi bang transitionend chu khong bang setTimeout de khong lech
+       nhip khi may cham hoac khi tab vua duoc mo lai. */
     if (lap) {
       ray.addEventListener('transitionend', (e) => {
         if (e.propertyName !== 'transform') return;
@@ -308,14 +457,6 @@ const dauThat = lap ? 1 : 0;
     bn.querySelectorAll<HTMLButtonElement>('.bn__lai').forEach((n) =>
       n.addEventListener('click', () => {
         tien(Number(n.dataset.huong));
-        chay();
-      }),
-    );
-    // Bam vao anh he lo hai ben thi nhay toi no - no dang moi nguoi bam
-    o.forEach((e, k) =>
-      e.addEventListener('click', () => {
-        if (k === i) return;
-        den(k);
         chay();
       }),
     );

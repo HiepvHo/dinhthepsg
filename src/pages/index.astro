@@ -99,7 +99,25 @@ const moTa = catMoTa(
       bo: khong ai yeu cau chu tren banner. Banner la anh, het.
       Chieu cao van tinh theo man hinh de dai ly do ngay duoi lot tron vao man
       hinh dau - xem BannerSlider.astro. */}
-  <BannerSlider anh={anhBanner} giay={5.5} />
+  {/* Chu tren banner: NHAN + H1 + dong phu + hai nut, do theo caption cua ho.
+      MOI CAU deu dua tren du lieu da xac minh trong cong-ty.yaml va content
+      collection - nam thanh lap 2012, so quy cach dem tu du lieu, dia diem nha
+      may lay tu diaDiem[0].
+      KHONG viet "dan dau nganh" hay "so 1": khong co so lieu nao chung minh
+      duoc, va mot cau nhu vay tren trang ban vat tu vua khong thuyet phuc duoc
+      khach B2B vua la rui ro E-E-A-T. Cai thuyet phuc duoc dan mua vat tu la
+      NHA MAY THAT, SO QUY CACH THAT, BAN THANG KHONG QUA TRUNG GIAN. */}
+  <BannerSlider
+    anh={anhBanner}
+    giay={5.5}
+    nhan={`Tự sản xuất từ ${c.namThanhLap} - ${tongQuyCach} quy cách`}
+    tieuDe="Nhà máy sản xuất đinh thép xây dựng"
+    phu={`Đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán trực tiếp từ xưởng ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, không qua trung gian.`}
+    nut={[
+      { chu: 'Xem bảng quy cách', duongDan: '/bang-gia-dinh-thep/', chinh: true },
+      { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
+    ]}
+  />
 
   {/* ==== 2. Ly do chon chung toi - thay cho 4 chip mau dac cu ==== */}
   <LyDoChon soQuyCach={tongQuyCach} />
@@ -132,8 +150,11 @@ const moTa = catMoTa(
       </div>
 
       <div class="gt__chu">
-        <p class="nhan-muc">Nhà máy sản xuất đinh</p>
-        <h1>Đinh Thép Sài Gòn - Nhà máy sản xuất đinh thép xây dựng</h1>
+        {/* H2 chu khong H1: H1 da chuyen len banner. Mot trang chi duoc mot
+            H1 - chinh template Industro mac loi nay, moi slide cua ho mot the
+            <h1> nen trang chu cua ho co hai. */}
+        <p class="nhan-muc">Về nhà máy</p>
+        <h2>Đinh Thép Sài Gòn - nhà máy đinh thép và lưới thép hàn</h2>
         <p>
           {c.tenPhapDinhHoa} là đơn vị <strong>sản xuất trực tiếp</strong> đinh thép xây dựng
           và lưới thép hàn, hoạt động từ năm {c.namThanhLap}, {soNam} năm trong ngành vật tư
@@ -448,7 +469,7 @@ const moTa = catMoTa(
     object-fit: cover;
   }
 
-  .gioi-thieu h1 {
+  .gioi-thieu h2 {
     font-size: var(--cs-h1);
     margin-bottom: var(--k4);
   }

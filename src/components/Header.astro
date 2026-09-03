@@ -61,19 +61,24 @@ const navSau = [
 
 <header class="dau-trang">
   <div class="thanh-tren">
-    <div class="khung thanh-tren__trong">
+    <div class="thanh-tren__trong">
       <span class="thanh-tren__xh an-mobile">
+        {/* Icon DAC (to fill), khong ke net. Ho dung glyph Font Awesome dac -
+            net mong 15px cua ta truoc day o co do doc ra nhoe, khong ra hinh.
+            Ta ve tay thay vi nap Font Awesome: bon icon khong dang mot ten
+            mien ngoai va mot goi 30KB. */}
         <a href={`tel:${c.hotlineTel}`} aria-label="Gọi hotline">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5 4 4.2c-1 .3-1.6 1.3-1.3 2.3C4 12 9 17 14.5 18.3c1 .3 2-.3 2.3-1.3l.7-2.5-3.6-1.6-1.3 1.6a12 12 0 0 1-4.4-4.4l1.6-1.3-1.6-3.6Z"></path></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.6a1.7 1.7 0 0 1 2.2.6l2 3.2a1.7 1.7 0 0 1-.3 2.2L9 9.8a11 11 0 0 0 5.2 5.2l1.2-1.5a1.7 1.7 0 0 1 2.2-.3l3.2 2a1.7 1.7 0 0 1 .6 2.2l-1 1.8a2.6 2.6 0 0 1-2.9 1.2C11.1 19 5 12.9 3.6 6.5a2.6 2.6 0 0 1 1.2-2.9Z"></path></svg>
         </a>
         <a href={`https://zalo.me/${c.zalo}`} rel="noopener" aria-label="Nhắn Zalo">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H9l-4 4v-4H5.5A1.5 1.5 0 0 1 4 14.5v-9Z"></path></svg>
+          {/* Bong chat co chu Z - dau hieu Zalo doc ra ngay o Viet Nam */}
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6c5.4 0 9.7 3.6 9.7 8.1 0 4.5-4.3 8.1-9.7 8.1a12 12 0 0 1-2.3-.2l-4.6 2.5a.6.6 0 0 1-.9-.6l.6-3.3c-1.7-1.5-2.5-3.4-2.5-5.5 0-4.5 4.3-8.1 9.7-8.1Z"></path><path fill="#02245b" d="M8.4 7.9h6.3v1.5l-4 4.4h4.2v1.6H8v-1.6l4-4.4H8.4z"></path></svg>
         </a>
         <a href={`mailto:${c.email}`} aria-label="Gửi email">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h15A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5v-11Z"></path><path d="m3.6 6.2 8.4 6 8.4-6"></path></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.6 7.3 12 13.1l9.4-5.8V17a1.8 1.8 0 0 1-1.8 1.8H4.4A1.8 1.8 0 0 1 2.6 17Z"></path><path d="M21.2 5.6 12 11.3 2.8 5.6a1.8 1.8 0 0 1 1.6-1H19.6a1.8 1.8 0 0 1 1.6 1Z"></path></svg>
         </a>
         <a href={c.websiteMe} rel="noopener" aria-label="Website công ty">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 1 0 0 19.6 9.8 9.8 0 0 0 0-19.6Zm5.9 6.4h-2.5a13 13 0 0 0-1.3-3.6 8 8 0 0 1 3.8 3.6ZM12 4.2c.7.9 1.3 2.4 1.6 4.4h-3.2c.3-2 .9-3.5 1.6-4.4ZM4.3 13.9a7.9 7.9 0 0 1 0-3.8h2.9a17 17 0 0 0 0 3.8Zm.8 2h2.5c.3 1.3.7 2.5 1.3 3.6a8 8 0 0 1-3.8-3.6Zm2.5-7.3H5.1a8 8 0 0 1 3.8-3.6 13 13 0 0 0-1.3 3.6ZM12 19.8c-.7-.9-1.3-2.4-1.6-4.4h3.2c-.3 2-.9 3.5-1.6 4.4Zm1.9-6.4h-3.8a15 15 0 0 1 0-3.8h3.8a15 15 0 0 1 0 3.8Zm1.2 6a13 13 0 0 0 1.3-3.6h2.5a8 8 0 0 1-3.8 3.6Zm1.7-5.6a17 17 0 0 0 0-3.8h2.9a7.9 7.9 0 0 1 0 3.8Z"></path></svg>
         </a>
       </span>
 
@@ -94,7 +99,7 @@ const navSau = [
     </div>
   </div>
 
-  <div class="khung dau-trang__trong">
+  <div class="dau-trang__trong">
     {/* Lockup thuong hieu: DAU HIEU + chu. Cong ty chua co file logo nao, ma mot
         dong chu dam khong doc ra la logo. Dau hieu la dung hinh cay dinh trong
         favicon - mot tai san, dung o hai cho, khong ve them cai moi. */}
@@ -243,11 +248,16 @@ const navSau = [
     font-size: var(--cs-micro);
     font-weight: var(--w-vua);
   }
+  /* TRAN HET BE NGANG, le 48px - do dung cua ho (`ps-5` / `pe-5` = 3rem).
+     Truoc day hai hang header bo trong khung 1140 nen o man 1440 con thua
+     150px trang moi ben; dai topbar doc ra nho va rut lai. Ho de ca hai hang
+     tran het be ngang, chi than trang moi bo trong khung. */
   .thanh-tren__trong {
     display: flex;
     align-items: center;
     gap: var(--k5);
-    min-height: 40px;
+    min-height: 46px; /* do duoc ben ho */
+    padding-left: 48px;
   }
 
   /* Khoi hotline: nen cam, mep trai cheo, TRAN ra mep phai man hinh.
@@ -255,13 +265,15 @@ const navSau = [
      dung ve cho cu. Tong be ngang khong doi nen bo cuc flex khong xe dich.
      DA THU `box-shadow: 100vw 0 0` va HONG: bong khong co spread chi DOI hop
      di chu khong keo dai no, nen ca vet mau nam han ngoai man hinh. */
+  /* Hang da tran het be ngang nen khoi nay TU cham mep phai - bo han tro
+     margin am 100vw truoc day. `padding: 8px 48px` la so do duoc cua ho. */
   .thanh-tren__goi {
     display: flex;
     align-items: center;
     gap: var(--k2);
+    align-self: stretch;
     margin-left: auto;
-    margin-right: -100vw;
-    padding: 5px 100vw 5px var(--k5);
+    padding: 8px 48px;
     background: var(--cam-500);
   }
   .thanh-tren__goi svg {
@@ -299,27 +311,35 @@ const navSau = [
     font-weight: var(--w-nang);
   }
   /* Icon xa hoi ben TRAI top bar - Industro dat "Follow Us:" o cot trai */
+  /* Icon lien he. Ho dung glyph Font Awesome DAC o 16px mau #F5F5F5, boc
+     trong nut 36x38. Icon net mong 15px cua ta truoc day doc ra nhoe va khong
+     ra hinh gi - dung cai user chi ra.
+     Ta khong dung Font Awesome (them mot ten mien ngoai) ma ve SVG DAC cung
+     co: 18px, to fill chu khong ke net. */
   .thanh-tren__xh {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 2px;
   }
   .thanh-tren__xh a {
     display: grid;
     place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    transition: background var(--thoi) var(--nhip);
   }
   .thanh-tren__xh svg {
-    width: 15px;
-    height: 15px;
-    fill: none;
-    stroke: var(--trang);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0.9;
+    width: 18px;
+    height: 18px;
+    fill: #f5f5f5;
+    stroke: none;
+  }
+  .thanh-tren__xh a:hover {
+    background: rgba(255, 255, 255, 0.14);
   }
   .thanh-tren__xh a:hover svg {
-    opacity: 1;
+    fill: var(--trang);
   }
 
   /* Tang 2 */
@@ -333,7 +353,8 @@ const navSau = [
     display: flex;
     align-items: center;
     gap: var(--k6);
-    min-height: 80px;
+    min-height: 75px; /* do duoc ben ho */
+    padding-right: 48px;
   }
   .dieu-huong {
     margin-right: auto; /* day CTA sang phai, nav van dinh sat logo */
@@ -348,11 +369,10 @@ const navSau = [
     align-items: center;
     gap: var(--k3);
     align-self: stretch;
-    /* Tran ra mep TRAI man hinh - cung ky thuat voi khoi hotline o tren.
-       50px ben phai la con so cua ho (.navbar-brand padding-right 50px), chua
-       cho cho mep cheo ::after rong 50px lech ra -25px. */
-    margin-left: -100vw;
-    padding: 0 50px 0 100vw;
+    /* `padding: 0 50px 0 48px` la so do duoc cua ho. Hang da tran het be ngang
+       nen khoi nay TU cham mep trai - bo han tro margin am 100vw truoc day.
+       50px ben phai chua cho mep cheo ::after rong 50px lech ra -25px. */
+    padding: 0 50px 0 48px;
     background: var(--cam-500);
     text-decoration: none;
     line-height: 1.05;
@@ -379,7 +399,7 @@ const navSau = [
   /* 26px in dam - dat nguong CHU LON (3:1) tren nen cam, do duoc 3,06:1. */
   .hieu__ten {
     font-family: var(--font-hien);
-    font-size: 26px;
+    font-size: 32px;
     font-weight: var(--w-dam);
     letter-spacing: -0.005em;
     color: var(--trang);
@@ -453,7 +473,7 @@ const navSau = [
     display: flex;
     align-items: center;
     gap: 4px;
-    min-height: 76px;
+    min-height: 75px;
     font-family: var(--font-hien);
     /* Do duoc ben ho: .nav-link font-size 18px, font-weight 500, mau --dark.
        Ta doi mau chu sang navy-900 (chinh la --dark cua ho) chu khong de mau
@@ -782,6 +802,24 @@ const navSau = [
     }
     .hieu__ten {
       font-size: 19px;
+    }
+    /* Le 48px cua ho la so cho man rong. O 390px no chiem 25% be ngang chi de
+       lam le cho mot dong chu - ha xuong 16px de dai navy con doc ra la mot
+       dai, thay vi chi con mot manh o goc trai. */
+    .thanh-tren__trong {
+      padding-left: 16px;
+    }
+    .thanh-tren__goi {
+      padding-inline: 16px;
+    }
+    .thanh-tren__goi a {
+      font-size: var(--cs-nho);
+    }
+    .dau-trang__trong {
+      padding-right: 16px;
+    }
+    .hieu {
+      padding-left: 16px;
     }
     /* Duoi 560px bo dong phu. Ho cung chi de moi ten thuong hieu o mobile.
        Ten phap dinh day du van co o footer va trang gioi thieu. */
