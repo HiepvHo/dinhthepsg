@@ -108,7 +108,6 @@ const buoc = [
       </div>
 
       <h2 id="hinh-anh">Hình ảnh tại xưởng</h2>
-      <p class="nm__dan">Ảnh chụp thực tế tại nhà máy, không phải ảnh minh họa.</p>
       <div class="luoi luoi--3 nm__luoi">
         <figure class="khung-anh khung-anh--4-3">
           <Image src={anhDayChuyen} alt="Dây chuyền máy dập đinh đang hoạt động tại nhà máy" widths={[400, 700]} sizes="(max-width: 900px) 92vw, 360px" loading="lazy" />
@@ -127,7 +126,6 @@ const buoc = [
         </figure>
       </div>
 
-      <p class="nhan-muc">Thiết bị</p>
       <h2 id="thiet-bi">Đại diện hãng thiết bị châu Âu</h2>
       <p>
         {c.tenPhapDinh} làm đại diện tại Việt Nam cho một số hãng cung cấp thiết bị
@@ -203,6 +201,16 @@ const buoc = [
     margin-bottom: var(--k4);
     scroll-margin-top: var(--neo-le);
   }
+  /* Nhan muc dung TRUOC h2, nhung h2 mang margin-top 64px - nen nhan bi day
+     len dinh vao khoi phia tren con tieu de roi xuong 64px ben duoi, doc ra
+     nhu nhan lac long. Chuyen khoang cach 64px len chinh cai nhan. */
+  .nm .nhan-muc {
+    margin-top: var(--k8);
+  }
+  .nm .nhan-muc + h2 {
+    margin-top: 0;
+    scroll-margin-top: var(--neo-le);
+  }
   .nm p {
     max-width: var(--do-doc);
   }
@@ -258,8 +266,10 @@ const buoc = [
     font-size: var(--cs-nho);
     color: var(--muc-2);
   }
+  /* 24px chu khong 16px: truoc day giua tieu de va luoi anh con mot dong chu
+     dan; bo dong do roi thi 16px lam anh dinh sat chan chu. */
   .nm__luoi {
-    margin-top: var(--k4);
+    margin-top: var(--k5);
   }
   .nm__bang,
   .nm__dac-ta {
