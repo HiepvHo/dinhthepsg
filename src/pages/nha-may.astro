@@ -2,7 +2,8 @@
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import VunBanh from '../components/VunBanh.astro';
+import anhDauMuc from '../assets/anh/day-chuyen-dap-dinh.jpg';
+import DauMuc from '../components/DauMuc.astro';
 import { schemaDiaDiem } from '../lib/schema';
 
 import anhDayChuyen from '../assets/anh/day-chuyen-dap-dinh.jpg';
@@ -62,11 +63,15 @@ const buoc = [
   duongDan="/nha-may/"
   schema={schemaDiaDiem(c, nhaMay)}
 >
-  <VunBanh muc={[{ ten: 'Nhà máy', duongDan: '/nha-may/' }]} />
+  <DauMuc
+    nhan="Giới thiệu"
+    tieuDe={c.tenNhaMay}
+    muc={[{ ten: 'Nhà máy', duongDan: '/nha-may/' }]}
+    anh={{ src: anhDauMuc, alt: 'Dây chuyền máy dập đinh tại nhà máy Đinh Thép Sài Gòn' }}
+  />
 
-  <article class="section nm">
+  <article class="section nang-chu nm">
     <div class="khung">
-      <h1>{c.tenNhaMay}</h1>
       <p class="dan-nhap nm__mo">
         Thuộc {c.tenPhapDinh}, mã số thuế {c.maSoThue}, thành lập năm {c.namThanhLap} -
         {' '}{soNam} năm sản xuất và phân phối vật tư kim khí. Nhà máy đặt tại
@@ -86,7 +91,8 @@ const buoc = [
         </figure>
       </div>
 
-      <h2 id="quy-trinh">Quy trình sản xuất</h2>
+      <p class="nhan-muc">Quy trình</p>
+      <h2 id="quy-trinh">Từ cuộn thép đến bao thành phẩm</h2>
       <div class="nm__buoc">
         {
           buoc.map((b) => (
@@ -121,34 +127,26 @@ const buoc = [
         </figure>
       </div>
 
-      <h2 id="thiet-bi">Thiết bị và đối tác châu Âu</h2>
+      <p class="nhan-muc">Thiết bị</p>
+      <h2 id="thiet-bi">Đại diện hãng thiết bị châu Âu</h2>
       <p>
         {c.tenPhapDinh} làm đại diện tại Việt Nam cho một số hãng cung cấp thiết bị
         châu Âu trong ngành sản xuất và cơ khí chế tạo thép:
       </p>
-      <div class="bang-cuon nm__bang">
-        <table class="bang">
-          <caption>Các hãng thiết bị công ty làm đại diện</caption>
-          <thead>
-            <tr>
-              <th scope="col">Hãng</th>
-              <th scope="col">Loại thiết bị</th>
-              <th scope="col">Xuất xứ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              c.thietBi.map((t) => (
-                <tr>
-                  <td>{t.ten}</td>
-                  <td>{t.loai}</td>
-                  <td>{t.xuatXu}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
+      <ul class="nm__tb">
+        {
+          c.thietBi.map((t) => (
+            <li>
+              <em>{t.xuatXu}</em>
+              <strong>{t.ten}</strong>
+              <span>{t.loai}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="nm__ghi">
+        {c.tenPhapDinh} là đại diện tại Việt Nam của các hãng thiết bị nêu trên.
+      </p>
 
       <h2 id="dia-chi">Địa chỉ nhà máy</h2>
       <dl class="dac-ta nm__dac-ta">
@@ -213,23 +211,45 @@ const buoc = [
     font-size: var(--cs-nho);
     color: var(--muc-2);
   }
+  /* BON THE ngang chu khong danh sach gach ngang.
+     Truoc day bon buoc la bon dong cach nhau bang net ke - doc ra nhu mot bang
+     ke khai, khong ra mot quy trinh co thu tu. The ngang cho mat doc duoc
+     huong di tu trai sang phai, dung chieu cua mot quy trinh.
+     Bong toa 45px thay net vien - cung thu phap voi the san pham. */
   .nm__buoc {
     display: grid;
-    gap: var(--k4);
-    border-top: var(--vien-mong);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap);
+    margin-top: var(--k5);
   }
   .nm__buoc-muc {
+    position: relative;
     display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: var(--k4);
-    padding: var(--k4) 0;
-    border-bottom: var(--vien-mong);
+    align-content: start;
+    gap: var(--k2);
+    padding: var(--k5) var(--k4);
+    background: var(--trang);
+    box-shadow: var(--toa);
+  }
+  /* Vach cam tren dinh the - danh dau day la mot buoc */
+  .nm__buoc-muc::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 4px;
+    background: var(--cam-500);
   }
   .nm__so {
-    font-size: var(--cs-h2);
+    font-family: var(--font-hien);
+    font-size: var(--cs-display);
     font-weight: var(--w-nang);
     line-height: 1;
-    color: var(--cam-500);
+    /* Vien chu thay vi chu dac: so la nhan thu tu, khong phai noi dung. De dac
+       thi bon so cam to lan at ca tieu de buoc. */
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--cam-500);
   }
   .nm__buoc-muc h3 {
     margin-bottom: 4px;
@@ -246,6 +266,45 @@ const buoc = [
     margin-top: var(--k4);
     max-width: 640px;
   }
+
+  /* Bang thiet bi doi sang THE: ba hang ba cot la mot bang qua nho de dang
+     bang, va no nam giua mot trang toan the nen doc ra nhu con sot lai. */
+  .nm__tb {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+    margin-top: var(--k5);
+  }
+  .nm__tb li {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: var(--k5);
+    background: var(--nen-nhat);
+    border-left: 3px solid var(--cam-500);
+  }
+  .nm__tb strong {
+    font-family: var(--font-hien);
+    font-size: var(--cs-h3);
+    font-weight: var(--w-dam);
+  }
+  .nm__tb em {
+    font-style: normal;
+    font-size: var(--cs-micro);
+    font-weight: var(--w-dam);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--cam-700);
+  }
+  .nm__tb span {
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
+  .nm__ghi {
+    margin-top: var(--k4);
+    font-size: var(--cs-nho);
+    color: var(--muc-2);
+  }
   .nm__cta {
     display: flex;
     gap: var(--k3);
@@ -253,5 +312,19 @@ const buoc = [
     margin-top: var(--k8);
     padding-top: var(--k6);
     border-top: var(--vien-mong);
+  }
+
+  @media (max-width: 980px) {
+    .nm__buoc {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .nm__tb {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .nm__buoc {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

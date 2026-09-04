@@ -1,7 +1,8 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import VunBanh from '../components/VunBanh.astro';
+import anhDauMuc from '../assets/anh/dong-bao-dinh-sai-gon.jpg';
+import DauMuc from '../components/DauMuc.astro';
 import { tenChinh } from '../lib/quy-cach';
 import { catTieuDe, catMoTa } from '../lib/seo-text';
 
@@ -69,11 +70,15 @@ const schema = {
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/bang-tra-quy-cach-dinh/" schema={schema}>
-  <VunBanh muc={[{ ten: 'Bảng tra quy cách đinh', duongDan: '/bang-tra-quy-cach-dinh/' }]} />
+  <DauMuc
+    nhan="Tra cứu"
+    tieuDe="Bảng tra quy cách đinh: phân, cm và mm"
+    muc={[{ ten: 'Bảng tra quy cách đinh', duongDan: '/bang-tra-quy-cach-dinh/' }]}
+    anh={{ src: anhDauMuc, alt: 'Bao đinh Đinh Thép Sài Gòn in mã quy cách theo phân' }}
+  />
 
-  <article class="section bt">
+  <article class="section nang-chu bt">
     <div class="khung bt__trong">
-      <h1>Bảng tra quy cách đinh: phân, cm và mm</h1>
 
       {/* Cau tra loi dat NGAY dau trang, mot cau, khong vong vo.
           Day la doan co kha nang duoc AI Overview trich nhat. */}

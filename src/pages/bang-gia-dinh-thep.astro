@@ -1,7 +1,8 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import VunBanh from '../components/VunBanh.astro';
+import anhDauMuc from '../assets/anh/can-dinh-tai-xuong.jpg';
+import DauMuc from '../components/DauMuc.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { tenChinh, quyDoi, coGia, dinhDangGia } from '../lib/quy-cach';
 import { tuyetDoi } from '../lib/schema';
@@ -53,11 +54,15 @@ const mucLuc = [
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/bang-gia-dinh-thep/" schema={schema}>
-  <VunBanh muc={[{ ten: 'Bảng giá đinh thép', duongDan: '/bang-gia-dinh-thep/' }]} />
+  <DauMuc
+    nhan="Bảng giá"
+    tieuDe="Bảng giá và quy cách đinh thép"
+    muc={[{ ten: 'Bảng giá đinh thép', duongDan: '/bang-gia-dinh-thep/' }]}
+    anh={{ src: anhDauMuc, alt: 'Cân đinh thành phẩm tại xưởng trước khi đóng bao' }}
+  />
 
-  <article class="section bg">
+  <article class="section nang-chu bg">
     <div class="khung">
-      <h1>Bảng giá và quy cách đinh thép</h1>
       <p class="dan-nhap bg__mo">
         Toàn bộ {tong} quy cách của {nhom.length} nhóm sản phẩm do nhà máy
         {' '}{c.tenNhaMay} sản xuất, kèm chiều dài và đường kính thân. Cập nhật tháng {thang}/{nam}.

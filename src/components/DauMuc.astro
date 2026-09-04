@@ -1,0 +1,176 @@
+---
+import { Image } from 'astro:assets';
+import VunBanh from './VunBanh.astro';
+import type { Muc } from './VunBanh.astro';
+
+/**
+ * DAI DAU TRANG cho cac trang trong - nhan + H1 + vun banh tren mot dai navy,
+ * anh o nua phai cat cheo.
+ *
+ * VI SAO CAN: truoc day moi trang trong deu bat dau bang mot dong vun banh
+ * nho tren nen trang roi H1 ngay ben duoi. Do la thu lam cac trang do doc ra
+ * "chua lam xong" - khong co diem vao, khong co gi bao day la trang gi truoc
+ * khi mat kip doc chu.
+ *
+ * SO DO industrie.rstheme.com/html/blog.html (do ngay 04/09/2026, khung 1440):
+ *   dai `.rs-breadcrumb-area` 1425x437, padding 170px 0
+ *   H1  55px/700 mau trang
+ *   vun banh nam TRONG dai, ngay duoi H1
+ *   nua trai la dai mau, nua phai la anh, cat cheo giua hai ben
+ *
+ * TA KHAC HO BA CHO:
+ *
+ * 1. NEN NAVY chu khong cam. Dai cua ho mau cam. Header cua ta da co mot khoi
+ *    cam dac cao 76px; dat thang mot dai cam nua ngay duoi thi hai khoi lien
+ *    thanh mot vung cam lon va mat khong tach duoc dau la header dau la dai.
+ *    Navy cung la mau da dung cho dai so lieu va muc nha may.
+ *
+ * 2. CAO 260px chu khong 437px. 437px la 49% man hinh 900px. Trang cua ta la
+ *    trang TRA THONG SO - nguoi ta vao de tim mot con so, khong nen bat cuon
+ *    qua nua man hinh moi thay noi dung. 260px du de lam diem vao.
+ *
+ * 3. CAT CHEO bang skew chu khong bang clip-path. Header dung `skewX(-30deg)`;
+ *    giu cung mot phep bien hinh thi ca trang la mot ngon ngu.
+ *
+ * VUN BANH van do `VunBanh.astro` render de BreadcrumbList schema chi nam mot
+ * cho duy nhat - khong nhan doi logic schema.
+ */
+interface Props {
+  /** Nhan nho tren H1, in hoa. Bo trong thi khong hien */
+  nhan?: string;
+  tieuDe: string;
+  /** Mot cau dan duoi H1. Bo trong thi khong hien */
+  mo?: string;
+  muc: Muc[];
+  /** Anh nua phai. Bo trong thi dai chi con mau navy */
+  anh?: { src: ImageMetadata; alt: string };
+}
+const { nhan, tieuDe, mo, muc, anh } = Astro.props;
+---
+
+<section class="dau-muc">
+  {
+    anh && (
+      <span class="dau-muc__anh" aria-hidden="true">
+        <Image
+          src={anh.src}
+          alt={anh.alt}
+          widths={[700, 1100]}
+          sizes="(max-width: 980px) 100vw, 46vw"
+          loading="eager"
+        />
+      </span>
+    )
+  }
+
+  <div class="khung dau-muc__trong">
+    {nhan && <p class="nhan-muc nhan-muc--nghich">{nhan}</p>}
+    <h1>{tieuDe}</h1>
+    {mo && <p class="dau-muc__mo">{mo}</p>}
+    <VunBanh muc={muc} />
+  </div>
+</section>
+
+<style>
+  .dau-muc {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 260px;
+    padding-block: var(--k6);
+    background: var(--navy-900);
+    overflow: hidden;
+  }
+
+  /* Anh chiem nua phai, mep trai cat cheo. 54% de mep cheo roi vao khoang
+     trong ben phai chu chu khong cat vao chu. */
+  .dau-muc__anh {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 54%;
+    /* Cung phep bien hinh voi canh vat cua header: nghieng 30 do. Dung
+       clip-path o day chu khong skew ca the vi skew se lam anh ben trong meo. */
+    clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .dau-muc__anh :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Lop phu navy tren anh: anh nha may cua ta sang va roi, khong phu thi mep
+     cheo mat hut vao anh va chu ben trai bi anh keo mat. */
+  .dau-muc__anh::after {
+    position: absolute;
+    content: '';
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(2, 36, 91, 0.92) 0%,
+      rgba(2, 36, 91, 0.42) 46%,
+      rgba(2, 36, 91, 0.24) 100%
+    );
+  }
+
+  .dau-muc__trong {
+    position: relative;
+    z-index: 1;
+  }
+  .dau-muc h1 {
+    /* Ho go 55px. Ta dung clamp: 1440px ra 52px, dien thoai ra 30px. Chu tieng
+       Viet co dau thanh chong nen o cung px chiem cao hon chu Latin. */
+    max-width: 22ch;
+    font-size: clamp(30px, 4vw, 52px);
+    line-height: 1.12;
+    letter-spacing: var(--gc-display);
+    color: var(--trang);
+  }
+  .dau-muc__mo {
+    max-width: 56ch;
+    margin-top: var(--k4);
+    font-size: var(--cs-lead);
+    line-height: 1.6;
+    color: #c9d6ea; /* trang nga tren navy - 9,4:1 */
+  }
+
+  /* Vun banh nam trong dai nen phai doi mau va bo lop khung long nhau.
+     `VunBanh` tu render `<ol class="vun-banh khung">`; de nguyen thi mot
+     `.khung` long trong mot `.khung` va padding bi nhan doi. */
+  .dau-muc :global(.vun-banh) {
+    max-width: none;
+    padding-inline: 0;
+    margin-top: var(--k5);
+    color: var(--muc-nghich-2);
+  }
+  .dau-muc :global(.vun-banh a) {
+    color: var(--muc-nghich-2);
+  }
+  .dau-muc :global(.vun-banh a:hover) {
+    color: var(--trang);
+  }
+  .dau-muc :global(.vun-banh li[aria-current]) {
+    color: var(--trang);
+  }
+
+  @media (max-width: 980px) {
+    .dau-muc {
+      min-height: 200px;
+    }
+    /* Man hep: anh phu ca dai lam nen thay vi chiem nua phai - nua phai o
+       390px chi con 210px, hep den muc anh khong con doc ra la anh gi. */
+    .dau-muc__anh {
+      inset: 0;
+      width: 100%;
+      clip-path: none;
+    }
+    .dau-muc__anh::after {
+      background: linear-gradient(
+        to right,
+        rgba(2, 36, 91, 0.93) 0%,
+        rgba(2, 36, 91, 0.82) 100%
+      );
+    }
+    .dau-muc h1 {
+      max-width: none;
+    }
+  }
+</style>
