@@ -20,6 +20,24 @@ websiteMe: https://cuongphatsteel.com.vn/
 hotline: "0919 288 109"
 hotlineTel: "+84919288109"
 zalo: "0919288109"
+
+# URL nhung ban do Google cho TRU SO. Giai tu link chia se user gui:
+#   https://maps.app.goo.gl/TWyPHdo9VH4RhAhA8
+# Link do redirect ra chuoi truy van nay kem `ftid` - Feature ID, ma dinh danh
+# dia diem noi bo cua Google. Co `ftid` thi Google khong phai doan dia chi nua:
+# no ghim dung diem, kem O DIA CHI o goc.
+#
+# HAI CHI TIET PHAI GIU DUNG, do duoc chu khong doan:
+#   1. "Tran Xuan Hoa" - dau HUYEN tren chu a, khong phai "Hòa" nhu dia chi
+#      phap dinh cua cong ty. Google luu ten duong theo chinh ta nay.
+#   2. Dang NGAN "An Dong, Ho Chi Minh", khong co "Phuong"/"Quan 5".
+# Da thu bon dang truy van theo dia chi phap dinh va CA BON deu truot: mot cai
+# ra Phan Dang Luu (Phu Nhuan), mot cai ra Cao Thang (Quan 3), mot cai ra vung
+# trong, va khong cai nao co ghim.
+#
+# Dia chi HIEN TREN TRANG van la dia chi phap dinh trong `diaDiem`; chuoi duoi
+# day chi de Google tim dung diem.
+banDoNhung: "https://maps.google.com/maps?q=7%20Tr%E1%BA%A7n%20Xu%C3%A2n%20Ho%C3%A0,%20An%20%C4%90%C3%B4ng,%20H%E1%BB%93%20Ch%C3%AD%20Minh&ftid=0x31752efa2a21a447:0x3af959ff358ec0cd&z=17&output=embed"
 email: admin@cuongphatsteel.com.vn
 emailPhu: cuongphat.noibo@gmail.com
 
@@ -55,7 +73,7 @@ diaDiem:
   - id: van-phong-chinh
     ten: Văn phòng chính
     vaiTro: Trụ sở công ty
-    diaChi: Lầu 1, Tòa nhà Thông Tấn Xã Việt Nam, 7-9-11 Trần Xuân Hòa
+    diaChi: Lầu 1, Tòa nhà Thông Tấn Xa, 7-9-11 Trần Xuân Hòa
     phuong: Phường An Đông
     quanHuyen: Quận 5
     tinhThanh: TP. Hồ Chí Minh
