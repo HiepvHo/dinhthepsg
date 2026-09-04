@@ -51,6 +51,21 @@ const congTy = defineCollection({
     websiteMe: z.string().url(),
     hotline: z.string(),
     hotlineTel: z.string(),
+    /**
+     * URL nhung ban do Google, lay tu Maps: Chia se -> Nhung ban do -> copy
+     * gia tri `src` trong the iframe. Dang cua no la
+     *   https://www.google.com/maps/embed?pb=...
+     *
+     * VI SAO CAN TRUONG NAY chu khong ghep tu dia chi: da do bon dang truy van
+     * `?q=<dia chi>&output=embed` va KHONG dang nao ra ghim do lan o dia chi,
+     * lai con roi sai quan (Phu Nhuan, Quan 3, vung trong). Chuoi `pb` cua
+     * Maps chua place ID va toa do da giai san - do moi la thu ve ra ghim.
+     * Chuoi do khong the tu sinh, phai lay tu giao dien Maps.
+     *
+     * Bo trong thi trang lien he tu quay ve dang `?q=<dia chi>` - hien dung
+     * khu vuc nhung khong co ghim.
+     */
+    banDoNhung: z.string().url().optional(),
     zalo: z.string(),
     email: z.string().email(),
     emailPhu: z.string().email(),

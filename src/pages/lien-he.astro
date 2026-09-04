@@ -51,6 +51,16 @@ const moTa = catMoTa(`Mua đinh thép trực tiếp từ nhà máy: hotline ${c.
  */
 const truSo = c.diaDiem.find((d) => d.vaiTro.includes('Trụ sở')) ?? dinh[0];
 const diaChiMap = diaChiDayDu(truSo);
+
+/**
+ * UU TIEN `banDoNhung` trong cong-ty.yaml - URL lay tu Maps (Chia se -> Nhung
+ * ban do). Chi URL do moi ve ra GHIM DO va O DIA CHI o goc, vi no chua place
+ * ID va toa do Maps da giai san.
+ * Chua co thi quay ve dang `?q=<dia chi>`: hien dung khu vuc Quan 5 nhung
+ * khong co ghim - da do bon dang truy van va khong dang nao ra ghim.
+ */
+const nhungMapUrl =
+  c.banDoNhung ?? `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)}&z=15&output=embed`;
 const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)}&z=15&output=embed`;
 
 ---
@@ -117,45 +127,6 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
         }
       </div>
 
-      <h2 id="ban-do">Đường tới trụ sở</h2>
-      <p class="lh__dan">
-        Trụ sở công ty tại {diaChiMap}. Nhà máy đặt tại
-        {' '}{diaChiDayDu(dinh[0])} - gọi trước khi tới nhà máy để chúng tôi chuẩn bị
-        hàng và cho xe vào cổng.
-      </p>
-      {/* BAM MOI TAI - khong nhung iframe san.
-          DA THU `<iframe loading="lazy">` truoc va do duoc no KHONG hoan duoc:
-          ban do nam o y=1303 voi khung nhin 900px, tuc chi ~400px duoi man
-          hinh, ma Chrome nap truoc moi thu trong khoang ~1250px. Ket qua: 43
-          request toi 5 ten mien Google (Maps JS API, ~20 o ban do, ca font
-          rieng cua Google) cho MOI nguoi mo trang - ke ca nguoi chi vao xem so
-          dien thoai roi goi.
-          Ca site nay dang co 0 script ngoai va 0 ten mien ngoai; mot ban do
-          khong dang doi lay dieu do.
-          Bam roi moi tai thi ai can duong di van co ban do day du, ai khong
-          can thi khong ton mot byte nao. Nguoi khong bat JS van co link chi
-          duong ben duoi. */}
-      <div class="lh__map" data-map={nhungMap}>
-        <button class="lh__map-nut" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" />
-            <circle cx="12" cy="10" r="2.6" />
-          </svg>
-          <span>
-            <strong>Xem bản đồ tới trụ sở</strong>
-            <em>{truSo.ten} - {diaChiMap}</em>
-          </span>
-        </button>
-      </div>
-      <p class="lh__map-link">
-        <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(diaChiMap)}`}
-          rel="noopener"
-        >
-          Mở chỉ đường trong Google Maps
-        </a>
-      </p>
-
       <h2 id="phap-nhan">Thông tin pháp nhân</h2>
       <dl class="dac-ta lh__phap-nhan">
         <div class="dac-ta__hang">
@@ -220,6 +191,31 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
           </tbody>
         </table>
       </div>
+    <h2 id="ban-do">Đường tới trụ sở</h2>
+      <p class="lh__dan">{diaChiMap}</p>
+      {/* IFRAME NGOAI DUY NHAT tren ca site, va no nam o CUOI trang.
+          Vi tri cuoi trang khong phai tinh co: `loading="lazy"` chi hoan duoc
+          khi the o XA khung nhin. Da do o vi tri giua trang (y=1303) va lazy
+          KHONG hoan duoc - Chrome nap truoc moi thu trong khoang ~1250px, ket
+          qua 43 request toi 5 ten mien Google cho moi nguoi mo trang. Dat o
+          cuoi thi khoang cach du xa de lazy thuc su co tac dung. */}
+      <div class="lh__map">
+        <iframe
+          src={nhungMapUrl}
+          title={`Bản đồ tới ${truSo.ten}, ${diaChiMap}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <p class="lh__map-link">
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(diaChiMap)}`}
+          rel="noopener"
+        >
+          Mở chỉ đường trong Google Maps
+        </a>
+      </p>
     </div>
   </article>
 </BaseLayout>
@@ -268,56 +264,6 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
     background: var(--nen-nhat);
     border: var(--vien-mong);
   }
-  /* Khoi bam de tai ban do. Chiem dung cho cua iframe nen khi thay bang
-     iframe that thi trang khong nhay. */
-  .lh__map-nut {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--k4);
-    width: 100%;
-    padding: var(--k5);
-    border: 0;
-    background: var(--nen-nhat);
-    text-align: left;
-    cursor: pointer;
-    transition: background var(--thoi) var(--nhip);
-  }
-  .lh__map-nut:hover {
-    background: var(--cam-050);
-  }
-  .lh__map-nut svg {
-    width: 44px;
-    height: 44px;
-    flex: none;
-    fill: none;
-    stroke: var(--cam-500);
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .lh__map-nut strong {
-    display: block;
-    font-family: var(--font-hien);
-    font-size: var(--cs-h3);
-    font-weight: var(--w-dam);
-    color: var(--muc);
-  }
-  .lh__map-nut em {
-    display: block;
-    margin-top: 2px;
-    font-style: normal;
-    font-size: var(--cs-nho);
-    color: var(--muc-2);
-  }
-
-  /* PHAI dung `:global(iframe)`: iframe nay do JS tao ra khi bam nen no KHONG
-     mang thuoc tinh scope cua Astro. Astro bien `.lh__map iframe` thanh
-     `.lh__map[data-astro-cid-x] iframe[data-astro-cid-x]`, ma iframe tao bang
-     `createElement` khong co thuoc tinh do - luat khong an va iframe roi ve co
-     mac dinh 300x150. Do duoc: no hien mot manh ban do 305x145 o goc khung. */
   .lh__map :global(iframe) {
     position: absolute;
     inset: 0;
@@ -339,21 +285,3 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
   }
 </style>
 
-<script>
-  /* Nhung iframe ban do KHI BAM. Xem ghi chu trong markup ve ly do khong
-     nhung san. Bo ca khoi bam di sau khi nhung de khong con hai lop chong. */
-  document.querySelectorAll<HTMLElement>('.lh__map').forEach((khung) => {
-    const nut = khung.querySelector('button');
-    const nguon = khung.dataset.map;
-    if (!nut || !nguon) return;
-    nut.addEventListener('click', () => {
-      const f = document.createElement('iframe');
-      f.src = nguon;
-      f.title = nut.querySelector('strong')?.textContent ?? 'Bản đồ';
-      f.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-      f.setAttribute('allowfullscreen', '');
-      khung.appendChild(f);
-      nut.remove();
-    });
-  });
-</script>
