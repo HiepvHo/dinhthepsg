@@ -180,6 +180,16 @@ const conLai = bai.slice(1);
     grid-template-rows: 1fr 1fr;
     gap: var(--gap);
   }
+  /* O grid mac dinh la `min-width: auto`, tuc khong co lai duoi be ngang
+     min-content cua noi dung ben trong. Do duoc 04/09/2026 o kho 360px: the
+     `.tt-nho` ra 355px trong khi `.khung` chi con 320px, nen anh va cot chu bi
+     `.tt-nho { overflow: hidden }` cat mat 35px o mep phai.
+     Cung loi da gap o `.dac-ta__hang` va `.luoi > *`. */
+  .tt__luoi > *,
+  .tt__cot > *,
+  .tt-nho > * {
+    min-width: 0;
+  }
 
   /* ---------- the LON ---------- */
   .tt-lon {
@@ -331,6 +341,15 @@ const conLai = bai.slice(1);
     }
     .tt-nho__anh {
       order: -1;
+      /* `width: 100%` la BAT BUOC, khong phai du thua.
+         `.tt__cot` dat `grid-template-rows: 1fr 1fr` nen the bi keo cao, va o
+         cha `.tt-nho` thi o anh bi keo theo -> chieu cao thanh XAC DINH
+         (do duoc 194px o kho 360). Luc do `aspect-ratio` suy be ngang TU chieu
+         cao: 194 x 16/9 = 344px, trong khi cot chi rong 320px. Ket qua anh bi
+         `.tt-nho { overflow: hidden }` cat mat 24px o mep phai.
+         Khai be ngang tuong minh thi be ngang thanh xac dinh truoc, va
+         `aspect-ratio` suy CHIEU CAO tu no - dung chieu ta muon. */
+      width: 100%;
       aspect-ratio: 16 / 9;
       clip-path: polygon(0% 0%, 88% 0%, 100% 14%, 100% 100%, 0% 100%);
     }

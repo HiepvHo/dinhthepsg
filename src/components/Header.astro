@@ -277,7 +277,7 @@ const navSau = [
     transition: top 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   :global(html[data-cuon]) .dau-trang {
-    top: -46px;
+    top: calc(var(--dai-tren) * -1);
   }
   @media (prefers-reduced-motion: reduce) {
     .dau-trang {
@@ -315,7 +315,7 @@ const navSau = [
     display: flex;
     align-items: center;
     gap: var(--k5);
-    min-height: 46px; /* do duoc ben ho */
+    min-height: var(--dai-tren); /* do duoc ben ho */
     padding-left: 48px;
   }
 
@@ -776,18 +776,43 @@ const navSau = [
       gap: var(--k3);
       flex-wrap: nowrap;
     }
-    /* Khoi cam o mobile: thu hep NEM VAT lai. O man 1440 nem rong 50px la
-       vua, nhung o 390 thi 50px la 13% be ngang man hinh - no bop cot chu lai
-       den muc dong phu phai xuong ba dong va chu "STEEL" tran ra ngoai khoi.
-       Nem 34px thi ti le cheo van y het, chi nho lai. */
+    /* DAI CAM TRAN NGANG thay cho kieu hai dai vat cua desktop.
+       Do duoc 04/09/2026 o 390px truoc khi sua: `.hieu` chi rong 239px, nut
+       hamburger dat o x=251 nam tren nen TRANG, con lai 111px TRANG CHET o mep
+       phai - doc ra nhu mot cai lo trong header. O 768px con te hon: cam
+       0..346, trang 346..768.
+       Nguyen nhan: `.nut-lh` mang `margin-left: auto` de day cum sang phai,
+       nhung duoi 560px no bi `display: none` nen khong con gi day nua.
+       Cach sua: dat mau cam len CA HANG roi bo nen va nem vat cua `.hieu`.
+       Loi thi thu hai: het luon vet seam 1px o cho nem vat cua `.hieu` gap
+       mep duoi cua dai topbar - hai khoi cam gio lien mach. */
+    /* HOTLINE TOPBAR: `padding-block: 0` va link cao bang CA DAI, thay vi cho
+       link mot `min-height` roi cong them padding cua khoi bao no.
+       Do duoc: `min-height: 44px` + `padding: 8px 16px` lam topbar phinh tu 46
+       len 60px, trong khi animation an topbar chi chay `--dai-tren` = 46px ->
+       con lo 14px topbar sau khi da cuon. Cach nay cho vung bam 46px (tren ca
+       muc khuyen nghi 44px cua Apple) ma chieu cao dai KHONG doi. */
+    .thanh-tren__goi {
+      padding-block: 0;
+    }
+    .thanh-tren__goi a {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      min-height: var(--dai-tren);
+    }
+
+    .dau-trang__trong {
+      background: var(--cam-500);
+    }
     .hieu {
       min-width: 0;
       gap: var(--k2);
-      padding-right: 34px;
+      padding-right: 0;
+      background: none;
     }
     .hieu.vat--phai::after {
-      width: 34px;
-      right: -17px;
+      display: none;
     }
     .hieu__dau {
       width: 36px;
@@ -801,24 +826,32 @@ const navSau = [
     .hieu__ten {
       font-size: 20px;
     }
+    /* Bo dong phu tu 980px chu khong doi tới 560px.
+       Truoc day duoi 980px no bi thu con `font-size: 9.5px` - do duoc dung
+       9.5px tren ca 30 trang o kho 768px. 9.5px la khong doc duoc, va mot dong
+       khong doc duoc thi bo di tot hon la thu nho. Ten phap dinh day du van co
+       o footer va trang gioi thieu. */
     .hieu__phu {
-      font-size: 9.5px;
+      display: none;
     }
+    /* Nut CTA an tu 980px chu khong tu 560px: tren dai cam thi nut mau
+       `--cam-500` nam tren nen cam = khong con nhin ra la nut. Va mobile da co
+       thanh CTA co dinh o day man hinh (Goi / Nhan Zalo) nen nut nay du. */
     .nut-lh {
-      order: 2;
-      margin-left: auto;
-      margin-right: 0; /* bo luat day vao giua cua ban desktop */
-      padding: 9px 16px;
-      font-size: 15px;
+      display: none;
     }
-    .nut-lh svg {
-      width: 15px;
-      height: 15px;
-    }
+    /* `margin-left: auto` chuyen tu `.nut-lh` sang day: day nut ra sat mep
+       phai thay vi de no dinh vao khoi thuong hieu. */
     .nut-menu {
       order: 3;
       display: flex;
-      padding: 12px 0 12px 4px;
+      margin-left: auto;
+      padding: 12px 0;
+    }
+    /* Gach tren nen cam phai trang. Truoc day la `--muc` (gan den) tren nen
+       trang - gio nen da doi. */
+    .nut-menu span {
+      background: var(--trang);
     }
     /* Nav xo xuong thanh bang menu tran ngang duoi header.
        Giu NAV DAY DU - baogiathep an han nav duoi 900px, tuc cat het internal
@@ -901,9 +934,6 @@ const navSau = [
      header cao 243px). Bo duoc vi da co thanh Goi/Zalo dinh day man hinh - CTA
      o header luc nay chi la lap lai. */
   @media (max-width: 560px) {
-    .nut-lh {
-      display: none;
-    }
     .hieu__ten {
       font-size: 19px;
     }
@@ -924,11 +954,6 @@ const navSau = [
     }
     .hieu {
       padding-left: 16px;
-    }
-    /* Duoi 560px bo dong phu. Ho cung chi de moi ten thuong hieu o mobile.
-       Ten phap dinh day du van co o footer va trang gioi thieu. */
-    .hieu__phu {
-      display: none;
     }
   }
 </style>

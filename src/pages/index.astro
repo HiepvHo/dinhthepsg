@@ -809,4 +809,20 @@ const moTa = catMoTa(
       grid-template-columns: 1fr;
     }
   }
+
+  /* Duoi 620px hai tam anh nha may XEP DOC thay vi dung canh nhau.
+     Do duoc 04/09/2026: o 360px moi tam chi con 152x228, o 390px la 167x251.
+     Anh chup day chuyen va anh can dinh o be ngang 152px thi khong con doc ra
+     la anh gi - mat chinh gia tri E-E-A-T cua chung. Mot cot thi moi tam duoc
+     ca 350px, va ty le 2/3 giu nguyen nen anh cao 525px doc ro tung chi tiet.
+     Chi lay MOT tam de trang khong dai them 500px - tam thu hai da xuat hien
+     lai o muc nha may ben duoi. */
+  @media (max-width: 620px) {
+    .gt__anh {
+      grid-template-columns: 1fr;
+    }
+    .gt__anh--duoi {
+      display: none;
+    }
+  }
 </style>

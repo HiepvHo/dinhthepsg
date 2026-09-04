@@ -184,6 +184,15 @@
   margin: 65px 0 25px;
   box-shadow: var(--toa);
   background: var(--trang);
+  /* BAT BUOC, va day la mot cai bay CSS dang ghi lai:
+     `text-decoration` LAN xuong moi con TRONG LUONG va con KHONG the huy no -
+     dat `text-decoration: none` tren con khong co tac dung, gach van ve qua.
+     Ngoai le duy nhat: con NGOAI LUONG (absolute) va con atomic inline.
+     O ban desktop `.the-lat__dau`/`.the-lat__mo` deu `position: absolute` nen
+     tinh co khong bi gach. Khi ban mobile dua chung ve luong thuong thi gach
+     chan cua the `<a>` nay an xuong CA tieu de, so quy cach va mo ta.
+     Do duoc: `a.the-lat` co `text-decoration-line: underline` o ca hai kho. */
+  text-decoration: none;
 }
 /* Anh nen: nam trong luong bt de CHO CHIEU CAO cho ca the - giong ho, ho de
    mot <img class="img-fluid"> tran o day the. Mat thuong khong thay no vi lop
@@ -299,6 +308,72 @@
 .the-lat:hover .the-lat__nut {
   color: var(--trang);
   background: var(--cam-600);
+}
+
+/* THE LAT -> THE TINH duoi 760px.
+   DIEN THOAI KHONG CO HOVER. Ca co che lat chay bang `:hover`/`:focus-within`,
+   con `.the-lat__mo` (mat sau, chua mo ta san pham) nam o `top: 100%` tuc ngoai
+   the. Hau qua do duoc 04/09/2026: tren dien thoai MO TA SAN PHAM KHONG BAO GIO
+   HIEN - noi dung chet. Ngoai ra the van giu `margin: 65px 0 25px` va
+   `padding: 65px 30px 25px` tinh cho phan anh nho len cua ban desktop, nen o
+   390px the cao ~600px ma phan lon la khoang trong, nut bi cat mat.
+
+   Duoi 760px: bo lat, cho moi thu ve luong binh thuong - anh tren, tieu de,
+   mo ta hien san, nut cuoi. Desktop tu 761px giu nguyen ban da duyet. */
+@media (max-width: 760px) {
+  .the-lat {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+  /* Anh vuong nho len la BAN SAO cua chinh anh nen. O desktop no la diem nhan
+     vi anh nen bi lop tieu de trang phu kin. Khi da xep doc thi anh nen hien
+     day du, nen ban sao chi la lap lai cung mot tam anh. */
+  .the-lat__huy {
+    display: none;
+  }
+  .the-lat__khung {
+    position: static;
+    overflow: visible;
+  }
+  .the-lat__dau,
+  .the-lat__mo {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    transition: none;
+  }
+  .the-lat__dau {
+    align-items: flex-start;
+    gap: var(--k2);
+    padding: var(--k5) var(--k5) var(--k3);
+    text-align: left;
+    background: none;
+  }
+  .the-lat__mo {
+    display: block;
+    padding: 0 var(--k5) var(--k5);
+    color: var(--muc-2);
+    text-align: left;
+    background: none;
+  }
+  /* Mieng trang cheo chi co nghia khi hai mat truot qua nhau */
+  .the-lat__mo::before {
+    display: none;
+  }
+  .the-lat__nut {
+    position: static;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    height: auto;
+    padding: 14px var(--k4);
+    transform: none;
+    color: var(--trang);
+    background: var(--cam-600);
+    box-shadow: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -458,7 +533,15 @@
 /* Duoi 560px co thanh CTA dinh day man hinh - day nut len tren no */
 @media (max-width: 560px) {
   .len-dau {
-    left: 16px;
+    /* SANG MEP PHAI tren dien thoai, nguoc voi ban desktop.
+       Ly do dat ben TRAI o desktop la de tranh vong mui ten cua banner - ma o
+       kho nay `.bn__lai { display: none }`, tuc mui ten da an, ben phai trong
+       hoan toan. Con ben trai thi cot noi dung bat dau ngay o x=20 (padding
+       cua `.khung`), nen nut 44px o `left: 16px` che thuong xuyen ky tu DAU
+       dong - do duoc no phu len chu trong mo ta san pham.
+       Le phai an it hon vi dong chu canh trai nen mep phai luon rach. */
+    right: 16px;
+    left: auto;
     bottom: 76px;
     /* 44px chu khong 40: 44 la vung cham toi thieu. Do duoc 40x40 la muc duy
        nhat tren trang con duoi nguong. */

@@ -251,16 +251,53 @@ a.the:hover,
 
    Bang cua ta la HTML that, cuon ngang duoc tren dien thoai.
    ========================================================================== */
+/* BONG CUON TU AN - bao cho biet bang con noi dung ben canh.
+   Do duoc 04/09/2026: bang cuon ngang duoc nhung KHONG co dau hieu nao, cot
+   "Duong kinh" bi cat giua chu -> khach doc ra la thieu du lieu chu khong ra
+   la cuon duoc.
+
+   Ky thuat: bon lop background xep chong.
+     - hai lop PHU mau trang dat `local` -> truot theo noi dung
+     - hai lop BONG dat `scroll`   -> ghim vao hop
+   O dau bang, lop phu nam dung tren lop bong nen khong thay bong. Cuon di thi
+   lop phu truot theo noi dung, de lo bong ra. Tu an tu hien, KHONG CAN JS.
+   Dat truoc `background-color` de mau trang lam nen cho ca bon lop. */
 .bang-cuon {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: var(--vien-mong);
   border-radius: var(--bo);
-  background: var(--trang);
+  background-color: var(--trang);
+  background-image:
+    linear-gradient(to right, var(--trang) 30%, rgba(255, 255, 255, 0)),
+    linear-gradient(to left, var(--trang) 30%, rgba(255, 255, 255, 0)),
+    radial-gradient(farthest-side at 0 50%, rgba(2, 36, 91, 0.22), rgba(2, 36, 91, 0)),
+    radial-gradient(farthest-side at 100% 50%, rgba(2, 36, 91, 0.22), rgba(2, 36, 91, 0));
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
+  background-repeat: no-repeat;
+  background-size:
+    44px 100%,
+    44px 100%,
+    16px 100%,
+    16px 100%;
+  background-attachment: local, local, scroll, scroll;
 }
+/* `max-content` chu KHONG phai mot con so co dinh.
+   Truoc day la `min-width: 560px`. Do o khung nhin 390px: 560px khong du cho 6
+   cot nen trinh duyet bop hai cot cuoi xuong 62-87px, chu xuong 4-5 dong va
+   HANG CAO 131-157px (bang dia diem: 285px). Vung nhin chi thay cot dau mot
+   dong -> doc ra nhu bang trong.
+   Voi `max-content`: do lai ca 8 bang, HANG VE 55px DEU, bang rong 407-825px.
+   Cuon ngang xa hon nhung moi hang mot dong - dung hanh vi cua bang so tren
+   dien thoai. Desktop khong doi vi khung noi dung 853-1140px con rong hon
+   825px, `width: 100%` van thang. */
 .bang {
   width: 100%;
-  min-width: 560px;
+  min-width: max-content;
   border-collapse: collapse;
   font-size: var(--cs-nho);
 }
@@ -324,6 +361,71 @@ a.the:hover,
   margin-top: var(--k3);
   font-size: var(--cs-micro);
   color: var(--muc-2);
+}
+
+/* BANG XEP THANH THE tren dien thoai - `.bang.bang--xep`.
+   Danh cho bang co MOT COT VAN DAI (dia chi), khong danh cho bang so.
+
+   Vi sao khong dung `max-content` nhu cac bang khac: do bang dia diem o
+   `max-content` ra 1554px = 4 lan khung nhin 390px. Cuon ngang 4 man de doc
+   mot dia chi la khong dung duoc. Bang so thi 407-825px nen cuon duoc.
+
+   GIU THE `<table>` trong HTML, chi doi cach hien: Google van doc duoc quan he
+   hang-cot qua `<th scope="col">`, con mat nguoi doc thay tung the.
+   Nhan cot lay tu `data-nhan` tren tung `<td>` - khong go lai chu trong CSS,
+   khong nhan doi noi dung. */
+@media (max-width: 620px) {
+  .bang--xep {
+    /* de bo `min-width: max-content` cua .bang */
+    min-width: 0;
+    width: 100%;
+    font-size: var(--cs-nho);
+  }
+  /* `thead` an khoi mat nhung con cho screen reader va cho crawler */
+  .bang--xep thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .bang--xep tr {
+    display: block;
+    padding: var(--k4) 0;
+  }
+  .bang--xep tr + tr {
+    border-top: var(--vien-mong);
+  }
+  .bang--xep td {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: var(--k3);
+    padding: 4px var(--k4);
+    /* dia chi dai phai duoc xuong dong; .bang td:first-child dat nowrap */
+    white-space: normal;
+  }
+  .bang--xep td::before {
+    content: attr(data-nhan);
+    font-family: var(--font-hien);
+    font-size: var(--cs-micro);
+    font-weight: var(--w-nang);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+    color: var(--muc-2);
+  }
+  /* O dau the: ten dia diem, cho no chiem ca hang lam tieu de */
+  .bang--xep td:first-child {
+    grid-template-columns: 1fr;
+    margin-bottom: var(--k2);
+    font-size: var(--cs-than);
+    white-space: normal;
+  }
+  .bang--xep td:first-child::before {
+    display: none;
+  }
+  .bang--xep tbody tr:hover td {
+    background: none;
+  }
 }
 
 /* ----------------------------------------------------- danh sach dac ta ---- */
@@ -743,5 +845,68 @@ figcaption {
     --cs-the: 19px; /* goc 19   */
     --cs-h3: 21px; /* goc 19   */
     --cs-h2: 26px; /* goc 23   */
+  }
+}
+
+/* ==========================================================================
+   VUNG BAM TREN CAM UNG - WCAG 2.2 SC 2.5.8 Target Size (Minimum), 24x24 CSS px.
+
+   Do duoc 04/09/2026 o 360/390/414/768: 713-717 vung bam duoi 24px moi kho.
+   Link chu tran khong padding chi cao bang dong chu: footer 18px, nav 20px,
+   vun banh 22px, so dien thoai 23px, hotline topbar 17px.
+
+   CHI AP CHO LINK TRONG DANH SACH VA DIEU HUONG.
+   SC 2.5.8 co ngoai le "Inline": link nam trong mot cau hoac mot khoi van ban
+   duoc mien tru. Nong link trong doan van len 32px se pha nhip dong va tao
+   khoang trang giua cac dong - te hon van de no giai. Da phan loai bang script
+   (`scratchpad/do-bam.mjs`): kiem tra the cha gan nhat co nhieu chu hon chinh
+   link hay khong.
+
+   32px chu khong 24px: 24 la nguong DAT CHUAN, khong phai nguong dung thoai
+   mai. 32px con giu duoc footer o do dai hop ly (12 link/cot, +14px moi link).
+   Rieng so dien thoai va Zalo cho 44px - do la duong chuyen doi cua ca site,
+   bam nham o day la mat don hang.
+   ========================================================================== */
+@media (max-width: 980px) {
+  .vun-banh a,
+  .chan__ds a,
+  .chan__lh a,
+  .chan__dd a,
+  .muc-luc a,
+  .bv__lien-quan a,
+  .qc__ds-chi-em a,
+  .dac-ta dd a,
+  .bang td a,
+  .lh__map-link a,
+  .o-ben__phu,
+  .thanh-tren__goi a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+  }
+  /* SO DIEN THOAI duoc nong len KE CA khi nam trong cau van - day la ngoai le
+     duy nhat cua luat "khong dung vao link inline" o tren.
+     Ly do: goi dien la duong chuyen doi cua ca site. Do duoc con 30 link
+     `tel:` cao 18-22px nam trong doan van o cac trang quy cach, va bam nham
+     mot so dien thoai la mat don hang chu khong phai bam nham mot link doc
+     them.
+     28px chu khong 32px: dong chu than 16px x line-height 1.7 cho hop dong cao
+     ~27px, nen 28px gan nhu KHONG lam gian dong - vua qua nguong 24px cua
+     WCAG ma khong pha nhip doan van. */
+  a[href^='tel:'] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+  }
+  /* Duong chuyen doi o cac khoi lien he chuyen dung: cho han 44px.
+     KHONG co `.thanh-tren__goi a` o day - hotline tren topbar duoc xu ly rieng
+     trong `Header.astro`: dat 44px o day thi cong voi `padding: 8px 16px` cua
+     khoi bao no, topbar phinh tu 46px len 60px va lech mat quang duong 46px
+     cua animation an topbar khi cuon. Do duoc va da sua. */
+  .chan__lh a[href^='tel:'],
+  .chan__dd a[href^='tel:'],
+  .dac-ta dd a[href^='tel:'],
+  a[href*='zalo.me'] {
+    min-height: 44px;
   }
 }

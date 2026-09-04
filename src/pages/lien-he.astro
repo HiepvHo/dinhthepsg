@@ -161,7 +161,12 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
         Các địa điểm này không bán đinh, liệt kê ở đây để bạn biết quy mô hệ thống.
       </p>
       <div class="bang-cuon">
-        <table class="bang">
+        {/* `bang--xep`: duoi 620px bang nay XEP THANH THE thay vi cuon ngang.
+            Ly do do duoc: cot "Dia chi" la van dai nen o `min-width: max-content`
+            bang phinh len 1554px = 4 lan khung nhin 390px, con o be ngang co
+            dinh thi cot dia chi bi bop va HANG CAO 285px voi phan lon la
+            khoang trong. `data-nhan` cap nhan cot cho tung o khi da xep. */}
+        <table class="bang bang--xep">
           <caption>Hệ thống địa điểm {c.tenPhapDinh}</caption>
           <thead>
             <tr>
@@ -175,10 +180,10 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
             {
               [...dinh, ...khac].map((d) => (
                 <tr>
-                  <td>{d.ten}</td>
-                  <td>{d.vaiTro}</td>
-                  <td>{diaChiDayDu(d)}</td>
-                  <td>
+                  <td data-nhan="Địa điểm">{d.ten}</td>
+                  <td data-nhan="Chức năng">{d.vaiTro}</td>
+                  <td data-nhan="Địa chỉ">{diaChiDayDu(d)}</td>
+                  <td data-nhan="Điện thoại">
                     {d.hotline ? (
                       <a href={telHref(d.hotline)}>{d.hotline}</a>
                     ) : (

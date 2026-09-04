@@ -220,6 +220,12 @@
      link neo, dinh cot ben - deu phai dung con so nay.
      TRUOC DAY co bon gia tri khac nhau (70, 90, 95, 110px) rai trong 8 file;
      70px la SAI - do duoc tieu de bi nav che 6px khi bam link neo. */
+  /* Chieu cao DAI TREN (topbar). Mot bien chu khong hai con so go tay:
+     `.thanh-tren__trong { min-height }` va quang duong `top` cua animation an
+     topbar PHAI bang nhau. Da bi lech mot lan: luat vung bam 44px cho hotline
+     cong voi padding 8px cua khoi bao no lam topbar phinh len 60px trong khi
+     animation van chay -46px, de lo 14px topbar khi da cuon. */
+  --dai-tren: 46px;
   --dinh-cao: 76px;
   --neo-le: calc(var(--dinh-cao) + 16px); /* 92px - cong khoang tho */
 
@@ -258,6 +264,19 @@
   }
 }
 
+/* CO CHU NHO nang som hon ca thang chu con lai - tu 900px chu khong 760px.
+   Do duoc 04/09/2026: sau khi nang `--cs-micro` trong khoi 760px, kho 768px
+   (iPad doc) VAN con 13,5px tren ca 30 trang vi 768 > 760. Khoang cach doc tren
+   tablet khong xa hon dien thoai nen 13,5px o do cung kho doc y het.
+   Chi nang HAI bien nay, phan con lai cua thang chu giu nguyen den 760px:
+   tablet con du be ngang cho tieu de co man lon. */
+@media (max-width: 900px) {
+  :root {
+    --cs-nho: 15px;
+    --cs-micro: 14px;
+  }
+}
+
 @media (max-width: 760px) {
   :root {
     --cs-display: 33px;
@@ -266,7 +285,17 @@
     --cs-h3: 19px;
     --cs-lead: 16.5px;
     --cs-than: 16px;
-    --cs-nho: 14px;
+    /* Do duoc 04/09/2026: `--cs-micro` KHONG duoc dat lai o day nen giu nguyen
+       13,5px cua man lon - 1222 cho tren 30 trang dung co do (footer, mega
+       menu, `th`, ghi chu bang, ngay dang). 13,5px tren dien thoai la duoi
+       nguong doc thoai mai, ma khach cua site nay tra quy cach ngoai cong
+       truong bang dien thoai.
+       Nang micro len 14px va nho len 15px de van con MOT BAC cach nhau - de ca
+       hai o 14px thi mat khong con phan biet duoc nhan voi noi dung.
+       `.nang-chu` da dat san 14px/15,5px cho cac muc than trang tu truoc, day
+       la de khop phan con lai cua site voi no. */
+    --cs-nho: 15px;
+    --cs-micro: 14px;
     --cs-so: 28px;
     --section-y: 44px;
     --gap: 16px;
