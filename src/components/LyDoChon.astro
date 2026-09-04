@@ -145,6 +145,19 @@ const day = [...muc, ...muc];
           ))
         }
       </ul>
+
+      {/* CHAM CHI VI TRI - chi hien o kho mot muc (duoi 560px).
+          Thay cho kieu "he mot muc ke tiep": xem ghi chu trong CSS.
+          Ngoai viec bao con bao nhieu muc, cham con la CACH DUY NHAT de nguoi
+          dung cam ung dung bang truot lai - truoc day chi dung khi re chuot
+          hoac focus, tuc chi may tinh moi dung duoc (WCAG 2.2.2). */}
+      <div class="ld__cham">
+        {
+          muc.map((m, k) => (
+            <button type="button" class="ld__cham-nut" data-vt={k} aria-label={`Xem: ${m.ten}`} />
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -227,10 +240,60 @@ const day = [...muc, ...muc];
       --hien: 2;
     }
   }
+  /* CHAM CHI VI TRI. An o kho lon: tu 2 muc hien tro len, bang truot chay lien
+     tuc nen "dang o cham so may" khong con nghia gi. */
+  .ld__cham {
+    display: none;
+  }
+
   @media (max-width: 560px) {
+    /* MOT MUC TRAN KHUNG, khong con he mot phan muc ke tiep.
+       Truoc day la 1.35 - "he lo muc ke tiep de thay ngay day la bang truot".
+       Do lai o 390px: muc chinh chi con 257px trong 350px, phan he 93px vua
+       du lo vong icon 44px cong vai chu dau tieu de - doc ra nhu bi cat chu
+       khong ra la con noi dung. Va vi muc bi bop nen mo ta xuong 3 dong.
+       Voi 1 muc: muc duoc ca 350px, mo ta xuong con 1-2 dong, chieu cao dai
+       KHONG doi. Tin hieu "con muc khac" chuyen cho cham ben duoi - cham con
+       noi ro CON MAY MUC va DANG O DAU, cai ma phan he khong noi duoc.
+
+       DA CAN NHAC kieu can giua co he CA HAI BEN: o 390px muon he doi xung
+       thi --hien phai ~1.7, muc con 206px - hep hon hien tai 51px, mo ta len
+       4 dong va dai CAO THEM. Tuc vua bot noi dung vua ton cho. */
     .ly-do {
-      --hien: 1.35; /* he lo muc ke tiep de thay ngay day la bang truot */
+      --hien: 1;
       padding-block: var(--k3);
+    }
+    .ld__cham {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      margin-top: 8px;
+    }
+    /* Nut 24px x 24px de dat SC 2.5.8, cham ve trong bang ::before nen dau
+       hieu nhin thay chi 7px ma vung bam van du rong. */
+    .ld__cham-nut {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+    .ld__cham-nut::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--vien-dam);
+      transition:
+        width var(--thoi) var(--nhip),
+        background var(--thoi) var(--nhip);
+    }
+    .ld__cham-nut[aria-current="true"]::before {
+      width: 18px;
+      background: var(--cam-500);
     }
   }
 
@@ -248,6 +311,11 @@ const day = [...muc, ...muc];
       transition: none;
     }
     .ld__muc[aria-hidden] {
+      display: none;
+    }
+    /* Bang truot da xoe thanh luoi, moi muc deu hien - cham khong con chi
+       duoc vi tri nao ca. */
+    .ld__cham {
       display: none;
     }
     @media (max-width: 900px) {
@@ -269,7 +337,16 @@ const day = [...muc, ...muc];
     let i = 0;
     let hen: number | undefined;
 
-    const ve = () => ld.style.setProperty('--i', String(i));
+    const cham = Array.from(ld.querySelectorAll<HTMLButtonElement>('.ld__cham-nut'));
+
+    const ve = () => {
+      ld.style.setProperty('--i', String(i));
+      /* `i` chay qua het ban goc roi moi nhay ve 0, nen phai lay du */
+      const vt = i % so;
+      cham.forEach((n, k) =>
+        k === vt ? n.setAttribute('aria-current', 'true') : n.removeAttribute('aria-current'),
+      );
+    };
 
     /* Chay het ban goc thi nhay ve 0 khong hieu ung. Vi tri i va i+so hien cung
        noi dung (danh sach da nhan doi) nen mat khong thay cu nhay. */
@@ -282,18 +359,43 @@ const day = [...muc, ...muc];
       ray.classList.remove('ld__ray--nhay');
     });
 
+    /* Mot khi nguoi dung bam cham la HO nam quyen - khong tu chay lai nua.
+       Can co flag chu khong chi `dung()`: tren cam ung, mot cu bam sinh ra ca
+       mouseenter roi mouseleave, ma `mouseleave` goi `chay()` - tuc bang truot
+       chay lai ngay sau khi vua bam dung. */
+    let nguoiDungNamQuyen = false;
+
     const dung = () => {
       if (hen) window.clearInterval(hen);
       hen = undefined;
     };
     const chay = () => {
       dung();
-      if (itChuyenDong.matches) return;
+      if (itChuyenDong.matches || nguoiDungNamQuyen) return;
       hen = window.setInterval(() => {
         i += 1;
         ve();
       }, chuKy);
     };
+
+    /* Bam cham: nhay toi muc do VA DUNG HAN tu chay.
+       Dung han chu khong chay tiep: nguoi dung vua noi ro ho muon xem muc nao,
+       de no tu troi di sau 4 giay la giat mat cai ho dang doc. Day cung la
+       "Pause" ma WCAG 2.2.2 doi o noi dung tu chuyen dong - truoc day chi co
+       mouseenter/focusin, tuc may tinh moi dung duoc, cam ung thi khong. */
+    cham.forEach((n) =>
+      n.addEventListener('click', () => {
+        nguoiDungNamQuyen = true;
+        dung();
+        i = Number(n.dataset.vt) || 0;
+        ve();
+      }),
+    );
+
+    /* Danh dau cham dau tien NGAY LUC TAI. `ve()` truoc day chi duoc goi trong
+       ham hen, nen suot 4 giay dau khong cham nao duoc danh dau - do duoc tren
+       ban da build: ca 6 cham deu mau xam. */
+    ve();
 
     ld.addEventListener('mouseenter', dung);
     ld.addEventListener('mouseleave', chay);

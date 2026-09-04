@@ -366,6 +366,15 @@
     position: static;
     left: auto;
     bottom: auto;
+    /* `margin-top: auto` DAY NUT XUONG DAY THE.
+       Cac the trong mot hang duoc keo cao bang nhau, nhung noi dung ben trong
+       lai nam o luong thuong nen nut chay ngay sau doan mo ta - the nao mo ta
+       ngan thi nut do treo lung lung o giua, khong thang hang voi the ben
+       canh. Do duoc o kho 414: the "Dinh du" (mo ta 3 dong) co nut cao hon the
+       "Dinh thep vang" (mo ta 4 dong) 51px.
+       Trong flex column, `margin-top: auto` hut het khoang trong con lai len
+       phia tren no. */
+    margin-top: auto;
     width: 100%;
     height: auto;
     padding: 14px var(--k4);
@@ -494,9 +503,17 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border: 0;
+  /* VONG TRANG + BONG de nut doc ra la VAT NOI PHIA TREN noi dung.
+     Nut nay `position: fixed` nen tren dien thoai - noi cot noi dung tran ca
+     be ngang man hinh - no LUON de len mot cai gi do; do duoc no phu len nut
+     "Xem quy cach" cua the san pham. Doi ben chi doi cho de, khong het.
+     Truoc day nut la mot dia cam det khong vien khong bong, nen cho no de len
+     doc ra nhu chu bi cat. Co vong trang tach no khoi nen ben duoi thi mat
+     hieu ngay day la hai lop khac nhau. */
+  border: 2px solid var(--trang);
   border-radius: 50%;
   background: var(--cam-600);
+  box-shadow: 0 4px 14px rgba(2, 36, 91, 0.3);
   color: var(--trang);
   cursor: pointer;
   opacity: 0;

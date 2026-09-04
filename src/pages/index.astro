@@ -824,5 +824,25 @@ const moTa = catMoTa(
     .gt__anh--duoi {
       display: none;
     }
+
+    /* BO MO TA trong luoi nhom san pham o kho hai cot hep.
+       Do duoc: duoi 620px the chi rong 145-172px, mo ta chay 8-11 DONG va the
+       cao 540-604px - sau the thanh 3600px cuon chi cho mot muc.
+
+       DA THU cat con 2 dong bang `-webkit-line-clamp` VA HONG: Lightning CSS
+       (bo nen CSS cua Astro) doi `display: -webkit-box` thanh
+       `display: flow-root`, do duoc tren ban da build. Mat co che `-webkit-box`
+       thi clamp chi con chan chieu cao va chen dau ba cham o dong 2, nhung van
+       cho dong 3 hien ra - ket qua doc thanh "trơn dùng... phổ biến", tuc dau
+       ba cham nam GIUA cau.
+
+       Va ke ca neu clamp chay dung thi 2 dong x 145px chi chua duoc 3-4 tu
+       ("Dinh than / tron dung") - do la manh cau, khong phai thong tin. O co
+       the nay thu quyet dinh la TEN NHOM va SO QUY CACH.
+       Mo ta van la noi dung THAT va hien day du tren trang nhom, nen khong mat
+       gi - va tu 621px tro len no hien lai binh thuong. */
+    .the-hang .the-lat__mo {
+      display: none;
+    }
   }
 </style>
