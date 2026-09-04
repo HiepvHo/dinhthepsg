@@ -1,8 +1,33 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { anhCuaBai, nhanCum, ngayVn } from '../lib/anh-bai';
 
 /**
- * Muc tin tuc tren trang chu - lay 3 bai moi nhat.
+ * MUC TIN TUC TREN TRANG CHU - mot the LON + hai the NHO.
+ *
+ * SO DO industrie.rstheme.com/html/index.html (do ngay 04/09/2026, khung 1440):
+ *   muc `.rs-blog-one`: nhan "UPDATE" + h2 52px/700 + nut "View All Post" ben phai
+ *   the lon  630x529, anh lam NEN, clip-path vat goc tren phai,
+ *            khoi chu de len anh: padding 40px, meta 16px trang,
+ *            tieu de 28px/700 trang, tag nen cam 15px padding 6px 15px bo goc 2px
+ *   the nho  630x249, CHU BEN TRAI (400x249, padding 25px) + ANH BEN PHAI
+ *            (230x249, cung clip-path), tieu de 24px/700 mau #1f1f1f,
+ *            mo ta 17px, tag giong the lon
+ *   clip-path ca hai: polygon(0% 0%, 92% 0px, 100% 11%, 100% 100%, 0% 100%)
+ *
+ * TA KHAC HO BA CHO, deu co ly do:
+ *
+ * 1. BYLINE ghi TEN CONG TY chu khong ten nguoi. Ho de "By Nayeem" - mot ten
+ *    nguoi that. Ta khong co du lieu tac gia, va bia ra mot cai ten la bia
+ *    thong tin tac gia - dung thu Google phat trong danh gia E-E-A-T.
+ *
+ * 2. TAG lay tu truong `cum` trong frontmatter, khong go tay. `cum` la ma
+ *    trong topical map (B-quy-cach, H-so-sanh...) va `nhanCum()` doi sang chu
+ *    doc duoc. Nho vay them bai moi la co nhan ngay.
+ *
+ * 3. ANH la anh NHA MAY THAT, khong phai anh stock. Nhung phan lon chua chup
+ *    rieng cho tung bai - xem canh bao trong `lib/anh-bai.ts`.
  *
  * KHONG RENDER GI khi chua co bai. Trang chu de mot khoi "dang cap nhat" rong
  * la tin hieu xau ca voi khach lan voi crawler. Trang /kien-thuc/ da co san
@@ -12,31 +37,83 @@ const bai = (await getCollection('baiViet', ({ data }) => !data.nhap))
   .sort((a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf())
   .slice(0, 3);
 
-const ngayVn = (d: Date) =>
-  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+const noiBat = bai[0];
+const conLai = bai.slice(1);
 ---
 
 {
-  bai.length > 0 && (
+  noiBat && (
     <section class="tt nang-chu" aria-labelledby="tt-dau">
       <div class="khung">
-        <div class="hang__dau">
-          <h2 id="tt-dau">Tin tức và kiến thức</h2>
-          <a href="/kien-thuc/">Xem tất cả</a>
+        <div class="tt__dau">
+          <div>
+            <p class="nhan-muc">Cập nhật</p>
+            <h2 id="tt-dau">Tin tức</h2>
+          </div>
+          <a class="tt__tatca" href="/kien-thuc/">
+            Xem tất cả
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5.5-6 6 6-6 6" /></svg>
+          </a>
         </div>
-        <ul class="tt__hang">
-          {bai.map((b) => (
-            <li class="tt__the">
-              <time datetime={b.data.ngayDang.toISOString().slice(0, 10)}>
-                {ngayVn(b.data.ngayDang)}
-              </time>
-              <h3>
-                <a href={`/kien-thuc/${b.id}/`}>{b.data.tieuDe}</a>
+
+        <div class="tt__luoi">
+          {/* ---- The LON: anh lam nen, chu de len ---- */}
+          <article class="tt-lon">
+            <span class="tt-lon__anh" aria-hidden="true">
+              <Image
+                src={anhCuaBai(noiBat.id).src}
+                alt={anhCuaBai(noiBat.id).alt}
+                widths={[640, 1000]}
+                sizes="(max-width: 900px) 92vw, 560px"
+                loading="lazy"
+              />
+            </span>
+            <div class="tt-lon__chu">
+              <p class="tt__meta">
+                <span>{nhanCum(noiBat.data.cum)}</span>
+                <time datetime={noiBat.data.ngayDang.toISOString().slice(0, 10)}>
+                  {ngayVn(noiBat.data.ngayDang)}
+                </time>
+              </p>
+              <h3 class="tt-lon__ten">
+                <a href={`/kien-thuc/${noiBat.id}/`}>{noiBat.data.tieuDe}</a>
               </h3>
-              <p>{b.data.moTa}</p>
-            </li>
-          ))}
-        </ul>
+              <p class="tt-lon__mo">{noiBat.data.moTa}</p>
+            </div>
+          </article>
+
+          {/* ---- Hai the NHO: chu trai, anh phai ---- */}
+          <div class="tt__cot">
+            {conLai.map((b) => {
+              const a = anhCuaBai(b.id);
+              return (
+                <article class="tt-nho">
+                  <div class="tt-nho__chu">
+                    <p class="tt__meta">
+                      <span>{nhanCum(b.data.cum)}</span>
+                      <time datetime={b.data.ngayDang.toISOString().slice(0, 10)}>
+                        {ngayVn(b.data.ngayDang)}
+                      </time>
+                    </p>
+                    <h3 class="tt-nho__ten">
+                      <a href={`/kien-thuc/${b.id}/`}>{b.data.tieuDe}</a>
+                    </h3>
+                    <p class="tt-nho__mo">{b.data.moTa}</p>
+                  </div>
+                  <span class="tt-nho__anh" aria-hidden="true">
+                    <Image
+                      src={a.src}
+                      alt={a.alt}
+                      widths={[260, 520]}
+                      sizes="230px"
+                      loading="lazy"
+                    />
+                  </span>
+                </article>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -46,45 +123,220 @@ const ngayVn = (d: Date) =>
   .tt {
     padding-block: var(--k7);
   }
-  .tt__hang {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--gap-lon);
+
+  .tt__dau {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--k5);
+    flex-wrap: wrap;
+    margin-bottom: var(--k6);
   }
-  .tt__the {
-    display: grid;
-    align-content: start;
+  .tt__dau h2 {
+    font-size: var(--cs-h2);
+  }
+  /* Nut "Xem tat ca" - do theo nut "View All Post" cua ho: nen cam, vuong goc,
+     co mui ten. Dung cung ngon ngu voi nut CTA o header. */
+  .tt__tatca {
+    display: inline-flex;
+    align-items: center;
     gap: var(--k2);
-    padding-left: var(--k4);
-    border-left: 3px solid var(--cam-500);
-  }
-  .tt__the time {
-    font-size: var(--cs-micro);
+    flex: none;
+    padding: 13px 26px;
+    background: var(--cam-600);
+    color: var(--trang);
+    font-family: var(--font-hien);
+    font-size: var(--cs-than);
     font-weight: var(--w-dam);
-    letter-spacing: var(--gc-micro);
-    color: var(--muc-3);
-    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    transition:
+      background var(--thoi) var(--nhip),
+      transform var(--thoi) var(--nhip);
   }
-  .tt__the h3 {
+  .tt__tatca svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tt__tatca:hover {
+    background: var(--cam-700);
+    color: var(--trang);
+    transform: translateY(1px);
+  }
+
+  /* Ho: 630 + 630. Khung ta 1140 nen 1fr/1fr ra 550 moi ben. */
+  .tt__luoi {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    align-items: stretch;
+  }
+  .tt__cot {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--gap);
+  }
+
+  /* ---------- the LON ---------- */
+  .tt-lon {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 420px;
+    overflow: hidden;
+    /* Do nguyen van cua ho. Vat goc tren phai - cung ho hinh hoc voi canh vat
+       skewX cua header nen khong lech ngon ngu. */
+    clip-path: polygon(0% 0%, 92% 0%, 100% 11%, 100% 100%, 0% 100%);
+    background: var(--navy-900);
+  }
+  .tt-lon__anh {
+    position: absolute;
+    inset: 0;
+  }
+  .tt-lon__anh :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Lop phu de chu doc duoc tren anh chup day chi tiet. Ho khong can lop nay
+     vi anh cua ho la anh dan dung co vung toi san; anh nha may cua ta sang va
+     roi nen chu trang khong tach ra khoi anh duoc. */
+  .tt-lon__chu {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: var(--k7) var(--k6) var(--k6);
+    background: linear-gradient(
+      to top,
+      rgba(2, 36, 91, 0.94) 0%,
+      rgba(2, 36, 91, 0.78) 55%,
+      rgba(2, 36, 91, 0) 100%
+    );
+  }
+  .tt-lon__ten {
+    font-size: var(--cs-h3);
+    line-height: var(--dc-vua);
+    margin-bottom: var(--k2);
+  }
+  .tt-lon__ten a {
+    color: var(--trang);
+    text-decoration: none;
+  }
+  .tt-lon__ten a:hover {
+    color: var(--cam-500);
+  }
+  .tt-lon__mo {
+    font-size: var(--cs-nho);
+    line-height: 1.6;
+    color: #c9d6ea; /* trang nga tren navy - 9,4:1 */
+  }
+
+  /* ---------- the NHO: chu trai, anh phai ---------- */
+  .tt-nho {
+    display: grid;
+    /* Ho: chu 400px + anh 230px tren the 630px. Ti le do o khung 550 cua ta
+       thanh 1fr + 200px. */
+    grid-template-columns: 1fr 200px;
+    align-items: stretch;
+    overflow: hidden;
+    background: var(--nen-nhat);
+  }
+  .tt-nho__chu {
+    display: grid;
+    align-content: center;
+    gap: var(--k2);
+    padding: var(--k5);
+    min-width: 0;
+  }
+  .tt-nho__ten {
     font-size: var(--cs-the);
     line-height: var(--dc-vua);
   }
-  .tt__the h3 a {
+  .tt-nho__ten a {
     color: inherit;
     text-decoration: none;
   }
-  .tt__the h3 a:hover {
-    color: var(--cam-600);
+  .tt-nho__ten a:hover {
+    color: var(--cam-700);
   }
-  .tt__the p {
+  .tt-nho__mo {
     font-size: var(--cs-nho);
+    line-height: 1.55;
     color: var(--muc-2);
+    /* Cat con hai dong: mo ta cua ta la meta description dai 150 ky tu, de het
+       thi the nho cao gan bang the lon va bo cuc mat can. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tt-nho__anh {
+    position: relative;
+    /* Cung clip-path voi the lon, do cua ho */
+    clip-path: polygon(0% 0%, 92% 0%, 100% 11%, 100% 100%, 0% 100%);
+    background: var(--nen-anh);
+  }
+  .tt-nho__anh :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---------- meta: nhan chuyen muc + ngay ---------- */
+  .tt__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--k3);
+    flex-wrap: wrap;
+    font-size: var(--cs-micro);
+  }
+  /* Nhan chuyen muc: nen cam, bo goc 2px, padding 6px 15px - do cua ho */
+  .tt__meta span {
+    padding: 5px 14px;
+    background: var(--cam-600);
+    border-radius: 2px;
+    color: var(--trang);
+    font-family: var(--font-hien);
+    font-weight: var(--w-dam);
+    letter-spacing: var(--gc-micro);
+    text-transform: uppercase;
+  }
+  .tt__meta time {
+    color: var(--muc-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .tt-lon__chu .tt__meta time {
+    color: #c9d6ea;
   }
 
   @media (max-width: 980px) {
-    .tt__hang {
+    .tt__luoi {
       grid-template-columns: 1fr;
-      gap: var(--k5);
+    }
+    .tt-lon {
+      min-height: 340px;
+    }
+  }
+  @media (max-width: 560px) {
+    /* The nho doi sang xep DOC: o 390px thi cot anh 200px an mat nua be ngang
+       cot chu, tieu de xuong bay dong. */
+    .tt-nho {
+      grid-template-columns: 1fr;
+    }
+    .tt-nho__anh {
+      order: -1;
+      aspect-ratio: 16 / 9;
+      clip-path: polygon(0% 0%, 88% 0%, 100% 14%, 100% 100%, 0% 100%);
+    }
+    .tt__tatca {
+      width: 100%;
+      justify-content: center;
     }
   }
 </style>
