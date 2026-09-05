@@ -1,7 +1,7 @@
 /**
  * Xac dinh site dang chay o dau, va co CHO PHEP Google index hay khong.
  *
- * VAN DE THAT: domain dinhthepsg.com chua mua, nen ban deploy dau tien chay tren
+ * VAN DE THAT: domain dinhthepsaigon.com chua mua, nen ban deploy dau tien chay tren
  * *.vercel.app. Neu de Google index ban do:
  *  - canonical tro ve mot domain chua ton tai -> tin hieu hong
  *  - khi mua domain that, ban vercel.app da duoc index se canh tranh voi domain
@@ -16,7 +16,7 @@
  * (dat bien roi deploy lai). Mac dinh phai nga ve phia de sua.
  *
  * KHI MUA DOMAIN XONG: vao Vercel dat bien moi truong
- *   SITE_URL = https://dinhthepsg.com
+ *   SITE_URL = https://dinhthepsaigon.com
  * roi deploy lai. Site tu mo index, khong phai sua code.
  *
  * Logic that nam o `site-url.mjs` o goc project - dung chung voi astro.config.mjs

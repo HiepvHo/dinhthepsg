@@ -34,11 +34,11 @@ Sitemap: ${SITE_URL}/sitemap-index.xml
 `
     : `# ${SITE_URL}
 # BAN CHUA CHINH THUC - chan toan bo crawler.
-# Day KHONG phai domain that (dinhthepsg.com). Cho index ban nay se tao duplicate
+# Day KHONG phai domain that (dinhthepsaigon.com). Cho index ban nay se tao duplicate
 # canh tranh voi domain that sau khi mua.
 #
 # De mo index: mua domain, tro ve Vercel, dat bien moi truong
-#   SITE_URL=https://dinhthepsg.com
+#   SITE_URL=https://dinhthepsaigon.com
 # roi deploy lai. File nay tu doi sang cho phep, khong phai sua code.
 
 User-agent: *

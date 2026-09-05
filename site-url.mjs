@@ -5,13 +5,19 @@
  * `src/lib/moi-truong.ts` (de quyet dinh co cho index khong) deu doc tu day.
  *
  * Truoc day hai cho tu tinh rieng theo hai chuoi uu tien khac nhau -> khi chi co
- * VERCEL_URL thi canonical ra dinhthepsg.com con robots.txt ra URL vercel.
+ * VERCEL_URL thi canonical ra domain that con robots.txt ra URL vercel.
  * Hai nguon su that = som muon cung lech.
  *
  * File .mjs de astro.config (chay truoc khi Vite xu ly src) import duoc.
  */
 
-export const DOMAIN_THAT = 'https://dinhthepsg.com';
+/* DOMAIN CHINH THUC, user chot 05/09/2026.
+   Truoc do la dinhthepsg.com; doi sang dinhthepsaigon.com vi day la ten in
+   tren BROCHURE GIAY dang phat cho khach - khach go lai dung cai ho cam trong
+   tay. dinhthepsg.com neu co mua thi de 301 ve day, khong chay song song.
+   Doi mot dong o day la du: `astro.config.mjs` (canonical + sitemap) va
+   `src/lib/moi-truong.ts` (quyet dinh cho index) deu doc tu bien nay. */
+export const DOMAIN_THAT = 'https://dinhthepsaigon.com';
 
 function doc(ten) {
   if (typeof process === 'undefined' || !process.env) return undefined;
