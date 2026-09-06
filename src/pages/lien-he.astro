@@ -6,6 +6,7 @@ import DauMuc from '../components/DauMuc.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { schemaDiaDiem } from '../lib/schema';
 import { catTieuDe, catMoTa } from '../lib/seo-text';
+import { dongGio } from '../lib/gio-lam-viec';
 
 /**
  * Trang lien he.
@@ -124,6 +125,16 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
                     <dd>{d.fax}</dd>
                   </div>
                 )}
+                {c.gioLamViec.length > 0 && (
+                  <div class="dac-ta__hang">
+                    <dt>Giờ làm việc</dt>
+                    <dd>
+                      {c.gioLamViec.map((k) => (
+                        <span class="lh__gio">{dongGio(k)}</span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
               </dl>
             </div>
           ))
@@ -233,6 +244,12 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
 </BaseLayout>
 
 <style>
+  /* Moi khung gio mot dong - de tren mot dong thi "T2-T6 8:00-17:00 T7 8:00-12:00"
+     doc ra nhu mot chuoi so lien tuc, mat khong tach duoc hai khung. */
+  .lh__gio {
+    display: block;
+  }
+
   .lh h1 {
     font-size: var(--cs-h1);
   }

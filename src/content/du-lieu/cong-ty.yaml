@@ -38,6 +38,19 @@ hotline: "0919 288 109"
 hotlineTel: "+84919288109"
 zalo: "0919288109"
 
+# GIO LAM VIEC - user chot 06/09/2026: "de theo gio hanh chinh".
+# [CAN USER XAC NHAN] Da dat theo khung pho bien nhat cua nganh vat tu xay dung
+# o Viet Nam: T2-T6 ca ngay, T7 buoi sang. Neu nha may chay khac (vi du nghi
+# trua co dinh, hoac T7 lam ca ngay) thi sua o day - trang lien he va
+# `openingHoursSpecification` trong schema deu doc tu day.
+gioLamViec:
+  - ngay: [Monday, Tuesday, Wednesday, Thursday, Friday]
+    mo: "08:00"
+    dong: "17:00"
+  - ngay: [Saturday]
+    mo: "08:00"
+    dong: "12:00"
+
 # URL nhung ban do Google cho TRU SO. Giai tu link chia se user gui:
 #   https://maps.app.goo.gl/TWyPHdo9VH4RhAhA8
 # Link do redirect ra chuoi truy van nay kem `ftid` - Feature ID, ma dinh danh

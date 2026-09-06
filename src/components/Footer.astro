@@ -1,5 +1,6 @@
 ---
 import { getEntry, getCollection } from 'astro:content';
+import { gioMotDong } from '../lib/gio-lam-viec';
 
 /**
  * MEGA FOOTER - kiem sitemap + khoi NAP day du.
@@ -43,6 +44,9 @@ function telHref(s: string) {
           Nhà máy sản xuất đinh thép xây dựng và lưới thép hàn. Thành viên
           {' '}{c.congTyMe.tenPhapDinh} - MST {c.congTyMe.maSoThue}, sản xuất và phân phối
           vật tư kim khí từ năm {c.congTyMe.namThanhLap}, {soNam} năm trong ngành.
+        </p>
+        <p class="chan__mo-ta">
+          Giờ làm việc: {gioMotDong(c.gioLamViec)}
         </p>
         <p class="chan__mo-ta">
           Website công ty mẹ:

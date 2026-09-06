@@ -13,6 +13,8 @@
 
 import { SITE_URL } from './moi-truong';
 
+import { schemaGio } from './gio-lam-viec';
+
 const GOC = SITE_URL;
 
 export function tuyetDoi(duongDan: string): string {
@@ -40,12 +42,15 @@ type CongTyMe = {
   website: string;
 };
 
+type Khung = { ngay: readonly string[]; mo: string; dong: string };
+
 type CongTy = {
   tenPhapDinh: string;
   tenThuongHieu: string;
   maSoThue?: string;
   namThanhLap?: number;
   congTyMe: CongTyMe;
+  gioLamViec: readonly Khung[];
   hotline: string;
   hotlineTel: string;
   email: string;
@@ -174,6 +179,10 @@ export function schemaDiaDiem(ct: CongTy, d: DiaDiem) {
     url: GOC,
     telephone: d.hotline ?? d.dienThoai ?? ct.hotline,
     address: diaChiSchema(d),
+    /* Gio lam viec: tin hieu local that. Google hien no ngay tren ket qua tim
+       kiem va tren Maps, va no la mot trong cac truong GBP doi chieu voi
+       website - lech nhau la mot diem tru khi xac minh ho so. */
+    ...(ct.gioLamViec.length ? { openingHoursSpecification: schemaGio(ct.gioLamViec) } : {}),
     parentOrganization: { '@id': `${GOC}/#to-chuc` },
   };
 }

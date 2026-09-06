@@ -98,6 +98,33 @@ const congTy = defineCollection({
      * khu vuc nhung khong co ghim.
      */
     banDoNhung: z.string().url().optional(),
+    /**
+     * GIO LAM VIEC. Dung cho `openingHoursSpecification` trong LocalBusiness
+     * schema va hien tren trang lien he.
+     *
+     * `ngay` dung ten tieng Anh vi do la gia tri schema.org doi (DayOfWeek).
+     * Ten tieng Viet de hien thi duoc suy ra trong `lib/gio-lam-viec.ts` -
+     * mot nguon su that, khong go hai lan.
+     */
+    gioLamViec: z
+      .array(
+        z.object({
+          ngay: z.array(
+            z.enum([
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday',
+            ]),
+          ),
+          mo: z.string().regex(/^\d{2}:\d{2}$/),
+          dong: z.string().regex(/^\d{2}:\d{2}$/),
+        }),
+      )
+      .default([]),
     zalo: z.string(),
     email: z.string().email(),
     emailPhu: z.string().email(),
