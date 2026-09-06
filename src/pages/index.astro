@@ -60,7 +60,8 @@ const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
 const MA_NOI_BAT = ['3F', '5F', '7F', '10F', '15F'];
 const quyCachNoiBat = dinhChi.data.quyCach.filter((q) => MA_NOI_BAT.includes(q.ma));
 const nhaMay = c.diaDiem[0];
-const soNam = new Date().getFullYear() - c.namThanhLap;
+/* Tinh tu nam thanh lap CONG TY ME - xem ghi chu trong cong-ty.yaml */
+const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
 
 /**
@@ -226,8 +227,8 @@ const moTa = catMoTa(
         <h2>Đinh Thép Sài Gòn - nhà máy đinh thép và lưới thép hàn</h2>
         <p>
           {c.tenPhapDinhHoa} là đơn vị <strong>sản xuất trực tiếp</strong> đinh thép xây dựng
-          và lưới thép hàn, hoạt động từ năm {c.namThanhLap}, {soNam} năm trong ngành vật tư
-          kim khí. Nhà máy đặt tại {nhaMay.diaChi}, {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
+          và lưới thép hàn, thành viên {c.congTyMe.tenPhapDinh} - đơn vị đã làm vật tư kim khí
+          từ năm {c.congTyMe.namThanhLap}, {soNam} năm trong ngành. Nhà máy đặt tại {nhaMay.diaChi}, {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
         </p>
         <p>
           Chúng tôi sản xuất <strong>{tongQuyCach} quy cách</strong>: đinh chì từ 2 phân đến
@@ -459,7 +460,7 @@ const moTa = catMoTa(
       <ul class="nm__y">
         <li><strong>Thông số là của chính hàng chúng tôi làm ra</strong>, không phải số chép lại.</li>
         <li><strong>Đặt được số lượng lớn và quy cách riêng</strong>, nhà máy chạy theo đơn.</li>
-        <li><strong>Pháp nhân rõ ràng</strong>, MST {c.maSoThue}, thành lập {c.namThanhLap}.</li>
+        <li><strong>Pháp nhân rõ ràng</strong>, thành viên {c.congTyMe.tenPhapDinh}, MST {c.congTyMe.maSoThue}.</li>
       </ul>
     </div>
   </section>

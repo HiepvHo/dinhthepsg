@@ -39,7 +39,8 @@ const { soQuyCach } = Astro.props;
 
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
-const soNam = new Date().getFullYear() - c.namThanhLap;
+/* Tinh tu nam thanh lap CONG TY ME - xem ghi chu trong cong-ty.yaml */
+const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 
 /**
  * SAU LY DO. Tham khao bo 6 muc user gui, doi sang thu CONG TY NAY that su co.
@@ -80,7 +81,7 @@ const muc = [
   },
   {
     ten: `Hơn ${soNam} năm kinh nghiệm`,
-    phu: `Thành lập ${c.namThanhLap}, MST ${c.maSoThue}`,
+    phu: `Thành viên ${c.congTyMe.tenPhapDinh}, làm nghề từ ${c.congTyMe.namThanhLap}`,
     icon: 'huy-chuong',
   },
 ];

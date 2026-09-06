@@ -10,10 +10,11 @@ import { catTieuDe, catMoTa } from '../lib/seo-text';
 /**
  * Trang lien he.
  *
- * LocalBusiness schema CHI cho 2 dia diem lien quan den dinh (nha may Long An
- * va van phong chinh Quan 5). Bon xuong can tole van liet ke de the hien quy mo
- * nhung KHONG dua vao schema - chung khong ban dinh, dua vao chi lam nhieu
- * tin hieu dia phuong.
+ * LocalBusiness schema CHI cho 2 dia diem cua DINH THEP SAI GON: nha may dinh
+ * (KCN Hiep Phuoc, Nha Be) va tru so (KDC Him Lam, Quan 7).
+ * 5 dia diem cua CONG TY ME van liet ke o muc He thong de the hien quy mo that
+ * nhung KHONG dua vao schema - chung thuoc phap nhan khac va khong ban dinh;
+ * dua vao chi lam loang tin hieu dia phuong.
  *
  * NAP o day phai giong HET footer va Google Business Profile.
  */
@@ -30,17 +31,18 @@ function telHref(s: string) {
 }
 
 const tieuDe = catTieuDe('Liên hệ mua đinh thép - Đinh Thép Sài Gòn');
-const moTa = catMoTa(`Mua đinh thép trực tiếp từ nhà máy: hotline ${c.hotline}, Zalo, hoặc đến nhà máy ${dinh[0].quanHuyen}, ${dinh[0].tinhThanh}. MST ${c.maSoThue}.`);
+const moTa = catMoTa(`Mua đinh thép trực tiếp từ nhà máy: hotline ${c.hotline}, Zalo, hoặc đến nhà máy ${dinh[0].quanHuyen}, ${dinh[0].tinhThanh}.`);
 
 /**
- * DIA CHI cho bang do - lay TRU SO (toa nha Thong Tan Xa, Quan 5) chu khong
- * lay nha may.
+ * DIA CHI cho bang do - lay TRU SO (KDC Him Lam, Quan 7) chu khong lay nha may.
  *
- * VI SAO: da thu dia chi nha may "Lo so 2, CCN Lien Minh, Binh Tien 2, Duc
- * Hoa, Long An" va Google GIAI MA SAI - no cam ghim o An Suong / Quan 12,
- * cach that hon 30km. Mot ban do chi sai cho con te hon khong co ban do.
- * Google khong co du lieu so lo trong cum cong nghiep; toa nha Thong Tan Xa
- * la dia chi MOC nen giai ma dung.
+ * VI SAO KHONG LAY NHA MAY: Google khong co du lieu so lo trong cum cong
+ * nghiep. Da thu "Lo so 2, CCN Lien Minh, Binh Tien 2, Duc Hoa, Long An" va
+ * Google GIAI MA SAI - cam ghim o An Suong / Quan 12, cach that hon 30km.
+ * Mot ban do chi sai cho con te hon khong co ban do.
+ *
+ * Dia chi tru so Quan 7 thi nguoc lai: da do 06/09/2026, truy van thuong ghim
+ * DUNG tai "Khu dan cu Him Lam Tan Hung".
  *
  * Tim theo `vaiTro` chu khong theo chi so trong mang: doi thu tu trong
  * cong-ty.yaml thi ban do van tro dung cho.
@@ -56,8 +58,9 @@ const diaChiMap = diaChiDayDu(truSo);
  * UU TIEN `banDoNhung` trong cong-ty.yaml - URL lay tu Maps (Chia se -> Nhung
  * ban do). Chi URL do moi ve ra GHIM DO va O DIA CHI o goc, vi no chua place
  * ID va toa do Maps da giai san.
- * Chua co thi quay ve dang `?q=<dia chi>`: hien dung khu vuc Quan 5 nhung
- * khong co ghim - da do bon dang truy van va khong dang nao ra ghim.
+ * Hien `banDoNhung` DANG BO TRONG nen chay dang `?q=<dia chi>`: da do va no
+ * ghim dung cho, chi thieu O DIA CHI o goc. Co link chia se Maps cua tru so
+ * Quan 7 thi dien vao `banDoNhung` la co lai o dia chi.
  */
 const nhungMapUrl =
   c.banDoNhung ?? `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)}&z=15&output=embed`;
@@ -134,12 +137,16 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
           <dd>{c.tenPhapDinhHoa}</dd>
         </div>
         <div class="dac-ta__hang">
-          <dt>Mã số thuế</dt>
-          <dd class="so">{c.maSoThue}</dd>
+          <dt>Công ty mẹ</dt>
+          <dd>{c.congTyMe.tenPhapDinh}</dd>
         </div>
         <div class="dac-ta__hang">
-          <dt>Năm thành lập</dt>
-          <dd class="so">{c.namThanhLap}</dd>
+          <dt>MST công ty mẹ</dt>
+          <dd class="so">{c.congTyMe.maSoThue}</dd>
+        </div>
+        <div class="dac-ta__hang">
+          <dt>Hoạt động từ</dt>
+          <dd class="so">{c.congTyMe.namThanhLap}</dd>
         </div>
         <div class="dac-ta__hang">
           <dt>Email</dt>
@@ -150,8 +157,8 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
           </dd>
         </div>
         <div class="dac-ta__hang">
-          <dt>Website công ty</dt>
-          <dd><a href={c.websiteMe} rel="noopener">cuongphatsteel.com.vn</a></dd>
+          <dt>Website công ty mẹ</dt>
+          <dd><a href={c.congTyMe.website} rel="noopener">cuongphatsteel.com.vn</a></dd>
         </div>
       </dl>
 

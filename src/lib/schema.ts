@@ -33,12 +33,19 @@ type DiaDiem = {
   lienQuanDenDinh: boolean;
 };
 
+type CongTyMe = {
+  tenPhapDinh: string;
+  maSoThue: string;
+  namThanhLap: number;
+  website: string;
+};
+
 type CongTy = {
   tenPhapDinh: string;
   tenThuongHieu: string;
-  maSoThue: string;
-  namThanhLap: number;
-  websiteMe: string;
+  maSoThue?: string;
+  namThanhLap?: number;
+  congTyMe: CongTyMe;
   hotline: string;
   hotlineTel: string;
   email: string;
@@ -61,7 +68,8 @@ function diaChiSchema(d: DiaDiem) {
  * website nay voi mot doanh nghiep co dang ky.
  */
 export function schemaToChuc(ct: CongTy) {
-  const tru = ct.diaDiem.find((d) => d.id === 'van-phong-chinh');
+  const tru = ct.diaDiem.find((d) => d.id === 'tru-so');
+  const nhaMay = ct.diaDiem.find((d) => d.id === 'nha-may-dinh');
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -69,14 +77,70 @@ export function schemaToChuc(ct: CongTy) {
     name: ct.tenPhapDinh,
     alternateName: ct.tenThuongHieu,
     url: GOC,
-    foundingDate: String(ct.namThanhLap),
-    taxID: ct.maSoThue,
-    vatID: ct.maSoThue,
+    /* `logo` la dieu kien de Google dung duoc anh dai dien trong Knowledge
+       Panel. Toi thieu 112x112; file nay 180x180. */
+    logo: {
+      '@type': 'ImageObject',
+      url: `${GOC}/apple-touch-icon.png`,
+      width: 180,
+      height: 180,
+    },
+    /* MST va nam thanh lap CHI khai khi co so RIENG cua cong ty nay.
+       Chua co thi bo han truong, KHONG muon so cua cong ty me: hai to chuc
+       dung chung mot taxID la thu lam Google khong tach duoc hai thuc the. */
+    ...(ct.namThanhLap ? { foundingDate: String(ct.namThanhLap) } : {}),
+    ...(ct.maSoThue ? { taxID: ct.maSoThue, vatID: ct.maSoThue } : {}),
     email: ct.email,
     telephone: ct.hotlineTel,
     ...(tru ? { address: diaChiSchema(tru) } : {}),
-    // Website cong ty me - lien ket hai thuc the voi nhau
-    sameAs: [ct.websiteMe],
+    /* QUAN HE ME - CON. Day la cach dung de noi uy tin cua cong ty me sang
+       cong ty con ma khong tron danh tinh hai ben: Google hieu day la hai to
+       chuc khac nhau co lien ket, chu khong phai mot to chuc khai lung tung. */
+    parentOrganization: {
+      '@type': 'Organization',
+      name: ct.congTyMe.tenPhapDinh,
+      url: ct.congTyMe.website,
+      foundingDate: String(ct.congTyMe.namThanhLap),
+      taxID: ct.congTyMe.maSoThue,
+      vatID: ct.congTyMe.maSoThue,
+    },
+    /* Chu de cong ty am hieu. Khong phai nhoi tu khoa: day la cac thuc the co
+       that trong Knowledge Graph ma san pham cua ta thuoc ve. */
+    knowsAbout: [
+      'đinh thép xây dựng',
+      'đinh chì',
+      'đinh thép trắng',
+      'đinh thép vàng',
+      'đinh dù',
+      'đinh vít',
+      'dây kẽm buộc',
+      'lưới thép hàn',
+      'vật tư kim khí xây dựng',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      telephone: ct.hotlineTel,
+      email: ct.email,
+      availableLanguage: ['vi'],
+      areaServed: 'VN',
+    },
+    ...(nhaMay
+      ? {
+          areaServed: [
+            { '@type': 'AdministrativeArea', name: 'TP. Hồ Chí Minh' },
+            { '@type': 'AdministrativeArea', name: 'Long An' },
+            { '@type': 'Country', name: 'Việt Nam' },
+          ],
+        }
+      : {}),
+    /* `sameAs` la tin hieu thuc the manh nhat: no khai "website nay va cac ho
+       so kia la CUNG MOT doanh nghiep", de Google doi chieu qua nhieu nguon
+       doc lap.
+       [CAN USER CUNG CAP] hien chi co website cong ty me. Can them: Google
+       Business Profile, Facebook, Zalo OA, trang danh ba nganh. Moi ho so
+       them vao la mot nguon doi chieu nua. */
+    sameAs: [ct.congTyMe.website],
   };
 }
 

@@ -28,10 +28,11 @@ import { catTieuDe, catMoTa } from '../lib/seo-text';
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhaMay = c.diaDiem[0];
-const soNam = new Date().getFullYear() - c.namThanhLap;
+/* Tinh tu nam thanh lap CONG TY ME - xem ghi chu trong cong-ty.yaml */
+const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 
 const tieuDe = catTieuDe(`Nhà máy sản xuất đinh thép ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}`);
-const moTa = catMoTa(`Nhà máy sản xuất đinh thép tại ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, thuộc ${c.tenPhapDinh}. Dây chuyền dập đinh và đóng bao tại chỗ từ ${c.namThanhLap}. Gọi ${c.hotline}.`);
+const moTa = catMoTa(`Nhà máy sản xuất đinh thép tại ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, thuộc ${c.tenPhapDinh}. Dây chuyền dập đinh và đóng bao tại chỗ. Thành viên ${c.congTyMe.tenPhapDinh}. Gọi ${c.hotline}.`);
 
 const buoc = [
   {
@@ -73,8 +74,9 @@ const buoc = [
   <article class="section nang-chu nm">
     <div class="khung">
       <p class="dan-nhap nm__mo">
-        Thuộc {c.tenPhapDinh}, mã số thuế {c.maSoThue}, thành lập năm {c.namThanhLap} -
-        {' '}{soNam} năm sản xuất và phân phối vật tư kim khí. Nhà máy đặt tại
+        {c.tenPhapDinh} là thành viên {c.congTyMe.tenPhapDinh} - MST
+        {' '}{c.congTyMe.maSoThue}, thành lập năm {c.congTyMe.namThanhLap}, {soNam} năm sản xuất
+        và phân phối vật tư kim khí. Nhà máy đặt tại
         {' '}{nhaMay.diaChi}, {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
       </p>
 
@@ -173,8 +175,8 @@ const buoc = [
           <dd>{c.tenPhapDinh}</dd>
         </div>
         <div class="dac-ta__hang">
-          <dt>Mã số thuế</dt>
-          <dd class="so">{c.maSoThue}</dd>
+          <dt>Công ty mẹ</dt>
+          <dd>{c.congTyMe.tenPhapDinh} - MST {c.congTyMe.maSoThue}</dd>
         </div>
       </dl>
 

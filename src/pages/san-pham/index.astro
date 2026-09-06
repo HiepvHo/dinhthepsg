@@ -37,7 +37,8 @@ const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhom = await getCollection('nhomSanPham');
 const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
-const soNam = new Date().getFullYear() - c.namThanhLap;
+/* Tinh tu nam thanh lap CONG TY ME - xem ghi chu trong cong-ty.yaml */
+const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 
 const tieuDe = catTieuDe('Sản phẩm đinh và vật tư liên kết - Đinh Thép SG');
 const moTa = catMoTa(
@@ -91,8 +92,8 @@ const schema = {
           <p>
             Đặt hàng gọi <a href={`tel:${c.hotlineTel}`}>{c.hotline}</a>. Nhận đơn số lượng lớn
             và quy cách riêng, nhà máy chạy theo đơn. Giao tận công trình khu vực TP.HCM,
-            Long An và các tỉnh lân cận. Pháp nhân rõ ràng, MST {c.maSoThue}, thành lập
-            {' '}{c.namThanhLap} - {soNam} năm trong ngành vật tư kim khí.
+            Long An và các tỉnh lân cận. Thành viên {c.congTyMe.tenPhapDinh},
+            MST {c.congTyMe.maSoThue} - {soNam} năm trong ngành vật tư kim khí.
           </p>
         </div>
 

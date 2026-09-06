@@ -19,7 +19,9 @@ const nhom = await getCollection('nhomSanPham');
 
 const dinh = c.diaDiem.filter((d) => d.lienQuanDenDinh);
 const nam = new Date().getFullYear();
-const soNam = nam - c.namThanhLap;
+/* So nam tinh tu nam thanh lap CONG TY ME: kinh nghiem 2012 den nay la cua
+   nhom, khong phai tuoi phap nhan Dinh Thep Sai Gon (moi tach ra). */
+const soNam = nam - c.congTyMe.namThanhLap;
 
 function diaChiDayDu(d: (typeof c.diaDiem)[number]) {
   return [d.diaChi, d.phuong, d.quanHuyen, d.tinhThanh].filter(Boolean).join(', ');
@@ -36,14 +38,15 @@ function telHref(s: string) {
     <div class="chan__luoi">
       <div class="chan__hieu">
         <span class="chan__ten">ĐINH THÉP SÀI GÒN</span>
-        <p class="chan__phap-nhan">{c.tenPhapDinhHoa} - MST {c.maSoThue}</p>
+        <p class="chan__phap-nhan">{c.tenPhapDinhHoa}</p>
         <p class="chan__mo-ta">
-          Nhà máy sản xuất đinh thép xây dựng và lưới thép hàn. Sản xuất, phân phối trực tiếp
-          từ năm {c.namThanhLap}, {soNam} năm trong ngành vật tư kim khí.
+          Nhà máy sản xuất đinh thép xây dựng và lưới thép hàn. Thành viên
+          {' '}{c.congTyMe.tenPhapDinh} - MST {c.congTyMe.maSoThue}, sản xuất và phân phối
+          vật tư kim khí từ năm {c.congTyMe.namThanhLap}, {soNam} năm trong ngành.
         </p>
         <p class="chan__mo-ta">
-          Website công ty:
-          <a href={c.websiteMe} rel="noopener">cuongphatsteel.com.vn</a>
+          Website công ty mẹ:
+          <a href={c.congTyMe.website} rel="noopener">cuongphatsteel.com.vn</a>
         </p>
       </div>
 
@@ -133,7 +136,7 @@ function telHref(s: string) {
     </section>
 
     <div class="chan__day">
-      <span>(c) {nam} {c.tenPhapDinhHoa}. MST {c.maSoThue}.</span>
+      <span>(c) {nam} {c.tenPhapDinhHoa}.</span>
       <span>Hotline {c.hotline}</span>
     </div>
   </div>

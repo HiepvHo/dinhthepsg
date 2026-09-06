@@ -34,6 +34,13 @@ const diaDiemSchema = z.object({
   hotline: z.string().optional(),
   /** Chi dia diem lienQuanDenDinh moi duoc dua vao LocalBusiness schema */
   lienQuanDenDinh: z.boolean(),
+  /**
+   * Dia diem nay thuoc CONG TY ME chu khong phai Dinh Thep Sai Gon.
+   * Van liet ke de the hien quy mo that cua nhom, nhung phai ghi ro chu
+   * so huu - noi gop la noi sai, va khach goi nham vao xuong tole hoi mua
+   * dinh la goi sai cho.
+   */
+  thuocCongTyMe: z.boolean().default(false),
 });
 
 const congTy = defineCollection({
@@ -46,9 +53,34 @@ const congTy = defineCollection({
     tenPhapDinhHoa: z.string(),
     tenThuongHieu: z.string(),
     tenNhaMay: z.string(),
-    maSoThue: z.string(),
-    namThanhLap: z.number().int().min(1900).max(2100),
-    websiteMe: z.string().url(),
+    /**
+     * MST va nam thanh lap CUA CHINH cong ty nay. CA HAI DEU OPTIONAL vi Dinh
+     * Thep Sai Gon moi tach ra tu cong ty me va chua cung cap so rieng.
+     *
+     * VI SAO KHONG MUON TAM SO CUA CONG TY ME: do la thong tin phap ly SAI.
+     * Khach B2B tra ma so thue truoc khi dat don lon; tra ra khong khop la mat
+     * don. Va voi Google, hai to chuc dung chung mot taxID lam hong chinh cai
+     * thuc the dang xay. Chua co thi de trong, khong bia.
+     */
+    maSoThue: z.string().optional(),
+    namThanhLap: z.number().int().min(1900).max(2100).optional(),
+    /**
+     * CONG TY ME. Dinh Thep Sai Gon tach ra tu Thep Cuong Phat de tap trung
+     * vao dinh (user xac nhan 06/09/2026); truoc do chinh cong ty me ban dinh.
+     *
+     * Khai o day chu khong tron vao cong ty nay de:
+     *  1. Kinh nghiem tu 2012 VAN duoc noi ra, nhung noi DUNG chu the
+     *  2. `parentOrganization` trong schema noi hai thuc the lai voi nhau -
+     *     Google hieu quan he me-con, va uy tin cua me chay sang con
+     *  3. MST 0312168657 gan dung ten cong ty so huu no
+     */
+    congTyMe: z.object({
+      tenPhapDinh: z.string(),
+      tenPhapDinhHoa: z.string(),
+      maSoThue: z.string(),
+      namThanhLap: z.number().int().min(1900).max(2100),
+      website: z.string().url(),
+    }),
     hotline: z.string(),
     hotlineTel: z.string(),
     /**
