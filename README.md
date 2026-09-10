@@ -1,7 +1,10 @@
 # dinhthepsg
 
-Website **Đinh Thép Sài Gòn** - nhà máy sản xuất đinh thép xây dựng,
-thuộc Công ty TNHH TM XNK Thép Cường Phát (MST 0312168657, thành lập 2012).
+Website **Công ty Đinh Thép Sài Gòn** - nhà máy sản xuất đinh thép xây dựng.
+Thành viên Công ty TNHH TM XNK Thép Cường Phát (MST 0312168657, hoạt động từ 2012).
+
+> **AI agent đọc [AGENTS.md](AGENTS.md) trước.** Ở đó có luật viết, những cái bẫy
+> đã mắc, trạng thái hiện tại và danh sách đang chờ khách cung cấp.
 
 ## Stack
 
