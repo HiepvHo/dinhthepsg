@@ -1,0 +1,109 @@
+# =============================================================================
+# .htaccess - cau hinh may chu cho hosting cPanel (CloudFly)
+#
+# File nay nam trong `public/` nen Astro chep nguyen van ra `dist/` khi build,
+# roi deploy day len `public_html`.
+#
+# VI SAO CAN: Vercel tu lam bon viec duoi day. Hosting thi KHONG. Do duoc tren
+# ban build:
+#   - khong co cache header -> moi luot vao tai lai 1,8 MB anh va font
+#   - khong co ErrorDocument -> Apache tra trang loi trang tron
+#   - khong nen        -> HTML 77 KB thay vi 14 KB
+#   - khong redirect   -> cung noi dung ton tai tren 4 bien the URL
+#
+# Tren shared hosting ta khong co quyen root, nen `.htaccess` la cach DUY NHAT
+# ra lenh cho may chu.
+# =============================================================================
+
+# ---------------------------------------------------------------- trang loi --
+# Tro toi trang 404 do Astro sinh ra. Duong dan tuyet doi tinh tu goc web.
+ErrorDocument 404 /404.html
+
+# ------------------------------------------------------------------ redirect -
+# PHAI dat TRUOC moi thu khac.
+#
+# Hai luat, gop lai mot lan chuyen huong chu khong hai lan noi tiep: chuyen hai
+# chang (http://www -> https://www -> https://) ton them mot vong khu hoi va
+# lam mat mot phan tin hieu lien ket.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # PHAI la luat DAU TIEN. `.well-known` la duong Let's Encrypt dung de xac
+  # minh so huu domain khi cap va GIA HAN chung chi. Dat sau redirect thi moi
+  # lan xac minh phai di qua mot vong chuyen huong - thua, va them mot cho de
+  # hong. Tuoi tho chung chi dang rut ngan (mac dinh ve 64 ngay tu 02/2027)
+  # nen gia han tu dong chay deu la bat buoc.
+  RewriteRule ^\.well-known/ - [L]
+
+  # http -> https. Dung `%{HTTPS} off` va kem ca bien cua proxy: nhieu hosting
+  # dat LiteSpeed sau mot lop can bang tai, luc do %{HTTPS} luon la off va
+  # neu chi kiem tra bien do se thanh vong lap chuyen huong vo tan.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://dinhthepsaigon.com/$1 [R=301,L]
+
+  # www -> khong www. Chon khong-www vi `SITE_URL` va toan bo canonical trong
+  # code deu la `https://dinhthepsaigon.com` khong co www.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+</IfModule>
+
+# --------------------------------------------------------------------- cache -
+# `/_astro/*` la thu muc Astro dat anh, CSS va JS da bam VAN TAY NOI DUNG vao
+# ten file (vi du `dinh-ra-khoi-may.Bj2A4TlL_2cxmyM.webp`). Noi dung doi thi
+# TEN FILE DOI theo, nen cache mot nam la an toan tuyet doi - khong bao gio co
+# chuyen trinh duyet giu ban cu cua mot file da sua.
+#
+# `immutable` bao trinh duyet dung hoi lai may chu ngay ca khi nguoi dung bam
+# tai lai trang.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(webp|avif|jpg|jpeg|png|gif|svg|ico|woff2|woff|ttf|css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML thi NGUOC LAI: khong duoc cache lau. Ten file khong doi (`index.html`)
+  # nen cache lau nghia la sua noi dung xong khach van thay ban cu.
+  # `must-revalidate` + max-age 0: trinh duyet luon hoi lai may chu, may chu tra
+  # 304 neu chua doi nen van rat nhanh.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Bo header lo thong tin phien ban phan mem
+  Header unset X-Powered-By
+  Header always unset X-Powered-By
+</IfModule>
+
+# ----------------------------------------------------------------------- nen -
+# LiteSpeed va Apache dung cung cu phap nay. Brotli neu co thi may chu tu chon,
+# khong khai duoc tu `.htaccess`.
+#
+# KHONG nen anh webp/avif va font woff2: chung DA nen san, nen lai chi ton CPU
+# ma file khong nho di, co khi con to hon.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE application/rss+xml image/svg+xml
+</IfModule>
+
+# ------------------------------------------------------------------ MIME type -
+# Mot so hosting chua khai san webp va woff2. Khai sai kieu thi trinh duyet tai
+# ve roi khong hien duoc.
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType font/woff2 .woff2
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ------------------------------------------------------------------ an toan --
+# Tat liet ke thu muc: khong co file index thi Apache mac dinh liet ke toan bo
+# file trong thu muc do ra man hinh.
+Options -Indexes
+
+# Chan truy cap cac file an va file cau hinh. Site tinh khong co file nao dang
+# nay, nhung day la lop chan phong khi deploy lo tay chep nham.
+<FilesMatch "^\.|(\.(env|json|lock|md|yaml|yml|log|bak|sql))$">
+  Require all denied
+</FilesMatch>

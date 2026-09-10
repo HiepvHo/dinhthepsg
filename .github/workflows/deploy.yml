@@ -1,0 +1,75 @@
+name: Build va deploy len hosting
+
+# Chay khi day len nhanh chinh, hoac bam tay tu tab Actions.
+# `workflow_dispatch` de deploy lai mot commit cu ma khong phai revert code -
+# day chinh la co che QUAY LUI cua ta, thay cho viec dung mot site staging.
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+# Chan hai lan deploy chay chong len nhau. Neu day hai commit lien tiep, lan
+# truoc bi huy va chi lan sau len - tranh chuyen file cua hai ban build tron vao
+# nhau tren may chu.
+concurrency:
+  group: deploy-hosting
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # `npm ci` chu khong `npm install`: cai dung theo package-lock, khong tu
+      # nang phien ban. Ban build tren may chay CI phai giong het ban tren may
+      # lap trinh, khong duoc "moi hon mot chut".
+      - name: Cai dependency
+        run: npm ci
+
+      - name: Build
+        # SITE_URL lay tu bien cua repo (Settings -> Secrets and variables ->
+        # Actions -> Variables), KHONG go trong code.
+        #
+        # CO CHE MO INDEX nam o day: `site-url.mjs` chi cho index khi SITE_URL
+        # duoc dat TUONG MINH va bang domain that. Bien nay chua dat thi site
+        # build ra van `noindex` - mac dinh AN TOAN.
+        # Mo index = them bien tren GitHub roi chay lai workflow. Khong sua code.
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: npm run build
+
+      # Hang rao cuoi truoc khi day len. Script nay kiem: anh thieu alt, ky tu
+      # ngoai ban phim, link noi bo gay, tieu de va meta trung, so H1 moi trang.
+      # No THOAT MA 1 neu co loi, tuc workflow dung lai va KHONG deploy.
+      - name: Kiem tra ban build
+        run: python scripts/kiem-tra-site.py
+
+      - name: Day len hosting qua FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          # FTPS chu khong FTP tran: mat khau va noi dung file duoc ma hoa tren
+          # duong truyen. `loose` vi nhieu hosting Viet Nam dung chung chi khong
+          # khop ten may chu FTP - van ma hoa, chi khong xac minh danh tinh.
+          protocol: ftps
+          security: loose
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_DIR }}
+          # Action tu so sanh voi lan truoc va CHI DAY FILE DA DOI, nen mot lan
+          # sua noi dung chi day vai file chu khong phai ca 178 file.
+          # Danh sach loai tru: dung dung file cua may chu va cua cPanel.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.well-known/**
+            cgi-bin/**
+            .htpasswd

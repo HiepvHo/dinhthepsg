@@ -1,0 +1,127 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/**
+ * TRANG 404.
+ *
+ * VI SAO CAN: tren Vercel, nen tang tu tra mot trang 404 mac dinh nen thieu file
+ * nay khong lo ra. Tren hosting cPanel thi Apache tra mot trang loi TRANG TRON
+ * chu "Not Found" - khong header, khong menu, khong duong ra. Khach vao do la
+ * mat luon.
+ *
+ * `.htaccess` tro toi file nay bang `ErrorDocument 404 /404.html`.
+ *
+ * KHONG PHAI TRANG XIN LOI. Nguoi vao day dang tim mot thu cu the - gan nhu luon
+ * la mot quy cach dinh. Nen trang nay dan thang toi cho tra cuu va toi hotline,
+ * chu khong chi noi "khong tim thay".
+ *
+ * `khongIndex` = true: trang loi khong duoc vao chi muc. Neu de Google index no
+ * thi mot ngay dep troi truy van "dinh chi 5p" co the ra trang bao loi.
+ */
+const ct = await getEntry('congTy', 'cong-ty');
+const c = ct!.data;
+
+/* Lay vai quy cach pho bien nhat lam loi ra nhanh. Dung du lieu that chu khong
+   go cung: them bot quy cach trong YAML thi day tu doi theo. */
+const nhom = await getCollection('nhomSanPham');
+const dinhChi = nhom.find((n) => n.data.slug === 'dinh-chi');
+const quyCachPhoBien = (dinhChi?.data.quyCach ?? []).slice(0, 6);
+---
+
+<BaseLayout
+  tieuDe="Không tìm thấy trang - Đinh Thép Sài Gòn"
+  moTa="Trang bạn tìm không còn hoặc đã đổi địa chỉ. Xem bảng quy cách đinh hoặc gọi hotline nhà máy."
+  duongDan="/404/"
+  khongIndex={true}
+>
+  <section class="section nang-chu bon-lech">
+    <div class="khung bon-lech__trong">
+      <p class="nhan-muc">Lỗi 404</p>
+      <h1>Không tìm thấy trang này</h1>
+      <p class="dan-nhap">
+        Trang bạn tìm không còn hoặc đã đổi địa chỉ. Nếu bạn đang tìm một quy cách
+        đinh cụ thể, chọn ngay bên dưới hoặc gọi hotline - đội ngũ tra giúp trong ít phút.
+      </p>
+
+      <div class="bon-lech__nut">
+        <a class="nut nut--chinh nut--lon" href={`tel:${c.hotlineTel}`}>
+          Gọi {c.hotline}
+        </a>
+        <a class="nut nut--vien nut--lon" href="/bang-gia-dinh-thep/">
+          Xem bảng quy cách đầy đủ
+        </a>
+      </div>
+
+      {
+        quyCachPhoBien.length > 0 && (
+          <>
+            <h2 class="bon-lech__dau">Quy cách được tìm nhiều</h2>
+            <ul class="bon-lech__ds">
+              {quyCachPhoBien.map((q) => (
+                <li>
+                  <a href={`/san-pham/${q.slug}/`}>Đinh chì {q.ma.replace('F', 'p')}</a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+
+      <h2 class="bon-lech__dau">Hoặc đi tới</h2>
+      <ul class="bon-lech__ds bon-lech__ds--rong">
+        <li><a href="/">Trang chủ</a></li>
+        <li><a href="/san-pham/">Tất cả sản phẩm</a></li>
+        <li><a href="/bang-tra-quy-cach-dinh/">Bảng tra phân - cm - mm</a></li>
+        <li><a href="/nha-may/">Nhà máy sản xuất</a></li>
+        <li><a href="/kien-thuc/">Tin tức</a></li>
+        <li><a href="/lien-he/">Liên hệ</a></li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bon-lech {
+    padding-block: var(--k8);
+  }
+  .bon-lech__trong {
+    max-width: 56ch;
+  }
+  .bon-lech h1 {
+    margin-top: var(--k2);
+  }
+  .bon-lech .dan-nhap {
+    margin-top: var(--k4);
+  }
+  .bon-lech__nut {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--k3);
+    margin-top: var(--k6);
+  }
+  .bon-lech__dau {
+    margin-top: var(--k7);
+    font-size: var(--cs-h3);
+  }
+  /* Hai cot cho danh sach quy cach - sau muc ngan, mot cot thi troi dai. */
+  .bon-lech__ds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--k2) var(--k5);
+    margin-top: var(--k4);
+    list-style: none;
+    padding: 0;
+  }
+  .bon-lech__ds a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+  }
+  @media (max-width: 560px) {
+    .bon-lech__ds--rong,
+    .bon-lech__ds {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
