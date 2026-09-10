@@ -1,5 +1,7 @@
 ---
 import { getEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
+import anhChiaSe from '../assets/anh/dong-bao-dinh-sai-gon.jpg';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -29,7 +31,31 @@ if (!ct) throw new Error('Thieu src/content/du-lieu/cong-ty.yaml');
 const c = ct.data;
 
 const canonical = new URL(duongDan, Astro.site).toString();
-const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
+
+/**
+ * ANH XEM TRUOC khi chia se link.
+ *
+ * TRUOC DAY THIEU HAN tren ca 31 trang: `anhOg` la optional va khong trang nao
+ * truyen vao, trong khi `twitter:card` van khai `summary_large_image`. Tuc la
+ * khai co the anh lon roi khong dua anh - link dan len Zalo, Facebook,
+ * Messenger ra o trong khong co hinh.
+ *
+ * Voi khach hang nganh vat tu o Viet Nam thi link chu yeu duoc chia se qua
+ * ZALO, nen mot link khong co anh xem truoc la mat phan lon suc thu hut.
+ *
+ * 1200x630 la ty le cac nen tang dung de cat. `getImage` sinh dung MOT file o
+ * co do luc build, khong phai srcset - the og:image chi nhan MOT URL.
+ * Dung anh bao dinh co in ten thuong hieu: nguoi luot thay ngay day la hang gi
+ * va cua ai.
+ */
+const anhOgMacDinh = await getImage({
+  src: anhChiaSe,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  format: 'jpg',
+});
+const ogUrl = new URL(anhOg ?? anhOgMacDinh.src, Astro.site).toString();
 ---
 
 <!doctype html>
@@ -80,7 +106,10 @@ const ogUrl = anhOg ? new URL(anhOg, Astro.site).toString() : undefined;
     <meta property="og:title" content={tieuDe} />
     <meta property="og:description" content={moTa} />
     <meta property="og:url" content={canonical} />
-    {ogUrl && <meta property="og:image" content={ogUrl} />}
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={tieuDe} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />

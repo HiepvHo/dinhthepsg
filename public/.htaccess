@@ -35,6 +35,18 @@ ErrorDocument 404 /404.html
   # nen gia han tu dong chay deu la bat buoc.
   RewriteRule ^\.well-known/ - [L]
 
+  # `/sitemap.xml` la duong ma nguoi va cong cu QUEN TIM, nhung Astro sinh ra
+  # `sitemap-index.xml`. Do duoc tren may chu that: /sitemap.xml tra 404.
+  # Google doc duong khai trong robots.txt nen khong anh huong, nhung moi cong
+  # cu SEO ben thu ba va moi nguoi go tay deu thu duong nay truoc.
+  RewriteRule ^sitemap\.xml$ /sitemap-index.xml [R=301,L]
+
+  # Trang mac dinh cua cPanel o `/cgi-sys/defaultwebpage.cgi` VAN tra 200 - do
+  # duoc tren may chu that. No nam NGOAI public_html nen deploy khong xoa duoc;
+  # chan bang rewrite. De no song thi ton tai mot trang mong khong lien quan gi
+  # nam ngay tren ten mien nay.
+  RewriteRule ^cgi-sys/ - [F,L]
+
   # http -> https. Dung `%{HTTPS} off` va kem ca bien cua proxy: nhieu hosting
   # dat LiteSpeed sau mot lop can bang tai, luc do %{HTTPS} luon la off va
   # neu chi kiem tra bien do se thanh vong lap chuyen huong vo tan.
@@ -72,6 +84,30 @@ ErrorDocument 404 /404.html
   # Bo header lo thong tin phien ban phan mem
   Header unset X-Powered-By
   Header always unset X-Powered-By
+
+  # ---- Header an toan ----
+  # Khong phai yeu to xep hang truc tiep, nhung day la thu moi cong cu cham
+  # diem site deu kiem, va chung khong ton mot byte nao cua nguoi dung.
+  #
+  # nosniff: cam trinh duyet TU DOAN kieu file. Khong co no, mot file bi doan
+  # nham thanh script la mot duong tan cong.
+  Header always set X-Content-Type-Options "nosniff"
+  # Gui TEN MIEN khi khach bam sang site khac, nhung khong gui duong dan day
+  # du - ben kia van thay traffic den tu dau, ma khong lo URL noi bo.
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Chan site khac nhung trang nay vao iframe de gia mao.
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # HSTS: bao trinh duyet CHI duoc noi qua https trong mot nam, nen cac lan sau
+  # khoi phai di qua buoc chuyen huong 301 - tiet kiem mot vong khu hoi.
+  #
+  # CO Y KHONG dat `includeSubDomains` va `preload`:
+  #  - `includeSubDomains` bat buoc MOI subdomain phai co SSL. Hom nay chua
+  #    dung subdomain nao, nhung ngay nao do dung mot cai chua co chung chi thi
+  #    no chet ngay va khong go nhanh duoc.
+  #  - `preload` la ghi vao danh sach cung trong trinh duyet; GO RA mat nhieu
+  #    thang. Khong dang cho mot site vua len.
+  Header always set Strict-Transport-Security "max-age=31536000"
 </IfModule>
 
 # ----------------------------------------------------------------------- nen -
