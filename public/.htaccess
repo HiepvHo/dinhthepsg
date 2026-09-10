@@ -41,11 +41,14 @@ ErrorDocument 404 /404.html
   # cu SEO ben thu ba va moi nguoi go tay deu thu duong nay truoc.
   RewriteRule ^sitemap\.xml$ /sitemap-index.xml [R=301,L]
 
-  # Trang mac dinh cua cPanel o `/cgi-sys/defaultwebpage.cgi` VAN tra 200 - do
-  # duoc tren may chu that. No nam NGOAI public_html nen deploy khong xoa duoc;
-  # chan bang rewrite. De no song thi ton tai mot trang mong khong lien quan gi
-  # nam ngay tren ten mien nay.
-  RewriteRule ^cgi-sys/ - [F,L]
+  # DA THU chan `/cgi-sys/` (trang mac dinh cua cPanel) bang `RewriteRule
+  # ^cgi-sys/ - [F,L]` va KHONG AN - do lai van tra 200. Ly do: `/cgi-sys/` la
+  # ScriptAlias khai o CAP MAY CHU, duoc giai truoc va nam ngoai thu muc web,
+  # nen `.htaccess` trong thu muc web khong voi toi.
+  # Da chuyen sang chan bang `Disallow: /cgi-sys/` trong robots.txt - van de o
+  # day thuan tuy la SEO (mot trang mong tren ten mien), khong phai bao mat.
+  # Khong de lai luat chet o day: mot luat khong an ma van nam do se khien lan
+  # sau ai doc cung tuong la da chan roi.
 
   # http -> https. Dung `%{HTTPS} off` va kem ca bien cua proxy: nhieu hosting
   # dat LiteSpeed sau mot lop can bang tai, luc do %{HTTPS} luon la off va

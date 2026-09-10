@@ -29,6 +29,12 @@ Allow: /
 Disallow: /_astro/
 Disallow: /*?*fbclid=
 Disallow: /*?*utm_
+# Trang mac dinh cua cPanel. Do duoc tren may chu that: no tra 200 va KHONG
+# chan duoc bang .htaccess vi `/cgi-sys/` la ScriptAlias o cap may chu, nam
+# ngoai thu muc web nen .htaccess cua ta khong voi toi.
+# Chan o day la du: no khong duoc lien ket tu dau trong site, van de duy nhat
+# la lo Google tu tim ra roi coi la mot trang mong tren ten mien nay.
+Disallow: /cgi-sys/
 
 Sitemap: ${SITE_URL}/sitemap-index.xml
 `
