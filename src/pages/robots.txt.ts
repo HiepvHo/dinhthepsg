@@ -30,10 +30,16 @@ Disallow: /_astro/
 Disallow: /*?*fbclid=
 Disallow: /*?*utm_
 # Trang mac dinh cua cPanel. Do duoc tren may chu that: no tra 200 va KHONG
-# chan duoc bang .htaccess vi `/cgi-sys/` la ScriptAlias o cap may chu, nam
+# chan duoc bang .htaccess, vi /cgi-sys/ la ScriptAlias o cap may chu, nam
 # ngoai thu muc web nen .htaccess cua ta khong voi toi.
 # Chan o day la du: no khong duoc lien ket tu dau trong site, van de duy nhat
 # la lo Google tu tim ra roi coi la mot trang mong tren ten mien nay.
+#
+# CHU Y KHI SUA KHOI NAY: day la ben trong mot TEMPLATE LITERAL cua JavaScript.
+# TUYET DOI khong dat dau backtick trong chu - no dong chuoi som. Da mac loi do
+# mot lan: viet /cgi-sys/ co backtick lam build CI hong voi "cgi is not
+# defined", va build o may KHONG bat duoc vi may khong co SITE_URL nen luon
+# chay nhanh chan-index, con CI co SITE_URL nen chay dung nhanh bi hong.
 Disallow: /cgi-sys/
 
 Sitemap: ${SITE_URL}/sitemap-index.xml

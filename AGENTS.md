@@ -99,6 +99,9 @@ suy từ việc đọc CSS.
 | `aspect-ratio` | Nếu chiều cao đã xác định (do grid kéo giãn), nó suy **bề rộng từ chiều cao** - có thể vượt cột. Khai `width: 100%` tường minh |
 | Google Maps nhúng | Truy vấn `?q=` thường chỉ ra chấm đỏ. Muốn có **ô địa chỉ ở góc** phải có `ftid`, mà `ftid` chỉ lấy được từ link chia sẻ của Maps |
 | `loading="lazy"` trên iframe | **Không hoãn**. Đã đo ở khoảng cách 400px và 1741px, ~40 request tới Google vẫn chạy |
+| **Build ở máy KHÁC build ở CI** | `robots.txt.ts` có hai nhánh theo `SITE_URL`. Máy không đặt biến này nên **luôn chạy nhánh chặn-index**; CI có đặt nên chạy nhánh cho-index. Một lỗi chỉ nằm ở nhánh kia thì build ở máy không bao giờ bắt được. Trước khi push thay đổi liên quan, chạy `SITE_URL=https://dinhthepsaigon.com npm run build` |
+| Backtick trong `robots.txt.ts` | Nội dung robots nằm trong **template literal** của JS. Một dấu backtick trong lời chú thích đóng chuỗi sớm và làm build CI hỏng với `cgi is not defined` |
+| `/cgi-sys/` không chặn được bằng `.htaccess` | Đó là ScriptAlias ở **cấp máy chủ**, nằm ngoài thư mục web. Chặn bằng `Disallow` trong robots.txt |
 
 ## 7. Trạng thái hiện tại
 
