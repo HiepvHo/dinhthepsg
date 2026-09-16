@@ -1,5 +1,6 @@
 ---
 tieuDe: "Chọn chiều dài đinh theo độ dày ván: bảng tra từ 10mm đến 50mm"
+tieuDeSeo: "Chọn chiều dài đinh theo độ dày ván: bảng tra 10-50mm"
 moTa: "Quy tắc nghề mộc: đinh dài gấp 2,5 đến 3 lần độ dày tấm cần đóng, và ít nhất 2/3 thân phải ăn vào lớp nền. Bảng tra sẵn ra mã đinh tương ứng."
 cum: F-chon-dung
 ngayDang: 2026-09-02

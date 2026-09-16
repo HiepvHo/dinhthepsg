@@ -1,5 +1,6 @@
 ---
 tieuDe: "1 phân bằng bao nhiêu cm, mm? Phân, ly, tấc trong nghề vật tư"
+tieuDeSeo: "1 phân bằng bao nhiêu cm, mm? Bảng quy đổi phân, ly, tấc"
 moTa: "1 phân = 1cm = 10mm. Nhưng phân đo chiều dài còn ly đo đường kính, và hệ đo cổ hiểu 1 phân khác hẳn. Bảng quy đổi đầy đủ kèm ví dụ trên hàng thật."
 cum: B-quy-cach
 ngayDang: 2026-09-02

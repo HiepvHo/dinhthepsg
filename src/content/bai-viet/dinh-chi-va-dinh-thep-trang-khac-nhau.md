@@ -1,5 +1,6 @@
 ---
 tieuDe: "Đinh chì và đinh thép trắng khác nhau thế nào? Đối chiếu từng thông số"
+tieuDeSeo: "Đinh chì và đinh thép trắng khác nhau thế nào? Bảng so sánh"
 moTa: "Cùng mã 5F nhưng đinh chì thân 2.7mm còn đinh thép trắng thân 3.5mm. Đối chiếu đầy đủ dải quy cách, đường kính và việc nên dùng loại nào."
 cum: H-so-sanh
 ngayDang: 2026-09-02

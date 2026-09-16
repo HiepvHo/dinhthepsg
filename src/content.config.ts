@@ -291,7 +291,18 @@ const baiViet = defineCollection({
   loader: glob({ pattern: ['**/*.md', '!**/README.md', '!**/_*.md'], base: './src/content/bai-viet' }),
   schema: ({ image }) => z.object({
     tieuDe: z.string(),
-    moTa: z.string().min(50).max(165, 'Meta description dai qua 165 ky tu se bi cat tren SERP'),
+    /**
+     * Title cho the <title> khi `tieuDe` dai qua 60 ky tu. H1 van dung `tieuDe`.
+     *
+     * Truoc 16/09/2026 site TU CAT tieuDe o ky tu 57 roi them "...", ra title
+     * kieu "...nghe vậ..." tren 6 bai. Tu cat con te hon de Google cat: chu
+     * cuoi mat han khoi the title - ma the title la tin hieu xep hang. Viet
+     * mot ban ngan co nghia thay vi chat ngang.
+     */
+    tieuDeSeo: z.string().max(60).optional(),
+    // 160 chu khong 165: `catMoTa` cat o 160, khai 165 thi 161-165 ky tu lot
+    // qua schema roi bi cat mat duoi - thuong la mat so hotline o cuoi.
+    moTa: z.string().min(50).max(160, 'Meta description dai qua 160 ky tu se bi cat'),
     /** Cum thuoc tinh trong topical map: A dinh danh, B quy cach, C khoi luong... */
     cum: z.enum(['A-dinh-danh', 'B-quy-cach', 'C-khoi-luong', 'D-vat-lieu', 'E-ung-dung', 'F-chon-dung', 'G-san-xuat', 'H-so-sanh']),
     ngayDang: z.coerce.date(),
@@ -319,6 +330,9 @@ const baiViet = defineCollection({
     /** true = anh minh hoa DUNG noi dung bai; false = anh nha may gan chu de nhat */
     anhBiaKhop: z.boolean().default(false),
     nhap: z.boolean().default(false),
+  }).refine((d) => d.tieuDe.length <= 60 || d.tieuDeSeo !== undefined, {
+    message: 'tieuDe dai qua 60 ky tu: them tieuDeSeo (<= 60) de the <title> khong bi cat ngang',
+    path: ['tieuDeSeo'],
   }),
 });
 

@@ -1,5 +1,6 @@
 ---
 tieuDe: "Các loại đinh trong xây dựng: 6 nhóm và việc nào dùng loại nào"
+tieuDeSeo: "Các loại đinh trong xây dựng: 6 nhóm và cách chọn theo việc"
 moTa: "Đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít, dây kẽm buộc. Đối chiếu dải quy cách, cách đặt tên mã và bảng chọn theo từng công việc."
 cum: A-dinh-danh
 ngayDang: 2026-09-02

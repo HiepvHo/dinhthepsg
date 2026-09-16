@@ -1,5 +1,6 @@
 ---
 tieuDe: "Đinh đóng cốp pha chọn loại nào, mấy phân? Bảng tra theo độ dày ván"
+tieuDeSeo: "Đinh đóng cốp pha chọn loại nào, mấy phân theo độ dày ván"
 moTa: "Cốp pha cần đinh thân trơn để tháo ra nhổ lại được. Ván 18mm dùng đinh 5 phân. Bảng tra theo độ dày ván, kèm ba lỗi hay gặp khi chọn sai."
 cum: E-ung-dung
 ngayDang: 2026-09-02

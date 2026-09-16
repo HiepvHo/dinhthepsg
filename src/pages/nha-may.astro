@@ -13,7 +13,7 @@ import anhDongBao from '../assets/anh/dong-bao-dinh-sai-gon.jpg';
 import anhCongNhan from '../assets/anh/cong-nhan-thep-cuong-phat.jpg';
 import anhSoiThep from '../assets/anh/cuon-soi-thep-nguyen-lieu.jpg';
 import anhKho from '../assets/anh/kho-bao-dinh.jpg';
-import { catTieuDe, catMoTa } from '../lib/seo-text';
+import { catTieuDe, catMoTa, moTaVua } from '../lib/seo-text';
 
 /**
  * TRANG E-E-A-T MANH NHAT.
@@ -33,7 +33,10 @@ const nhaMay = cacNhaMay(c.diaDiem);
 const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 
 const tieuDe = catTieuDe(`Nhà máy sản xuất đinh thép ${noiNhaMayNgan(c.diaDiem)}`);
-const moTa = catMoTa(`Nhà máy sản xuất đinh thép tại ${noiNhaMayNgan(c.diaDiem)}, thuộc ${c.tenPhapDinh}. Dây chuyền dập đinh và đóng bao tại chỗ. Thành viên ${c.congTyMe.tenPhapDinh}. Gọi ${c.hotline}.`);
+const moTa = moTaVua(
+  `Nhà máy sản xuất đinh thép tại ${noiNhaMayNgan(c.diaDiem)}, thuộc ${c.tenPhapDinh}. Gọi ${c.hotline}.`,
+  `Dây chuyền dập đinh và đóng bao tại chỗ, thành viên ${c.congTyMe.tenPhapDinh}.`,
+);
 
 const buoc = [
   {

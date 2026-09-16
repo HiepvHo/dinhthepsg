@@ -25,7 +25,8 @@ import { catTieuDe, catMoTa } from '../../lib/seo-text';
  *
  * MOT THU KHONG LAY: ho nhoi tu khoa vao tieu de
  * ("[ Bao Gia ] Luoi thep han D4, D5, D6, D7, D8, D9, D10, D12(trai tim)2026" -
- * 64 ky tu, dai qua muc SERP cat). Tieu de o day cat theo catTieuDe().
+ * 64 ky tu, dai qua muc SERP cat). Title dai qua 60 thi bai phai co
+ * `tieuDeSeo` - schema bat buoc, xem content.config.ts.
  */
 export async function getStaticPaths() {
   const bai = await getCollection('baiViet', ({ data }) => !data.nhap);
@@ -70,7 +71,7 @@ const schema = [
 ---
 
 <BaseLayout
-  tieuDe={catTieuDe(d.tieuDe)}
+  tieuDe={d.tieuDeSeo ?? d.tieuDe}
   moTa={catMoTa(d.moTa)}
   duongDan={duongDan}
   schema={schema}

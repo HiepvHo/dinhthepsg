@@ -62,7 +62,7 @@ const meta =
         tenPhapDinh: c.tenPhapDinh,
         noiNhaMay: noiNhaMayNgan(c.diaDiem),
       })
-    : metaNhom(nhom.ten, nhom.quyCach.length, nhom.moTaNgan, { hotline: c.hotline });
+    : metaNhom(nhom.ten, nhom.quyCach, nhom.moTaNgan, { hotline: c.hotline });
 
 const duongDan = loai === 'quy-cach' ? `/san-pham/${qc!.slug}/` : `/san-pham/${nhom.slug}/`;
 ---

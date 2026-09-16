@@ -31,8 +31,12 @@ const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
 const thang = String(new Date().getMonth() + 1).padStart(2, '0');
 const nam = new Date().getFullYear();
 
-const tieuDe = catTieuDe(`Bảng giá đinh thép ${thang}/${nam} - ${tong} quy cách`);
-const moTa = catMoTa(`Bảng quy cách và giá đinh thép: đinh chì ${phanMin}p-${phanMax}p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. ${tong} quy cách kèm chiều dài và đường kính. Gọi ${c.hotline}.`);
+/* Chua co gia thi khong goi la "Bảng giá": trang khong co con so gia nao ma
+   title hua bang gia. Co mot gia bat ky la chu tu tro ve "Bảng giá". */
+const coGiaNao = nhom.some((n) => n.data.quyCach.some(coGia));
+const chuBang = coGiaNao ? 'Bảng giá' : 'Báo giá';
+const tieuDe = catTieuDe(`${chuBang} đinh thép ${thang}/${nam} - ${tong} quy cách`);
+const moTa = catMoTa(`${chuBang} đinh thép ${thang}/${nam}, ${tong} quy cách kèm chiều dài và đường kính: đinh chì ${phanMin}p-${phanMax}p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Gọi ${c.hotline}.`);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -58,7 +62,7 @@ const mucLuc = [
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/bang-gia-dinh-thep/" schema={schema}>
   <DauMuc
     nhan="Bảng giá"
-    tieuDe="Bảng giá và quy cách đinh thép"
+    tieuDe={`${chuBang} và quy cách đinh thép`}
     muc={[{ ten: 'Bảng giá đinh thép', duongDan: '/bang-gia-dinh-thep/' }]}
     anh={{ src: anhDauMuc, alt: 'Cân đinh thành phẩm tại xưởng trước khi đóng bao' }}
   />

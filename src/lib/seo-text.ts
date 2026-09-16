@@ -12,9 +12,21 @@
  *  - dat QUY CACH ngay dau title, khong dat ten thuong hieu truoc
  */
 
-import { tenChinh, quyDoi, type QuyCach } from './quy-cach';
+import { tenChinh, quyDoi, coGia, khoangPhan, type QuyCach } from './quy-cach';
 
-const HIEU = 'Đinh Thép Sài Gòn';
+export const HIEU = 'Đinh Thép Sài Gòn';
+
+/**
+ * "Giá" khi trang CO gia that, "Báo giá" khi chua.
+ *
+ * Title cu ghi "Quy cách, giá" tren 24 trang trong khi 0/24 co gia: nguoi tim
+ * "gia dinh chi 5p" bam vao, khong thay gia, bam quay lai - dung loai tin hieu
+ * xau nhat cho trang ban hang. "Báo giá" van khop truy van co chu "gia" ma
+ * khong hua thu trang khong co. Dien gia vao YAML la chu tu doi.
+ */
+export function chuGia(coGiaThat: boolean): string {
+  return coGiaThat ? 'Giá' : 'Báo giá';
+}
 
 /**
  * Cat chuoi cho khong vuot toiDa ky tu, ke ca sau khi them dau "...".
@@ -33,6 +45,16 @@ export const catTieuDe = (s: string) => catBot(s, 60);
 /** Meta description: gioi han 160 */
 export const catMoTa = (s: string) => catBot(s, 160);
 
+/**
+ * Mo ta = phan CHINH + phan PHU neu con vua 160 ky tu; khong vua thi bo HAN phan
+ * phu. Cat ngang giua cau ("...đóng cốp pha, đóng gỗ, đóng...") te hon mot mo
+ * ta ngan hon ma tron cau. Phan chinh phai tu no du nghia va chua hotline.
+ */
+export function moTaVua(chinh: string, phu: string): string {
+  const day = `${chinh} ${phu}`;
+  return catMoTa(day.length <= 160 ? day : chinh);
+}
+
 export function metaQuyCach(
   nhomTen: string,
   qc: QuyCach,
@@ -42,7 +64,7 @@ export function metaQuyCach(
   const qd = quyDoi(qc);
 
   // Quy cach dung dau. Them mm trong ngoac de phu ca cach goi theo mm.
-  const tieuDe = catTieuDe(`${ten} (${qc.daiMm}mm) - Quy cách, giá | ${HIEU}`);
+  const tieuDe = catTieuDe(`${ten} (${qc.daiMm}mm) - ${chuGia(coGia(qc))} nhà máy | ${HIEU}`);
 
   const boPhan = [
     `${ten}`,
@@ -57,13 +79,28 @@ export function metaQuyCach(
 
 export function metaNhom(
   ten: string,
-  soQuyCach: number,
+  quyCach: readonly QuyCach[],
   moTaNgan: string,
   ctx: { hotline: string },
 ) {
-  const tieuDe = catTieuDe(`${ten} - ${soQuyCach} quy cách | ${HIEU}`);
-  const moTa = catMoTa(
-    `${ten}: ${soQuyCach} quy cách, công bố đầy đủ chiều dài và đường kính thân. ${moTaNgan} Nhà máy sản xuất trực tiếp, gọi ${ctx.hotline}.`,
+  const soQuyCach = quyCach.length;
+  const cg = chuGia(quyCach.some(coGia));
+  // Nhom theo he phan (dinh chi 2p-12p) thi dat KHOANG PHAN vao title - dung
+  // chu nguoi ta go. Nhom khong theo phan (dinh vit, day kem, dinh du...) thi
+  // khoangPhan tra [Infinity, -Infinity], nen chi dung khi co it nhat hai co.
+  const [pMin, pMax] = khoangPhan(quyCach);
+  const coKhoang = Number.isFinite(pMin) && pMax > pMin;
+  const tieuDe = catTieuDe(
+    coKhoang
+      ? `${ten} ${pMin}p-${pMax}p - ${cg} nhà máy | ${HIEU}`
+      : `${ten} - ${soQuyCach} quy cách, ${cg.toLowerCase()} | ${HIEU}`,
+  );
+  // HOTLINE TRUOC mo ta ngan. Ban cu de hotline cuoi cau, dai 160+ ky tu nen
+  // bi catMoTa cat dung vao so dien thoai - thu duy nhat tren doan trich nguoi
+  // ta co the bam goi ngay. Neu con bi cat thi mat duoi mo ta ngan, khong mat so.
+  const moTa = moTaVua(
+    `${ten}: ${soQuyCach} quy cách, đủ chiều dài và đường kính thân, sản xuất tại nhà máy. Gọi ${ctx.hotline}.`,
+    moTaNgan,
   );
   return { tieuDe, moTa };
 }

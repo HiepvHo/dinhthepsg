@@ -47,6 +47,11 @@ export function tinhNhaMay(ds: readonly DiaDiem[]): string[] {
   return [...new Set(cacNhaMay(ds).map((d) => d.tinhThanh))];
 }
 
+/** Ten tinh viet gon cho cho chat cho (tieu de banner): "TP. Hồ Chí Minh" -> "TP.HCM". */
+export function tinhNgan(t: string): string {
+  return t === 'TP. Hồ Chí Minh' ? 'TP.HCM' : t;
+}
+
 export function diaChiDayDu(d: DiaDiem): string {
   return `${d.diaChi}, ${d.quanHuyen}, ${d.tinhThanh}`;
 }

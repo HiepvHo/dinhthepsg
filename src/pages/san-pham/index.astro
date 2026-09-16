@@ -7,7 +7,7 @@ import anhDauMuc from '../../assets/anh/dinh-tren-nen-trang-01.jpg';
 import DauMuc from '../../components/DauMuc.astro';
 import CotDanhMuc from '../../components/CotDanhMuc.astro';
 import { tuyetDoi } from '../../lib/schema';
-import { catTieuDe, catMoTa } from '../../lib/seo-text';
+import { catTieuDe, catMoTa, HIEU } from '../../lib/seo-text';
 
 /**
  * TRANG DANH MUC SAN PHAM.
@@ -40,7 +40,7 @@ const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
 /* Tinh tu nam thanh lap CONG TY ME - xem ghi chu trong cong-ty.yaml */
 const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 
-const tieuDe = catTieuDe('Sản phẩm đinh và vật tư liên kết - Đinh Thép SG');
+const tieuDe = catTieuDe(`Sản phẩm đinh thép: ${tong} quy cách nhà máy | ${HIEU}`);
 const moTa = catMoTa(
   `${nhom.length} nhóm, ${tong} quy cách: đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít, dây kẽm hấp. Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`,
 );

@@ -1,10 +1,10 @@
 ---
-import { noiNhaMayNgan, tinhNhaMay, noiVa, cacNhaMay, diaChiDayDu } from '../lib/nha-may';
+import { noiNhaMayNgan, tinhNhaMay, tinhNgan, noiVa, cacNhaMay, diaChiDayDu } from '../lib/nha-may';
 import { khoangPhan } from '../lib/quy-cach';
 import { getEntry, getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { catTieuDe, catMoTa } from '../lib/seo-text';
+import { catTieuDe, catMoTa, HIEU } from '../lib/seo-text';
 import BannerSlider from '../components/BannerSlider.astro';
 import LyDoChon from '../components/LyDoChon.astro';
 import DoiTac from '../components/DoiTac.astro';
@@ -113,7 +113,9 @@ const anhBanner = [
     src: anhCongNhan,
     alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh',
     nhan: `Hơn ${soNam} năm kinh nghiệm`,
-    tieuDe: 'Nhà máy sản xuất đinh thép xây dựng',
+    // Slide dau la H1 cua trang chu. Them DIA DANH: truy van mua hang cua khach
+    // la "mua dinh ... tai sai gon / tphcm", ma H1 cu khong co noi nao.
+    tieuDe: `Nhà máy sản xuất đinh thép tại ${noiVa(tinhNhaMay(c.diaDiem).map(tinhNgan))}`,
     phu: `${tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán thẳng từ nhà máy ${noiNhaMayNgan(c.diaDiem)}, không qua trung gian.`,
     nut: [
       { chu: 'Xem sản phẩm', duongDan: '/san-pham/', chinh: true },
@@ -122,7 +124,9 @@ const anhBanner = [
   },
   {
     src: anhHero,
-    alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn, Đức Hòa, Long An',
+    // KHONG ghi dia danh: Duc Hoa la nha may cong ty me, va chua biet anh chup
+    // o nha may nao. Alt ghi sai noi chup la thong tin sai.
+    alt: 'Công nhân đóng bao đinh tại nhà máy Đinh Thép Sài Gòn',
     nhan: 'Chất lượng ổn định từ đầu vào',
     tieuDe: 'Đơn vị cung cấp đinh thép hàng đầu phía Nam',
     phu: 'Nguyên liệu chọn lọc, dập trên dây chuyền của chính nhà máy. Thân đinh thẳng, mũi nhọn đều, mũ chắc - đóng cốp pha hay gỗ cứng đều được.',
@@ -175,9 +179,12 @@ const anhNhom: Record<string, { src: ImageMetadata; alt: string }> = {
   'day-kem-hap': { src: anhSoiThep, alt: 'Cuộn sợi thép nguyên liệu tại nhà máy' },
 };
 
-const tieuDe = catTieuDe('Đinh Thép Sài Gòn - Nhà máy sản xuất đinh, dây kẽm');
+/* Trang chu la trang DICH cho y dinh "mua dinh thep TP.HCM". /san-pham/ co y
+   KHONG dung chu "mua" de hai trang khong tranh nhau mot truy van. Giu ten
+   thuong hieu: truy van "dinh thep sai gon" dang #1 va chuoi do nam trong ten. */
+const tieuDe = catTieuDe(`Mua đinh thép tại nhà máy TP.HCM - ${HIEU}`);
 const moTa = catMoTa(
-  `Nhà máy sản xuất đinh thép xây dựng: đinh chì ${phanMin}p đến ${phanMax}p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`,
+  `Mua đinh thép trực tiếp từ nhà máy ${noiNhaMayNgan(c.diaDiem)}: đinh chì ${phanMin}p đến ${phanMax}p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Gọi ${c.hotline}.`,
 );
 ---
 

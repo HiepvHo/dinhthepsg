@@ -1,5 +1,6 @@
 ---
 tieuDe: "Ký hiệu F trên bao đinh nghĩa là gì? Bảng tra F sang mm cho từng loại"
+tieuDeSeo: "Ký hiệu F trên bao đinh là gì? Bảng tra F sang mm"
 moTa: "Mã 2F, 5F, 12F trên bao đinh là chiều dài tính theo phân. Nhưng đinh dù và đinh thép vàng không theo quy tắc đó. Bảng tra đầy đủ từ nhà máy."
 cum: B-quy-cach
 ngayDang: 2026-09-02
