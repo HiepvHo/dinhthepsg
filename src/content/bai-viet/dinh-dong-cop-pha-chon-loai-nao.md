@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Nêu tiêu chí NHỔ LẠI ĐƯỢC là điều kiện riêng của cốp pha mà việc đóng gỗ thường không có, và bảng tra độ dày ván sang mã quy cách. Các trang bán đinh coffa chỉ liệt kê quy cách, không nói vì sao chọn thân trơn."
 truyVanChinh: "đinh đóng cốp pha mấy phân"
 nhomLienQuan: [dinh-chi, day-kem-hap]
+anhBia: ../../assets/anh/kho-bao-dinh.jpg
+anhBiaAlt: Bao đinh thành phẩm xếp trong kho nhà máy
+anhBiaKhop: false
 ---
 
 Đóng cốp pha khác đóng gỗ ở một điểm mà nhiều người bỏ qua khi chọn đinh:

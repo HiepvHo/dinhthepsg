@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Bảng tra độ dày ván sang chiều dài đinh sang mã quy cách cụ thể, dựng từ quy tắc 2/3 và hệ số 2,5-3x của nghề mộc. Các trang bán đinh tiếng Việt chỉ liệt kê quy cách chứ không đưa quy tắc chọn."
 truyVanChinh: "chọn chiều dài đinh"
 nhomLienQuan: [dinh-chi, dinh-thep-trang]
+anhBia: ../../assets/anh/dinh-tren-nen-trang-02.jpg
+anhBiaAlt: Đinh thép thân trơn nhiều chiều dài khác nhau
+anhBiaKhop: false
 ---
 
 Chọn đinh ngắn quá thì mối ghép bung. Chọn dài quá thì mũi lú ra mặt bên kia,

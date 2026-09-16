@@ -1,6 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { parse as parseYaml } from 'yaml';
 
 /**
@@ -165,14 +166,42 @@ const quyCachSchema = z.object({
   message: 'Co gia thi phai co donViGia. Doi thu ghi "19.000d" ma khong ghi /kg hay /bao - do la lo hong ta khong duoc lap lai.',
 });
 
+/**
+ * Loader dang OBJECT chu khong phai ham tra mang, chi vi mot ly do: `image()`
+ * trong schema CHI bien doi duong dan khi entry co `filePath`. Loader dang ham
+ * khong co cho nao khai bao filePath, nen `image()` se coi duong dan la duong
+ * public va KHONG toi uu anh - khong bao loi, chi lang le tra ra chuoi.
+ *
+ * Co filePath roi thi duong dan anh trong YAML duoc tinh TUONG DOI so voi chinh
+ * file YAML do, giong het cach viet trong frontmatter Markdown.
+ *
+ * Duoc them: `watcher` lam dev server tu tai lai khi sua YAML.
+ */
+const YAML_NHOM = 'src/content/du-lieu/nhom-san-pham.yaml';
+
 const nhomSanPham = defineCollection({
-  loader: async () => {
-    const d = await docYaml<{ nhom: Array<Record<string, unknown>> }>(
-      'src/content/du-lieu/nhom-san-pham.yaml',
-    );
-    return d.nhom.map((n) => ({ ...n, id: n.id as string }));
+  loader: {
+    name: 'nhom-san-pham-yaml',
+    load: async ({ store, parseData, config, watcher, logger }) => {
+      const nap = async () => {
+        const d = await docYaml<{ nhom: Array<Record<string, unknown>> }>(YAML_NHOM);
+        store.clear();
+        for (const n of d.nhom) {
+          const id = n.id as string;
+          store.set({ id, data: await parseData({ id, data: n, filePath: YAML_NHOM }), filePath: YAML_NHOM });
+        }
+      };
+      await nap();
+      const duongDanThat = fileURLToPath(new URL(YAML_NHOM, config.root));
+      watcher?.add(duongDanThat);
+      watcher?.on('change', async (doi) => {
+        if (doi !== duongDanThat) return;
+        logger.info('Nap lai nhom-san-pham.yaml');
+        await nap();
+      });
+    },
   },
-  schema: z.object({
+  schema: ({ image }) => z.object({
     ten: z.string(),
     tenNgan: z.string(),
     slug: z.string().regex(/^[a-z0-9-]+$/),
@@ -181,6 +210,26 @@ const nhomSanPham = defineCollection({
     moTaNgan: z.string(),
     /** Co tach trang rieng cho tung quy cach khong. Lo 1 chi tach dinh chi. */
     tachTrangQuyCach: z.boolean(),
+
+    /**
+     * ANH DAI DIEN cua nhom - MOT NGUON DUY NHAT cho trang chu, trang
+     * /san-pham/, trang nhom va trang quy cach.
+     *
+     * Duong dan tuong doi so voi CHINH FILE YAML nay. `image()` bat buoc file
+     * phai ton tai: go sai ten thi BUILD HONG ngay, khong phai doi den luc mo
+     * trang moi thay o anh vo.
+     *
+     * De o day chu khong trong file .ts de CMS sua duoc - doi anh la viec cua
+     * nguoi quan tri noi dung, khong phai viec phai sua code.
+     */
+    anh: image(),
+    anhAlt: z.string().min(10),
+    /**
+     * true = anh chup DUNG loai nay. false = anh nha may gan dung nhat trong so
+     * da co. Hien ca 6 nhom deu false: trong 9 anh nha may, khong tam nao chup
+     * rieng tung loai dinh tren nen sach. Giu co that de biet con no gi.
+     */
+    anhDungLoai: z.boolean().default(false),
     /**
       * SO GHI NO DU LIEU - CHI NOI BO, TUYET DOI KHONG RENDER RA TRANG.
       *
@@ -227,7 +276,7 @@ const buLong = defineCollection({
 const baiViet = defineCollection({
   // Bo qua README va file bat dau bang _ (ban nhap) - chung khong phai bai viet
   loader: glob({ pattern: ['**/*.md', '!**/README.md', '!**/_*.md'], base: './src/content/bai-viet' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     tieuDe: z.string(),
     moTa: z.string().min(50).max(165, 'Meta description dai qua 165 ky tu se bi cat tren SERP'),
     /** Cum thuoc tinh trong topical map: A dinh danh, B quy cach, C khoi luong... */
@@ -241,7 +290,21 @@ const baiViet = defineCollection({
     duKienDocQuyen: z.string().min(10),
     truyVanChinh: z.string(),
     nhomLienQuan: z.array(z.string()).default([]),
-    anhBia: z.string().optional(),
+    /**
+     * ANH BIA - duong dan tuong doi so voi chinh file .md nay.
+     *
+     * Truoc day bang anh bia nam trong `src/lib/anh-bai.ts` vi truong nay khai
+     * la `z.string()` nen anh khong duoc Astro toi uu. Doi sang `image()` thi
+     * vua toi uu (WebP + srcset) vua o cung cho voi noi dung bai - CMS sua duoc,
+     * va go sai ten tep thi build hong ngay.
+     *
+     * `loader: glob()` tu dat `filePath` cho moi entry nen `image()` chay duoc
+     * ma khong phai lam gi them (khac voi nhomSanPham - xem ghi chu o tren).
+     */
+    anhBia: image(),
+    anhBiaAlt: z.string().min(10),
+    /** true = anh minh hoa DUNG noi dung bai; false = anh nha may gan chu de nhat */
+    anhBiaKhop: z.boolean().default(false),
     nhap: z.boolean().default(false),
   }),
 });

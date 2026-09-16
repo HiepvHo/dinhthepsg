@@ -1,4 +1,5 @@
 ---
+import { sapBaiMoiTruoc } from '../lib/bai-viet';
 import { getEntry, getCollection } from 'astro:content';
 import { tenChinh, nhanMm } from '../lib/quy-cach';
 
@@ -28,7 +29,7 @@ const nhom = (await getCollection('nhomSanPham')).sort((a, b) =>
    Ly do: bai tra cuu la mot buoc tren duong khach di toi don hang - de no o nhanh
    rieng thi no nam ngoai duong do. Chi lay 5 bai moi nhat, con lai xem o trang. */
 const baiMega = (await getCollection('baiViet', ({ data }) => !data.nhap))
-  .sort((a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf())
+  .sort(sapBaiMoiTruoc)
   .slice(0, 5);
 
 const duongDanHienTai = Astro.url.pathname;

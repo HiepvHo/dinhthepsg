@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Bảng đối chiếu mã F sang mm cho cả bốn nhóm, gồm hai nhóm KHÔNG theo quy tắc nhân mười (đinh dù 3F = 33mm, đinh thép vàng 1F6 = 16mm). Chưa đối thủ nào công bố hai ngoại lệ này."
 truyVanChinh: "ký hiệu f trên bao đinh"
 nhomLienQuan: [dinh-chi, dinh-thep-trang, dinh-du, dinh-thep-vang]
+anhBia: ../../assets/anh/dong-bao-dinh-sai-gon.jpg
+anhBiaAlt: Bao đinh Đinh Thép Sài Gòn in mã quy cách theo phân trên nhãn
+anhBiaKhop: true
 ---
 
 Trên bao đinh xuất xưởng, quy cách được in bằng một mã ngắn: `2F`, `5F`, `15F`,

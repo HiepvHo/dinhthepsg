@@ -6,7 +6,6 @@ import anhDauMuc from '../../assets/anh/dinh-tren-nen-trang-01.jpg';
 import DauMuc from '../../components/DauMuc.astro';
 import CotDanhMuc from '../../components/CotDanhMuc.astro';
 import { tuyetDoi } from '../../lib/schema';
-import { anhCuaNhom } from '../../lib/anh-nhom';
 import { catTieuDe, catMoTa } from '../../lib/seo-text';
 
 /**
@@ -110,7 +109,7 @@ const schema = {
         <div class="dm__luoi">
           {
             nhom.map((n) => {
-              const a = anhCuaNhom(n.id);
+              const a = { src: n.data.anh, alt: n.data.anhAlt };
               return (
                 <a class="the-lat" href={`/san-pham/${n.data.slug}/`}>
                   <span class="the-lat__nen" aria-hidden="true">

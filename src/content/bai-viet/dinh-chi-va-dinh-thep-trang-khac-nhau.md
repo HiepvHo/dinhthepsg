@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Đối chiếu đường kính thân theo từng mã giữa hai nhóm, chỉ ra cùng mã 5F nhưng lệch nhau 0.7mm. Các trang bán đinh liệt kê hai nhóm riêng rẽ, không ai đặt cạnh nhau để so."
 truyVanChinh: "đinh chì và đinh thép trắng khác nhau"
 nhomLienQuan: [dinh-chi, dinh-thep-trang]
+anhBia: ../../assets/anh/dinh-ra-khoi-may.jpg
+anhBiaAlt: Đinh thép vừa ra khỏi máy dập tại xưởng
+anhBiaKhop: false
 ---
 
 Hai nhóm này hay bị gọi lẫn khi đặt hàng, vì mã quy cách trùng nhau: cả hai đều

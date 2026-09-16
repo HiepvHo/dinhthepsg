@@ -57,7 +57,7 @@ const moTa = `${ten}${qd ? `: ${qd}` : ''}${qc.duongKinhMm ? `, đường kính 
 /* Thong so tom tat cho khoi dau trang. Bang `dac-ta` ngay duoi van giu day du
    (dung sai, ghi chu...) - giong ho: cot phai co danh sach gach dau dong ngan,
    ben duoi van co bang chi tiet. */
-const anh = anhCuaNhom(nhomSlug);
+const anh = await anhCuaNhom(nhomSlug);
 const thongSo = [
   { nhan: 'Mã quy cách', giaTri: qc.ma },
   { nhan: 'Chiều dài', giaTri: `${qc.daiMm} mm` },

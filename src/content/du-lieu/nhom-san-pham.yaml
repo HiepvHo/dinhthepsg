@@ -27,6 +27,9 @@ nhom:
     # quy cach ro nhat, va la nhom doi thu bo trong nhieu nhat (trungnamcons chi
     # co 1/10 quy cach).
     tachTrangQuyCach: true
+    anh: ../../assets/anh/dinh-tren-nen-trang-01.jpg
+    anhAlt: Đinh chì thân trơn do nhà máy Đinh Thép Sài Gòn sản xuất
+    anhDungLoai: false
     quyCach:
       - { ma: 2F,  phan: 2,  daiMm: 20,  duongKinhMm: 1.7, slug: dinh-chi-2p }
       - { ma: 3F,  phan: 3,  daiMm: 30,  duongKinhMm: 2.0, slug: dinh-chi-3p }
@@ -48,6 +51,9 @@ nhom:
     moTaNgan: >-
       Đinh thép xử lý bề mặt sáng màu. Cùng đường kính thân 3.5mm cho cả bốn quy cách.
     tachTrangQuyCach: false
+    anh: ../../assets/anh/dinh-tren-nen-trang-02.jpg
+    anhAlt: Đinh thép trắng thân trơn, bề mặt sáng
+    anhDungLoai: false
     canXacNhan: >-
       Cả 4 quy cách đều ghi đường kính 3.5mm - cần xác nhận đúng hay lỗi in catalogue.
     quyCach:
@@ -66,6 +72,9 @@ nhom:
       Đinh thép xử lý bề mặt vàng, quy cách ngắn. Mã đặt tên theo chiều dài mm
       chứ không theo phân.
     tachTrangQuyCach: false
+    anh: ../../assets/anh/dinh-ra-khoi-may.jpg
+    anhAlt: Đinh thép vừa ra khỏi máy dập tại xưởng Đinh Thép Sài Gòn
+    anhDungLoai: false
     canXacNhan: Mã 1F6 / 1F9 / 2F3 đọc thế nào, và vì sao khác quy ước phân.
     quyCach:
       - { ma: 1F6, daiMm: 16, duongKinhMm: 2.3, slug: dinh-thep-vang-1f6 }
@@ -80,6 +89,9 @@ nhom:
     tenGoiKhac: [đinh mũ, đinh mái tôn, đinh lợp tôn]
     moTaNgan: Đinh có mũ rộng dạng dù, dùng để lợp và cố định tấm mỏng.
     tachTrangQuyCach: false
+    anh: ../../assets/anh/can-dinh-tai-xuong.jpg
+    anhAlt: Đinh thành phẩm được cân tại xưởng Đinh Thép Sài Gòn
+    anhDungLoai: false
     canXacNhan: >-
       CẦN XÁC NHẬN GẤP: đinh dù ghi 3F = 33mm, trong khi các nhóm khác 3F = 30mm.
       Đây là quy ước đặt tên riêng của đinh dù hay lỗi in? Ảnh hưởng cả URL lẫn nội dung.
@@ -96,6 +108,9 @@ nhom:
     tenGoiKhac: [vít tự khoan, vít bắn tôn, đinh vít tự khoan]
     moTaNgan: Vít có ren, bắt bằng máy, dùng cho tôn và khung kim loại.
     tachTrangQuyCach: false
+    anh: ../../assets/anh/kho-bao-dinh.jpg
+    anhAlt: Bao đinh thành phẩm xếp trong kho nhà máy Đinh Thép Sài Gòn
+    anhDungLoai: false
     quyCach:
       - { ma: 4x30, daiMm: 30, duongKinhMm: 4, slug: dinh-vit-4x30 }
       - { ma: 5x30, daiMm: 30, duongKinhMm: 5, slug: dinh-vit-5x30 }
@@ -109,6 +124,9 @@ nhom:
     tenGoiKhac: [dây kẽm buộc, dây thép buộc, kẽm buộc]
     moTaNgan: Dây thép ủ mềm dùng buộc thép, buộc cốp pha, buộc hàng.
     tachTrangQuyCach: false
+    anh: ../../assets/anh/cuon-soi-thep-nguyen-lieu.jpg
+    anhAlt: Cuộn sợi thép nguyên liệu tại nhà máy Đinh Thép Sài Gòn
+    anhDungLoai: false
     canXacNhan: Catalogue chỉ ghi 1mm. Thường còn 0.8 / 1.2 / 1.5mm - cần bổ sung.
     quyCach:
       - { ma: 1mm, daiMm: 0, duongKinhMm: 1.0, slug: day-kem-hap-1mm }

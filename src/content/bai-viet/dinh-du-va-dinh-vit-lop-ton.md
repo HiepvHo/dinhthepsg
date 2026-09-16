@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Đặt đinh dù và vít bắn tôn cạnh nhau theo bảng quy cách thật của một nhà máy, và cảnh báo mã đinh dù 3F = 33mm chứ không phải 30mm. Không trang nào nêu ngoại lệ mã này."
 truyVanChinh: "lợp tôn dùng đinh dù hay vít"
 nhomLienQuan: [dinh-du, dinh-vit]
+anhBia: ../../assets/anh/day-chuyen-dap-dinh.jpg
+anhBiaAlt: Dây chuyền máy dập đinh tại nhà máy
+anhBiaKhop: false
 ---
 
 Hai nhóm này cùng phục vụ một việc - **giữ tấm tôn xuống khung** - nhưng cách

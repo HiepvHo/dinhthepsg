@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
-import { anhCuaBai, nhanCum, ngayVn } from '../lib/anh-bai';
+import { sapBaiMoiTruoc, nhanCum, ngayVn } from '../lib/bai-viet';
 
 /**
  * MUC TIN TUC TREN TRANG CHU - mot the LON + hai the NHO.
@@ -27,14 +27,14 @@ import { anhCuaBai, nhanCum, ngayVn } from '../lib/anh-bai';
  *    doc duoc. Nho vay them bai moi la co nhan ngay.
  *
  * 3. ANH la anh NHA MAY THAT, khong phai anh stock. Nhung phan lon chua chup
- *    rieng cho tung bai - xem canh bao trong `lib/anh-bai.ts`.
+ *    rieng cho tung bai - xem canh bao trong `lib/bai-viet.ts`.
  *
  * KHONG RENDER GI khi chua co bai. Trang chu de mot khoi "dang cap nhat" rong
  * la tin hieu xau ca voi khach lan voi crawler. Trang /kien-thuc/ da co san
  * trang thai rong tu te va van dan sang cac trang tra cuu - de viec do cho no.
  */
 const bai = (await getCollection('baiViet', ({ data }) => !data.nhap))
-  .sort((a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf())
+  .sort(sapBaiMoiTruoc)
   .slice(0, 3);
 
 const noiBat = bai[0];
@@ -61,8 +61,8 @@ const conLai = bai.slice(1);
           <article class="tt-lon">
             <span class="tt-lon__anh" aria-hidden="true">
               <Image
-                src={anhCuaBai(noiBat.id).src}
-                alt={anhCuaBai(noiBat.id).alt}
+                src={noiBat.data.anhBia}
+                alt={noiBat.data.anhBiaAlt}
                 widths={[640, 1000]}
                 sizes="(max-width: 900px) 92vw, 560px"
                 loading="lazy"
@@ -85,7 +85,7 @@ const conLai = bai.slice(1);
           {/* ---- Hai the NHO: chu trai, anh phai ---- */}
           <div class="tt__cot">
             {conLai.map((b) => {
-              const a = anhCuaBai(b.id);
+              const a = { src: b.data.anhBia, alt: b.data.anhBiaAlt };
               return (
                 <article class="tt-nho">
                   <div class="tt-nho__chu">

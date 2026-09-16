@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Chỉ rõ ngành vật tư dùng HAI đơn vị cho hai chiều khác nhau trên cùng một món hàng: phân cho chiều dài, ly cho đường kính. Kèm cảnh báo hệ đo cổ hiểu 1 phân = 4 ly. Các trang quy đổi đơn vị không nói tới, các trang vật tư cũng không."
 truyVanChinh: "1 phân bằng bao nhiêu cm"
 nhomLienQuan: [dinh-chi, dinh-thep-trang, day-kem-hap]
+anhBia: ../../assets/anh/can-dinh-tai-xuong.jpg
+anhBiaAlt: Cân đinh tại xưởng để kiểm khối lượng theo quy cách
+anhBiaKhop: true
 ---
 
 Câu trả lời ngắn: **1 phân = 1cm = 10mm**.

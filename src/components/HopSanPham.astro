@@ -1,7 +1,6 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import { anhCuaNhom } from '../lib/anh-nhom';
 
 /**
  * HOP SAN PHAM nhung GIUA bai viet.
@@ -53,7 +52,7 @@ function khoangDai(qc: { daiMm: number }[]) {
 
       <ul class="hsp__ds">
         {chon.map((n) => {
-          const a = anhCuaNhom(n.id);
+          const a = { src: n.data.anh, alt: n.data.anhAlt };
           return (
             <li>
               <a class="hsp__muc" href={`/san-pham/${n.data.slug}/`}>

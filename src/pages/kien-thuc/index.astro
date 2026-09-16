@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import anhDauMuc from '../../assets/anh/dinh-ra-khoi-may.jpg';
 import DauMuc from '../../components/DauMuc.astro';
 import { catTieuDe, catMoTa } from '../../lib/seo-text';
-import { anhCuaBai, nhanCum, ngayVn } from '../../lib/anh-bai';
+import { sapBaiMoiTruoc, nhanCum, ngayVn } from '../../lib/bai-viet';
 
 /**
  * TRANG TIN TUC - danh sach bai viet + cot ben.
@@ -42,9 +42,7 @@ import { anhCuaBai, nhanCum, ngayVn } from '../../lib/anh-bai';
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 
-const bai = (await getCollection('baiViet', ({ data }) => !data.nhap)).sort(
-  (a, b) => b.data.ngayDang.valueOf() - a.data.ngayDang.valueOf(),
-);
+const bai = (await getCollection('baiViet', ({ data }) => !data.nhap)).sort(sapBaiMoiTruoc);
 
 /* Thu tu cum lay tu TOPICAL-MAP.md, khong sap theo bang chu cai */
 const THU_TU_CUM = [
@@ -117,7 +115,7 @@ const moTa = catMoTa(
             {/* ---------- danh sach bai ---------- */}
             <div class="tt-ds">
               {bai.map((b) => {
-                const a = anhCuaBai(b.id);
+                const a = { src: b.data.anhBia, alt: b.data.anhBiaAlt };
                 return (
                   <article class="the-bai">
                     <a class="the-bai__anh" href={`/kien-thuc/${b.id}/`} tabindex="-1" aria-hidden="true">
@@ -169,7 +167,7 @@ const moTa = catMoTa(
                 <h2 class="o-ben__dau">Bài mới nhất</h2>
                 <ul class="o-ben__moi">
                   {moiNhat.map((b) => {
-                    const a = anhCuaBai(b.id);
+                    const a = { src: b.data.anhBia, alt: b.data.anhBiaAlt };
                     return (
                       <li>
                         <a href={`/kien-thuc/${b.id}/`}>

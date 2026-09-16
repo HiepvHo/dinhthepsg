@@ -6,6 +6,9 @@ ngayDang: 2026-09-02
 duKienDocQuyen: "Chỉ ra một catalogue dùng tới bốn hệ đặt tên mã khác nhau (phân, mm ghép quanh chữ F, đường kính nhân chiều dài, và đường kính đơn) và bảng đối chiếu cả sáu nhóm cạnh nhau. Không trang bán đinh nào đặt sáu nhóm chung một bảng."
 truyVanChinh: "các loại đinh trong xây dựng"
 nhomLienQuan: [dinh-chi, dinh-thep-trang, dinh-thep-vang, dinh-du, dinh-vit, day-kem-hap]
+anhBia: ../../assets/anh/dinh-tren-nen-trang-01.jpg
+anhBiaAlt: Đinh thép do nhà máy Đinh Thép Sài Gòn sản xuất
+anhBiaKhop: false
 ---
 
 Nhà máy chúng tôi sản xuất **6 nhóm, tổng 24 quy cách**. Bài này đặt cả sáu cạnh
