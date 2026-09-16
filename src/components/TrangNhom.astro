@@ -22,9 +22,8 @@ interface Props {
   tenGoiKhac: string[];
   quyCach: QuyCach[];
   tachTrangQuyCach: boolean;
-  canXacNhan?: string;
 }
-const { ten, slug, moTaNgan, tenGoiKhac, quyCach, tachTrangQuyCach, canXacNhan } = Astro.props;
+const { ten, slug, moTaNgan, tenGoiKhac, quyCach, tachTrangQuyCach } = Astro.props;
 
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
@@ -149,14 +148,6 @@ const schema = schemaNhomSanPham({
     </p>
 
     {
-      canXacNhan && (
-        <p class="nhom__can-xac-nhan">
-          <strong>Đang đối chiếu lại với nhà máy:</strong> {canXacNhan}
-        </p>
-      )
-    }
-
-    {
       baiLienQuan.length > 0 && (
         <nav class="nhom__kt" aria-labelledby="kt-dau">
           <h2 id="kt-dau">Kiến thức về {ten.toLowerCase()}</h2>
@@ -213,14 +204,6 @@ const schema = schemaNhomSanPham({
     font-size: var(--cs-nho);
     color: var(--muc-2);
     max-width: var(--do-doc);
-  }
-  .nhom__can-xac-nhan {
-    margin-top: var(--k4);
-    padding: var(--k4);
-    border-left: 3px solid var(--cam-500);
-    background: var(--cam-050);
-    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
-    font-size: var(--cs-nho);
   }
   .nhom__kt {
     margin-top: var(--k7);

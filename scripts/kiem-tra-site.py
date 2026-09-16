@@ -18,6 +18,13 @@ import re
 import sys
 from collections import defaultdict
 
+# Console Windows mac dinh la cp1252, khong in duoc dau tieng Viet: script
+# NEM LOI ngay khi in thong bao loi dau tien, nen chinh thong bao bi mat.
+# CI chay Ubuntu UTF-8 nen khong lo ra o do. Ep UTF-8 cho ca hai may.
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 DIST = 'dist'
 
 # Ky tu ngoai ban phim. Dau tieng Viet KHONG nam trong danh sach nay - chi
@@ -32,6 +39,25 @@ KY_TU_LA = {
     '…': 'dau ba cham (dung ...)',
     '→': 'mui ten (dung ->)',
 }
+
+
+# Nhung cum chi dung de ta tu ghi no voi chinh minh. Chung DA TUNG lot ra site
+# that: bon ghi chu kieu "CAN XAC NHAN GAP: dinh du ghi 3F = 33mm... Anh huong
+# ca URL lan noi dung" nam tren trang bang gia va bon trang nhom. Khach doc
+# duoc nha san xuat tu noi khong chac catalogue cua minh co loi in hay khong.
+# Hong nhu the khong co cong cu SEO nao bao, chi co nguoi doc moi thay - nen
+# chan o day.
+GHI_CHU_NOI_BO = [
+    'Dang doi chieu',
+    'Đang đối chiếu',
+    'CAN XAC NHAN',
+    'CẦN XÁC NHẬN',
+    'can xac nhan voi nha may',
+    'TODO',
+    'CAN USER CUNG CAP',
+    'loi in catalogue',
+    'lỗi in catalogue',
+]
 
 
 def cac_trang():
@@ -80,6 +106,11 @@ def main():
         for k, ten in KY_TU_LA.items():
             if k in sach:
                 loi.append('%s: co %s (%d lan)' % (d, ten, sach.count(k)))
+
+        # --- ghi chu noi bo lot ra trang cong khai ---
+        for cum in GHI_CHU_NOI_BO:
+            if cum.lower() in sach.lower():
+                loi.append('%s: GHI CHU NOI BO lot ra trang -> "%s"' % (d, cum))
 
         # --- H1 ---
         n = len(re.findall(r'<h1[\s>]', h))

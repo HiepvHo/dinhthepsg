@@ -102,6 +102,8 @@ suy từ việc đọc CSS.
 | **Build ở máy KHÁC build ở CI** | `robots.txt.ts` có hai nhánh theo `SITE_URL`. Máy không đặt biến này nên **luôn chạy nhánh chặn-index**; CI có đặt nên chạy nhánh cho-index. Một lỗi chỉ nằm ở nhánh kia thì build ở máy không bao giờ bắt được. Trước khi push thay đổi liên quan, chạy `SITE_URL=https://dinhthepsaigon.com npm run build` |
 | Backtick trong `robots.txt.ts` | Nội dung robots nằm trong **template literal** của JS. Một dấu backtick trong lời chú thích đóng chuỗi sớm và làm build CI hỏng với `cgi is not defined` |
 | `/cgi-sys/` không chặn được bằng `.htaccess` | Đó là ScriptAlias ở **cấp máy chủ**, nằm ngoài thư mục web. Chặn bằng `Disallow` trong robots.txt |
+| Ghi chú nội bộ render ra trang công khai | Trường `canXacNhan` trong `nhom-san-pham.yaml` là **sổ ghi nợ dữ liệu của ta**, nhưng đã từng được render thẳng ra trang bảng giá và 4 trang nhóm của site thật: khách đọc được "CẦN XÁC NHẬN GẤP: đinh dù ghi 3F = 33mm... Ảnh hưởng cả URL lẫn nội dung". Không công cụ SEO nào báo lỗi này, chỉ mắt người mới thấy. `kiem-tra-site.py` nay chặn ở CI |
+| `inline-flex` ăn mất dấu cách | Luật tap-target đổi link sang `inline-flex`; flex **cắt khoảng trắng ở đầu và cuối mỗi flex item**, nên `<a>Đinh chì 2p <span>50mm</span></a>` dính thành `Đinh chì 2p50mm` trên 10 trang quy cách ở khổ <=980px. Bản desktop vẫn `inline` nên không lộ. Đổi display của link có nhiều con thì phải kèm `column-gap` |
 
 ## 7. Trạng thái hiện tại
 

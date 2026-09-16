@@ -181,8 +181,22 @@ const nhomSanPham = defineCollection({
     moTaNgan: z.string(),
     /** Co tach trang rieng cho tung quy cach khong. Lo 1 chi tach dinh chi. */
     tachTrangQuyCach: z.boolean(),
-    /** Ghi chu can xac nhan voi nha may truoc khi publish */
-    canXacNhan: z.string().optional(),
+    /**
+      * SO GHI NO DU LIEU - CHI NOI BO, TUYET DOI KHONG RENDER RA TRANG.
+      *
+      * Da tung render that: bon ghi chu kieu "CAN XAC NHAN GAP: dinh du ghi 3F
+      * = 33mm... Anh huong ca URL lan noi dung" nam tren trang bang gia va bon
+      * trang nhom cua site that. Khach doc duoc nha san xuat tu noi khong chac
+      * catalogue cua minh co loi in hay khong - dung thu ma ca site dang di
+      * chung minh nguoc lai.
+      *
+      * Gia tri cua truong nay la giu cho ta khoi quen mon no. Muon dua thong
+      * tin nao trong day ra cho khach thi VIET LAI thanh cau khang dinh, dat
+      * vao bai kien thuc - dung do nguyen ghi chu ra.
+      *
+      * `scripts/kiem-tra-site.py` chan ban build neu chuoi nay lo ra dist.
+      */
+     canXacNhan: z.string().optional(),
     quyCach: z.array(quyCachSchema).min(1),
   }),
 });

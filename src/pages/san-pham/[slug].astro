@@ -47,7 +47,6 @@ const { loai, nhom, qc } = Astro.props as {
     tenGoiKhac: string[];
     quyCach: QuyCach[];
     tachTrangQuyCach: boolean;
-    canXacNhan?: string;
   };
   qc?: QuyCach;
 };
@@ -88,7 +87,6 @@ const duongDan = loai === 'quy-cach' ? `/san-pham/${qc!.slug}/` : `/san-pham/${n
         tenGoiKhac={nhom.tenGoiKhac}
         quyCach={nhom.quyCach}
         tachTrangQuyCach={nhom.tachTrangQuyCach}
-        canXacNhan={nhom.canXacNhan}
       />
     )
   }

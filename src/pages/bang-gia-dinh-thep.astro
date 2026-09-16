@@ -130,12 +130,6 @@ const mucLuc = [
                   </tbody>
                 </table>
               </div>
-
-              {n.data.canXacNhan && (
-                <p class="bg__xac-nhan">
-                  <strong>Đang đối chiếu với nhà máy:</strong> {n.data.canXacNhan}
-                </p>
-              )}
             </section>
           );
         })
@@ -245,14 +239,6 @@ const mucLuc = [
   }
   .bg__nhom p {
     max-width: var(--do-doc);
-  }
-  .bg__xac-nhan {
-    margin-top: var(--k4);
-    padding: var(--k4);
-    border-left: 3px solid var(--cam-500);
-    background: var(--cam-050);
-    border-radius: 0 var(--bo-nho) var(--bo-nho) 0;
-    font-size: var(--cs-nho);
   }
   .bg__luu-y {
     margin-top: var(--k4);
