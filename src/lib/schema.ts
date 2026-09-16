@@ -49,7 +49,7 @@ type CongTy = {
   tenPhapDinh: string;
   tenThuongHieu: string;
   tenThuongHieuNgan: string;
-  facebook?: string;
+  facebook: { ten: string; url: string }[];
   maSoThue?: string;
   namThanhLap?: number;
   congTyMe: CongTyMe;
@@ -149,8 +149,14 @@ export function schemaToChuc(ct: CongTy) {
        so kia la CUNG MOT doanh nghiep", de Google doi chieu qua nhieu nguon
        doc lap.
        [CAN USER CUNG CAP] con thieu: Google Business Profile, Zalo OA, trang
-       danh ba nganh. Moi ho so them vao la mot nguon doi chieu nua. */
-    sameAs: [ct.congTyMe.website, ...(ct.facebook ? [ct.facebook] : [])],
+       danh ba nganh. Moi ho so them vao la mot nguon doi chieu nua.
+
+       KHONG dat website cong ty me vao day (truoc 16/09/2026 co dat). `sameAs`
+       nghia la "CUNG MOT thuc the", tuc la khai Dinh Thep Sai Gon CHINH LA
+       cuongphatsteel.com.vn - dung loai nham ma Google da mac: tim
+       "dinhthepsaigon" tung ra web cong ty me. Lien ket me-con da nam o
+       `parentOrganization.url`, la cho dung nghia cua no. */
+    sameAs: ct.facebook.map((f) => f.url),
   };
 }
 

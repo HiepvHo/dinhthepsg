@@ -103,12 +103,26 @@ gioLamViec:
 # Email cua cong ty me xuong lam email phu.
 email: dinhthepsaigon@gmail.com
 
-# TRANG FACEBOOK chinh thuc, user xac nhan 16/09/2026.
-# Dung dang `/people/<ten>/<id>/`: dang `profile.php?id=` tra 301 ve dang nay.
-# `sameAs` tro vao mot URL chuyen huong la phi mot chang va lam tin hieu doi
-# chieu yeu di. Da bo tham so `mibextid` - do la ma theo doi cua app dien thoai,
-# khong thuoc dia chi trang.
-facebook: https://www.facebook.com/people/%C4%90inh-Th%C3%A9p-S%C3%A0i-G%C3%B2n/61593611463146/
+# HAI TRANG FACEBOOK chinh thuc, user xac nhan 16/09/2026.
+#
+# CA HAI vao `sameAs`: moi trang mang dung mot trong hai ten da khai trong
+# `alternateName`, va trang "Đinh Sài Gòn" ghi cung hai hotline voi site - la
+# mot nguon doi chieu doc lap ma Google kiem duoc.
+#
+# TRANG DAU TIEN la trang HIEN RA cho khach (chan trang). Chi dat MOT link:
+# hai link Facebook canh nhau thi khach khong biet nhan vao dau. Chon "Đinh Sài
+# Gòn" vi do duoc 16/09/2026: 293 nguoi theo doi, 12 nguoi dang noi ve, mo ta
+# trang ghi dung hotline 0919288109 - 0888343299; trang con lai khong tra ve so
+# lieu cong khai nao. Neu sale tra loi tin nhan o trang kia thi doi thu tu.
+#
+# URL dang `/p/<ten>-<id>/` - dung chuoi Facebook tu khai trong `og:url` cua
+# trang, tra 200 khong chuyen huong. Dang `profile.php?id=` tra 301; dang
+# `/people/...` cung chay nhung khong phai ban Facebook coi la chuan.
+facebook:
+  - ten: Đinh Sài Gòn
+    url: https://www.facebook.com/p/%C4%90inh-S%C3%A0i-G%C3%B2n-61593945894227/
+  - ten: Đinh Thép Sài Gòn
+    url: https://www.facebook.com/p/%C4%90inh-Th%C3%A9p-S%C3%A0i-G%C3%B2n-61593611463146/
 emailPhu: admin@cuongphatsteel.com.vn
 
 # Cac hang thiet bi chau Au ma cong ty lam dai dien.

@@ -56,9 +56,9 @@ function telHref(s: string) {
         {/* Link that toi trang Facebook, khong chi khai trong JSON-LD. `sameAs`
             manh hon khi tren trang co dung duong dan do de Google di theo. */}
         {
-          c.facebook && (
+          c.facebook[0] && (
             <p class="chan__mo-ta">
-              Facebook: <a href={c.facebook} rel="noopener">{c.tenThuongHieu}</a>
+              Facebook: <a href={c.facebook[0].url} rel="noopener">{c.facebook[0].ten}</a>
             </p>
           )
         }

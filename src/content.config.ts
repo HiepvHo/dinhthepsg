@@ -138,8 +138,8 @@ const congTy = defineCollection({
     zalo: z.string(),
     /** Zalo thu hai tro di - CHI so da xac minh co tai khoan Zalo. */
     zaloPhu: z.array(z.object({ so: z.string(), nhan: z.string() })).default([]),
-    /** Trang Facebook chinh thuc - vao `sameAs` cua Organization schema. */
-    facebook: z.string().url().optional(),
+    /** Cac trang Facebook chinh thuc. Tat ca vao `sameAs`; trang DAU hien cho khach. */
+    facebook: z.array(z.object({ ten: z.string(), url: z.string().url() })).default([]),
     email: z.string().email(),
     emailPhu: z.string().email(),
     thietBi: z.array(z.object({ ten: z.string(), loai: z.string(), xuatXu: z.string() })),

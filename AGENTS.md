@@ -170,7 +170,7 @@ chỉ thêm một bản sao có nguy cơ bị index trùng lặp.
 | MST + năm thành lập của Đinh Thép Sài Gòn | Xem mục 2 |
 | Toạ độ GPS nhà máy và trụ sở | `geo` trong LocalBusiness schema |
 | Link chia sẻ Maps của trụ sở Quận 7 | Để có `ftid`, xem mục 6 |
-| Hồ sơ khác (Zalo OA, danh bạ ngành, Google Business Profile) | Facebook đã có trong `sameAs` từ 16/09/2026 |
+| Hồ sơ khác (Zalo OA, danh bạ ngành, Google Business Profile) | Hai trang Facebook đã có trong `sameAs` từ 16/09/2026. **Không** đặt web công ty mẹ vào `sameAs` - nó nằm ở `parentOrganization.url` |
 | Số điện thoại bàn đúng | Bao bì in `028 3839 5969`, web công ty mẹ ghi `028 3859 3969` - lệch đảo chữ số. Site giữ số của web công ty mẹ |
 
 Chưa có thì **để trống**, đừng điền tạm.
