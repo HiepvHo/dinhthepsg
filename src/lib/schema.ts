@@ -33,6 +33,7 @@ type DiaDiem = {
   dienThoai?: string;
   hotline?: string;
   lienQuanDenDinh: boolean;
+  thuocCongTyMe?: boolean;
 };
 
 type CongTyMe = {
@@ -76,7 +77,11 @@ function diaChiSchema(d: DiaDiem) {
  */
 export function schemaToChuc(ct: CongTy) {
   const tru = ct.diaDiem.find((d) => d.id === 'tru-so');
-  const nhaMay = ct.diaDiem.find((d) => d.id === 'nha-may-dinh');
+  /* Tinh thanh noi Dinh Thep Sai Gon CO MAT that: nha may, tru so, chi nhanh.
+     Truoc day go cung hai tinh, nen mo CN Can Tho thi schema van khong biet. */
+  const tinhCoMat = [
+    ...new Set(ct.diaDiem.filter((d) => d.lienQuanDenDinh && !d.thuocCongTyMe).map((d) => d.tinhThanh)),
+  ];
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -136,15 +141,10 @@ export function schemaToChuc(ct: CongTy) {
       availableLanguage: ['vi'],
       areaServed: 'VN',
     },
-    ...(nhaMay
-      ? {
-          areaServed: [
-            { '@type': 'AdministrativeArea', name: 'TP. Hồ Chí Minh' },
-            { '@type': 'AdministrativeArea', name: 'Long An' },
-            { '@type': 'Country', name: 'Việt Nam' },
-          ],
-        }
-      : {}),
+    areaServed: [
+      ...tinhCoMat.map((name) => ({ '@type': 'AdministrativeArea', name })),
+      { '@type': 'Country', name: 'Việt Nam' },
+    ],
     /* `sameAs` la tin hieu thuc the manh nhat: no khai "website nay va cac ho
        so kia la CUNG MOT doanh nghiep", de Google doi chieu qua nhieu nguon
        doc lap.

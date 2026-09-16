@@ -1,6 +1,6 @@
 ---
 tieuDe: "Ký hiệu F trên bao đinh nghĩa là gì? Bảng tra F sang mm cho từng loại"
-moTa: "Mã 2F, 5F, 15F trên bao đinh là chiều dài tính theo phân. Nhưng đinh dù và đinh thép vàng không theo quy tắc đó. Bảng tra đầy đủ từ nhà máy."
+moTa: "Mã 2F, 5F, 12F trên bao đinh là chiều dài tính theo phân. Nhưng đinh dù và đinh thép vàng không theo quy tắc đó. Bảng tra đầy đủ từ nhà máy."
 cum: B-quy-cach
 ngayDang: 2026-09-02
 duKienDocQuyen: "Bảng đối chiếu mã F sang mm cho cả bốn nhóm, gồm hai nhóm KHÔNG theo quy tắc nhân mười (đinh dù 3F = 33mm, đinh thép vàng 1F6 = 16mm). Chưa đối thủ nào công bố hai ngoại lệ này."
@@ -11,7 +11,7 @@ anhBiaAlt: Bao đinh Đinh Thép Sài Gòn in mã quy cách theo phân trên nh�
 anhBiaKhop: true
 ---
 
-Trên bao đinh xuất xưởng, quy cách được in bằng một mã ngắn: `2F`, `5F`, `15F`,
+Trên bao đinh xuất xưởng, quy cách được in bằng một mã ngắn: `2F`, `5F`, `12F`,
 `1F6`. Người bán đọc mã này thành "đinh 5 phân", người mua lại hỏi "đinh 5cm",
 còn bản vẽ thì ghi "50mm". Ba cách nói, một món hàng.
 
@@ -45,16 +45,16 @@ Hai nhóm dưới đây theo đúng quy tắc nhân mười.
 
 | Mã trên bao | Phân | cm | mm | Đường kính thân |
 |---|---|---|---|---|
-| 2F | 2 | 2cm | 20 mm | 1.7 mm |
+| 2F | 2 | 2cm | 20 mm | 1.6 mm |
+| 2.5F | 2.5 | 2.5cm | 25 mm | 1.8 mm |
 | 3F | 3 | 3cm | 30 mm | 2.0 mm |
 | 4F | 4 | 4cm | 40 mm | 2.3 mm |
-| 5F | 5 | 5cm | 50 mm | 2.8 mm |
+| 5F | 5 | 5cm | 50 mm | 2.7 mm |
 | 6F | 6 | 6cm | 60 mm | 3.0 mm |
 | 7F | 7 | 7cm | 70 mm | 3.3 mm |
-| 8F | 8 | 8cm | 80 mm | 4.1 mm |
+| 8F | 8 | 8cm | 80 mm | 4.0 mm |
 | 10F | 10 | 10cm | 100 mm | 4.5 mm |
-| 12F | 12 | 12cm | 120 mm | 5.1 mm |
-| 15F | 15 | 15cm | 150 mm | 6.0 mm |
+| 12F | 12 | 12cm | 120 mm | 5.0 mm |
 
 ### Đinh thép trắng - 4 quy cách
 
@@ -102,12 +102,12 @@ mới cần mã lẻ đến từng milimet.
 Đây là hiểu nhầm thường gặp thứ hai. Mã F **chỉ nói chiều dài**. Đường kính thân
 là một thông số riêng, và hai nhóm hàng có cách xử lý hoàn toàn khác nhau:
 
-- **Đinh chì**: đường kính **tăng dần theo chiều dài**, từ 1.7mm ở 2F lên 6.0mm
-  ở 15F. Cây càng dài thì thân càng to để không cong khi đóng.
+- **Đinh chì**: đường kính **tăng dần theo chiều dài**, từ 1.6mm ở 2F lên 5.0mm
+  ở 12F. Cây càng dài thì thân càng to để không cong khi đóng.
 - **Đinh thép trắng**: đường kính **giữ nguyên 3.5mm** cho cả bốn quy cách.
 
-Nghĩa là `5F` đinh chì (2.8mm) và `5F` đinh thép trắng (3.5mm) dài bằng nhau
-nhưng thân chênh nhau 0.7mm. Khi đặt hàng, nói mã F thôi là chưa đủ nếu công
+Nghĩa là `5F` đinh chì (2.7mm) và `5F` đinh thép trắng (3.5mm) dài bằng nhau
+nhưng thân chênh nhau 0.8mm. Khi đặt hàng, nói mã F thôi là chưa đủ nếu công
 việc quan tâm tới độ cứng của thân đinh. Đối chiếu đầy đủ hai nhóm ở bài
 [đinh chì và đinh thép trắng khác nhau thế nào](/kien-thuc/dinh-chi-va-dinh-thep-trang-khac-nhau/).
 
@@ -143,7 +143,7 @@ Không. F chỉ chiều dài. Đường kính thân là thông số riêng, xem 
 thân" trong các bảng ở trên.
 
 **Đinh 5F loại nào cũng như nhau?**
-Không. Cùng là 5F nhưng đinh chì thân 2.8mm còn đinh thép trắng thân 3.5mm.
+Không. Cùng là 5F nhưng đinh chì thân 2.7mm còn đinh thép trắng thân 3.5mm.
 Khi cần độ cứng cụ thể thì phải nói rõ cả nhóm hàng lẫn mã.
 
 **Sao đinh dù 3F lại là 33mm?**

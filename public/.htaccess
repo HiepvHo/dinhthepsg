@@ -41,6 +41,12 @@ ErrorDocument 404 /404.html
   # cu SEO ben thu ba va moi nguoi go tay deu thu duong nay truoc.
   RewriteRule ^sitemap\.xml$ /sitemap-index.xml [R=301,L]
 
+  # QUY CACH DA BO. User xac nhan 16/09/2026 nha may KHONG san xuat dinh chi 15F.
+  # Trang cu da duoc Google thu thap nen KHONG de 404: 301 ve trang nhom dinh
+  # chi, noi khach thay ngay dai quy cach that (cay dai nhat la 12p). Tro ve
+  # trang 12p thi sai y - nguoi tim 15p khong tim 12p.
+  RewriteRule ^san-pham/dinh-chi-15p/?$ /san-pham/dinh-chi/ [R=301,L]
+
   # DA THU chan `/cgi-sys/` (trang mac dinh cua cPanel) bang `RewriteRule
   # ^cgi-sys/ - [F,L]` va KHONG AN - do lai van tra 200. Ly do: `/cgi-sys/` la
   # ScriptAlias khai o CAP MAY CHU, duoc giai truoc va nam ngoai thu muc web,

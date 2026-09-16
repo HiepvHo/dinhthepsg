@@ -1,4 +1,5 @@
 ---
+import { noiNhaMayNgan } from '../lib/nha-may';
 import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import anhDauMuc from '../assets/anh/cong-nhan-thep-cuong-phat.jpg';
@@ -32,7 +33,7 @@ function telHref(s: string) {
 }
 
 const tieuDe = catTieuDe('Liên hệ mua đinh thép - Đinh Thép Sài Gòn');
-const moTa = catMoTa(`Mua đinh thép trực tiếp từ nhà máy: hotline ${c.hotline}, Zalo, hoặc đến nhà máy ${dinh[0].quanHuyen}, ${dinh[0].tinhThanh}.`);
+const moTa = catMoTa(`Mua đinh thép trực tiếp từ nhà máy: hotline ${c.hotline}, Zalo, hoặc đến nhà máy ${noiNhaMayNgan(c.diaDiem)}.`);
 
 /**
  * DIA CHI cho bang do - lay TRU SO (KDC Him Lam, Quan 7) chu khong lay nha may.
@@ -94,6 +95,15 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
         <a class="nut nut--vien nut--lon" href={`https://zalo.me/${c.zalo}`} rel="noopener">
           Nhắn Zalo {c.hotline}
         </a>
+        {/* Zalo phu o DAY chu khong chi o cot lien he: cot do an tren dien thoai,
+            ma khach nhan Zalo phan lon la tu dien thoai. */}
+        {
+          c.zaloPhu.map((z) => (
+            <a class="nut nut--vien nut--lon" href={`https://zalo.me/${z.so}`} rel="noopener">
+              Nhắn {z.nhan}
+            </a>
+          ))
+        }
         <a class="nut nut--vien nut--lon" href={`mailto:${c.email}`}>
           Gửi email
         </a>

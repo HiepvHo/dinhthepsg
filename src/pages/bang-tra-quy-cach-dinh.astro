@@ -25,12 +25,18 @@ const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhom = await getCollection('nhomSanPham');
 const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
-const nhaMay = c.diaDiem[0];
 
 // Bang quy doi day du 1-15 phan, khong chi cac quy cach dang ban.
 // Ly do: nguoi ta tra "9 phan bang bao nhieu mm" ke ca khi ta khong ban co do.
-const bangPhan = Array.from({ length: 15 }, (_, i) => i + 1);
+// Cong them cac co le DANG SAN XUAT (2.5 phan): bang chi co so nguyen thi mot
+// quy cach that cua nha may lai khong co dong nao.
 const dangBan = new Set(dinhChi.data.quyCach.map((q) => q.phan));
+const bangPhan = [
+  ...new Set([
+    ...Array.from({ length: 15 }, (_, i) => i + 1),
+    ...[...dangBan].filter((p): p is number => p !== undefined),
+  ]),
+].sort((a, b) => a - b);
 
 const cauHoi = [
   {

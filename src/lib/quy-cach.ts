@@ -66,6 +66,16 @@ export function nhanMm(qc: QuyCach): string {
   return `${qc.daiMm}mm`;
 }
 
+/**
+ * Phan nho nhat va lon nhat cua mot nhom, vi du [2, 12].
+ * Dung cho cac cau "dinh chi tu 2 phan den 12 phan": truoc day go cung "15" o
+ * bon noi, bo 15F khoi du lieu thi bon cau do van noi 15.
+ */
+export function khoangPhan(ds: readonly QuyCach[]): [number, number] {
+  const p = ds.map((q) => q.phan).filter((n): n is number => n !== undefined);
+  return [Math.min(...p), Math.max(...p)];
+}
+
 /** Chuoi quy doi day du, dung cho bang tra va cau tra loi AI. */
 export function quyDoi(qc: QuyCach): string | null {
   if (qc.phan === undefined) return null;

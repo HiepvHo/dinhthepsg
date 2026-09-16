@@ -88,16 +88,16 @@ gồm hai nhóm không theo quy tắc nhân mười, xem bài
 
 | Cách gọi theo phân | cm | mm | Mã trên bao | Đường kính thân |
 |---|---|---|---|---|
-| đinh 2 phân | 2 cm | 20 mm | 2F | 1.7 mm |
+| đinh 2 phân | 2 cm | 20 mm | 2F | 1.6 mm |
+| đinh 2.5 phân | 2.5 cm | 25 mm | 2.5F | 1.8 mm |
 | đinh 3 phân | 3 cm | 30 mm | 3F | 2.0 mm |
 | đinh 4 phân | 4 cm | 40 mm | 4F | 2.3 mm |
-| đinh 5 phân | 5 cm | 50 mm | 5F | 2.8 mm |
+| đinh 5 phân | 5 cm | 50 mm | 5F | 2.7 mm |
 | đinh 6 phân | 6 cm | 60 mm | 6F | 3.0 mm |
 | đinh 7 phân | 7 cm | 70 mm | 7F | 3.3 mm |
-| đinh 8 phân | 8 cm | 80 mm | 8F | 4.1 mm |
+| đinh 8 phân | 8 cm | 80 mm | 8F | 4.0 mm |
 | đinh 10 phân | 10 cm | 100 mm | 10F | 4.5 mm |
-| đinh 12 phân | 12 cm | 120 mm | 12F | 5.1 mm |
-| đinh 15 phân | 15 cm | 150 mm | 15F | 6.0 mm |
+| đinh 12 phân | 12 cm | 120 mm | 12F | 5.0 mm |
 
 Để ý cột cuối: **đường kính thân tăng dần theo chiều dài**. Cây càng dài thân
 càng to, nếu không thì đóng sẽ cong. Đây là lý do không thể suy đường kính từ

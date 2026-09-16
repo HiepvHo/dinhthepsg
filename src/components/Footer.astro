@@ -1,4 +1,5 @@
 ---
+import { noiNhaMay } from '../lib/nha-may';
 import { getEntry, getCollection } from 'astro:content';
 import { gioMotDong } from '../lib/gio-lam-viec';
 
@@ -18,7 +19,6 @@ const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
 const nhom = await getCollection('nhomSanPham');
 
-const dinh = c.diaDiem.filter((d) => d.lienQuanDenDinh);
 const nam = new Date().getFullYear();
 /* So nam tinh tu nam thanh lap CONG TY ME: kinh nghiem 2012 den nay la cua
    nhom, khong phai tuoi phap nhan Dinh Thep Sai Gon (moi tach ra). */
@@ -116,7 +116,7 @@ function telHref(s: string) {
             >
             <span>
               <em>Nhà máy</em>
-              {dinh[0].quanHuyen}, {dinh[0].tinhThanh}
+              {noiNhaMay(c.diaDiem)}
             </span>
           </li>
         </ul>

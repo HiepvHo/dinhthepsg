@@ -36,7 +36,7 @@ export const catMoTa = (s: string) => catBot(s, 160);
 export function metaQuyCach(
   nhomTen: string,
   qc: QuyCach,
-  ctx: { hotline: string; tenPhapDinh: string; quanHuyen: string; tinhThanh: string },
+  ctx: { hotline: string; tenPhapDinh: string; noiNhaMay: string },
 ) {
   const ten = tenChinh(nhomTen, qc);
   const qd = quyDoi(qc);
@@ -48,7 +48,7 @@ export function metaQuyCach(
     `${ten}`,
     qd ? `: ${qd}` : '',
     qc.duongKinhMm !== undefined ? `, đường kính thân ${qc.duongKinhMm}mm` : '',
-    `. Sản xuất trực tiếp tại nhà máy ${ctx.quanHuyen}, ${ctx.tinhThanh}. Gọi ${ctx.hotline} để báo giá.`,
+    `. Sản xuất trực tiếp tại nhà máy ${ctx.noiNhaMay}. Gọi ${ctx.hotline} để báo giá.`,
   ];
   const moTa = catMoTa(boPhan.join(''));
 

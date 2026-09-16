@@ -40,9 +40,22 @@ Cách đã chốt: khai `parentOrganization` trong schema. Câu chữ là
 *"thành viên Thép Cường Phát - đơn vị đã làm vật tư kim khí từ 2012"*, không phải
 *"chúng tôi thành lập 2012"*. Đúng sự thật mà vẫn giữ nguyên sức nặng 14 năm.
 
-NAP lấy theo **brochure giấy đang phát cho khách** (trụ sở Quận 7 KDC Him Lam,
-nhà máy KCN Hiệp Phước Nhà Bè). 5 địa điểm khác thuộc công ty mẹ, có cờ
-`thuocCongTyMe: true`, không đưa vào LocalBusiness schema.
+NAP lấy theo **brochure giấy** và **bao bì đinh** - thứ khách cầm trong tay. Thứ tự ưu tiên
+khi hai nguồn lệch: bao bì, rồi brochure, rồi web công ty mẹ.
+
+User chốt 16/09/2026: công ty mẹ cũng sản xuất cho công ty này, **coi hai bên là một hệ
+thống chạy song song**. Nên:
+- **Hai nhà máy đinh**: KCN Hiệp Phước Nhà Bè (brochure) và Tỉnh lộ 826 Cần Đước (in trên
+  bao bì). Cờ `sanXuatDinh: true`; mọi câu "sản xuất tại nhà máy X" đọc qua
+  `src/lib/nha-may.ts`. **Không dùng `diaDiem[0]` làm "nhà máy" nữa.**
+- 4 địa điểm mang tên Đinh Thép Sài Gòn vào LocalBusiness: 2 nhà máy, trụ sở Q7, CN Cần Thơ.
+- Xưởng tole, văn phòng Q5, nhà máy Đức Hoà vẫn `thuocCongTyMe: true`, không vào schema.
+- **Vẫn giữ MST và năm 2012 dưới `parentOrganization`**, không khai là của công ty này. Lý do
+  đo được: tìm "dinhthepsaigon" từng ra web công ty mẹ - hai thực thể đã bị Google trộn một
+  lần. Khai chung taxID là đẩy thêm theo hướng đó.
+
+Logo là **ĐINH SÀI GÒN** (chữ trên bao), dòng phụ "Nhà máy sản xuất - Cường Phát Steel".
+Product schema: `brand` = Đinh Sài Gòn, `manufacturer` = công ty.
 
 ## 3. Luật viết - bắt buộc
 
@@ -106,6 +119,7 @@ suy từ việc đọc CSS.
 | `inline-flex` ăn mất dấu cách | Luật tap-target đổi link sang `inline-flex`; flex **cắt khoảng trắng ở đầu và cuối mỗi flex item**, nên `<a>Đinh chì 2p <span>50mm</span></a>` dính thành `Đinh chì 2p50mm` trên 10 trang quy cách ở khổ <=980px. Bản desktop vẫn `inline` nên không lộ. Đổi display của link có nhiều con thì phải kèm `column-gap` |
 | Sắp xếp hoà thì thứ tự do thứ tự nạp quyết định | 7 bài viết đều cùng `ngayDang`, nên sắp theo ngày luôn trả 0 và thứ tự hiển thị phụ thuộc thứ tự nạp collection chứ không phụ thuộc dữ liệu - deploy sinh ra thay đổi HTML không do ai. Dùng `sapBaiMoiTruoc()` trong `src/lib/bai-viet.ts`, đã có id làm trọng tài. Build nay lặp lại được từng byte |
 | `image()` đẩy cả ảnh gốc vào bản build | Ảnh khai bằng `image()` trong content collection thì Astro chép **cả file gốc** vào `dist/_astro/` chứ không chỉ các bản WebP đã resize (+2,1 MB cho 8 ảnh). Hiện ảnh gốc chỉ 960-1280px nên chấp nhận được. Khi khách gửi ảnh gốc độ phân giải cao thì phải xem lại - lúc đó file gốc sẽ công khai tải về được |
+| Bảng quy cách gõ tay trong bài viết | 5 bài có bảng chép lại số từ `nhom-san-pham.yaml`. Đổi số ở YAML mà quên bài thì trang sản phẩm và bài viết nói hai số khác nhau. `kiem-tra-site.py` đối chiếu mọi dòng `<tr>` có mã quy cách với YAML và chặn deploy. Nhớ cả các câu **tính ra** từ số ("dày hơn 0.8 mm") - hàng rào không bắt được loại đó |
 
 ## 7. Trạng thái hiện tại
 
@@ -156,9 +170,8 @@ chỉ thêm một bản sao có nguy cơ bị index trùng lặp.
 | MST + năm thành lập của Đinh Thép Sài Gòn | Xem mục 2 |
 | Toạ độ GPS nhà máy và trụ sở | `geo` trong LocalBusiness schema |
 | Link chia sẻ Maps của trụ sở Quận 7 | Để có `ftid`, xem mục 6 |
-| Hồ sơ khác của công ty (Facebook, Zalo OA, danh bạ) | `sameAs` hiện chỉ có 1 link |
-| Số Zalo thứ hai | Hiện chỉ 1 số đã xác minh |
-| Xác nhận 4 số điện thoại nào nhận đơn đinh | 4/6 địa điểm là xưởng cán tole, gọi vào đó hỏi mua đinh là sai chỗ |
+| Hồ sơ khác (Zalo OA, danh bạ ngành, Google Business Profile) | Facebook đã có trong `sameAs` từ 16/09/2026 |
+| Số điện thoại bàn đúng | Bao bì in `028 3839 5969`, web công ty mẹ ghi `028 3859 3969` - lệch đảo chữ số. Site giữ số của web công ty mẹ |
 
 Chưa có thì **để trống**, đừng điền tạm.
 

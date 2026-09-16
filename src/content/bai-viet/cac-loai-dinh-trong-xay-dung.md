@@ -18,11 +18,11 @@ nhau để bạn chọn đúng nhóm trước, rồi mới chọn quy cách tron
 
 | Nhóm | Số quy cách | Dải chiều dài | Đóng bằng | Việc chính |
 |---|---|---|---|---|
-| **[Đinh chì](/san-pham/dinh-chi/)** | 10 | 20 - 150 mm | búa | Cốp pha, đóng gỗ, đóng khung |
-| **[Dinh thep trang](/san-pham/dinh-thep-trang/)** | 4 | 20 - 50 mm | búa | Việc cần thân cứng ở cây ngắn |
-| **[Dinh thep vang](/san-pham/dinh-thep-vang/)** | 3 | 16 - 23 mm | búa | Việc cần cây rất ngắn, dưới 25mm |
-| **[Dinh du](/san-pham/dinh-du/)** | 3 | 33 - 53 mm | búa | Lợp tôn, cố định tấm mỏng |
-| **[Dinh vit](/san-pham/dinh-vit/)** | 3 | 30 - 40 mm | **máy** | Tôn và khung kim loại |
+| **[Đinh chì](/san-pham/dinh-chi/)** | 10 | 20 - 120 mm | búa | Cốp pha, đóng gỗ, đóng khung |
+| **[Đinh thép trắng](/san-pham/dinh-thep-trang/)** | 4 | 20 - 50 mm | búa | Việc cần thân cứng ở cây ngắn |
+| **[Đinh thép vàng](/san-pham/dinh-thep-vang/)** | 3 | 16 - 23 mm | búa | Việc cần cây rất ngắn, dưới 25mm |
+| **[Đinh dù](/san-pham/dinh-du/)** | 3 | 33 - 53 mm | búa | Lợp tôn, cố định tấm mỏng |
+| **[Đinh vít](/san-pham/dinh-vit/)** | 3 | 30 - 40 mm | **máy** | Tôn và khung kim loại |
 | **[Dây kẽm hấp](/san-pham/day-kem-hap/)** | 1 | dây cuộn | buộc tay | Buộc thép, buộc cốp pha |
 
 ## Đinh đóng bằng búa
@@ -33,16 +33,16 @@ nhau để bạn chọn đúng nhóm trước, rồi mới chọn quy cách tron
 
 | Mã | Chiều dài | Đường kính thân |
 |---|---|---|
-| 2F | 20 mm | 1.7 mm |
+| 2F | 20 mm | 1.6 mm |
+| 2.5F | 25 mm | 1.8 mm |
 | 3F | 30 mm | 2.0 mm |
 | 4F | 40 mm | 2.3 mm |
-| 5F | 50 mm | 2.8 mm |
+| 5F | 50 mm | 2.7 mm |
 | 6F | 60 mm | 3.0 mm |
 | 7F | 70 mm | 3.3 mm |
-| 8F | 80 mm | 4.1 mm |
+| 8F | 80 mm | 4.0 mm |
 | 10F | 100 mm | 4.5 mm |
-| 12F | 120 mm | 5.1 mm |
-| 15F | 150 mm | 6.0 mm |
+| 12F | 120 mm | 5.0 mm |
 
 Còn gọi là: đinh coffa, đinh coppha, đinh sắt, đinh đóng gỗ, đinh xây dựng.
 
@@ -60,8 +60,8 @@ thành nhóm mặc định cho việc cốp pha.
 
 Cả bốn quy cách **cùng đường kính 3.5mm**, bề mặt xử lý sáng màu. Dừng ở 50mm.
 
-Cùng mã nhưng thân dày hơn đinh chì. Chênh lớn nhất ở mã 2F: 3.5mm so với 1.7mm,
-tức **gấp đôi**.
+Cùng mã nhưng thân dày hơn đinh chì. Chênh lớn nhất ở mã 2F: 3.5mm so với 1.6mm,
+tức **hơn gấp đôi**.
 
 ### Đinh thép vàng - nhóm ngắn nhất
 
@@ -151,7 +151,7 @@ và "đinh dù 5F" là hai cây dài khác nhau: 50mm với 53mm.
 |---|---|---|
 | [Đóng cốp pha](/kien-thuc/dinh-dong-cop-pha-chon-loai-nao/), tháo ra nhổ lại | Đinh chì | Thân trơn, nhổ không phá ván |
 | Đóng khung gỗ, đà, xà lớn | Đinh chì mã 7F trở lên | Chỉ nhóm này có mã trên 50mm |
-| Đóng nẹp mỏng, gỗ dễ nứt | Đinh chì mã 2F, 3F | Thân mảnh 1.7 - 2.0 mm |
+| Đóng nẹp mỏng, gỗ dễ nứt | Đinh chì mã 2F, 2.5F, 3F | Thân mảnh 1.6 - 2.0 mm |
 | Cần thân cứng ở cây ngắn | Đinh thép trắng | Thân 3.5 mm cố định |
 | Cây cần ngắn hơn 20mm | Đinh thép vàng | Dải 16 - 23 mm |
 | [Lợp tôn](/kien-thuc/dinh-du-va-dinh-vit-lop-ton/), cố định tấm mỏng | Đinh dù | Mũ rộng chống xé tấm |
@@ -173,7 +173,7 @@ Coffa, coppha, cốp pha đều là một.
 bằng máy, giữ bằng ren cắn vào vật liệu. Vít bám chắc hơn nhưng phải có máy.
 
 **Đinh dài nhất nhà máy có là bao nhiêu?**
-Đinh chì 15 phân, tức 150mm.
+Đinh chì 12 phân, tức 120mm.
 
 **Đinh ngắn nhất là bao nhiêu?**
 Đinh thép vàng mã 1F6, dài 16mm.

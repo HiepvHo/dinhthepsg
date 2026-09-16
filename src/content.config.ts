@@ -42,6 +42,12 @@ const diaDiemSchema = z.object({
    * dinh la goi sai cho.
    */
   thuocCongTyMe: z.boolean().default(false),
+  /**
+   * Noi SAN XUAT dinh. Site co HAI nha may chay song song (Nha Be va Can Duoc),
+   * nen moi cau "san xuat tai nha may X" doc co nay qua `src/lib/nha-may.ts` -
+   * khong con coi `diaDiem[0]` la nha may duy nhat.
+   */
+  sanXuatDinh: z.boolean().default(false),
 });
 
 const congTy = defineCollection({
@@ -130,6 +136,8 @@ const congTy = defineCollection({
       )
       .default([]),
     zalo: z.string(),
+    /** Zalo thu hai tro di - CHI so da xac minh co tai khoan Zalo. */
+    zaloPhu: z.array(z.object({ so: z.string(), nhan: z.string() })).default([]),
     /** Trang Facebook chinh thuc - vao `sameAs` cua Organization schema. */
     facebook: z.string().url().optional(),
     email: z.string().email(),

@@ -1,4 +1,5 @@
 ---
+import { noiNhaMay } from '../lib/nha-may';
 import { getCollection, getEntry } from 'astro:content';
 
 /**
@@ -67,7 +68,7 @@ const nhom = await getCollection('nhomSanPham');
       <a class="nut nut--chinh the-ben__nut" href={`https://zalo.me/${c.zalo}`} rel="noopener">
         Nhắn Zalo
       </a>
-      <p class="the-ben__nm">Nhà máy: {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}</p>
+      <p class="the-ben__nm">Nhà máy: {noiNhaMay(c.diaDiem)}</p>
     </div>
   </div>
 </aside>

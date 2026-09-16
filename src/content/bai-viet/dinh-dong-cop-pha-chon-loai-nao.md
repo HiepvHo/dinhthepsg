@@ -52,7 +52,7 @@ xem bài [chọn chiều dài đinh theo độ dày ván](/kien-thuc/chon-chieu-
 | Mã | Chiều dài | Đường kính thân | Dùng cho ván dày |
 |---|---|---|---|
 | 4F | 40 mm | 2.3 mm | 13 - 16 mm |
-| **5F** | **50 mm** | **2.8 mm** | **17 - 20 mm** |
+| **5F** | **50 mm** | **2.7 mm** | **17 - 20 mm** |
 | 6F | 60 mm | 3.0 mm | 20 - 24 mm |
 
 Ba mã này phủ gần hết việc cốp pha dân dụng. Đóng đà, chống, khung đỡ thì lên
@@ -74,7 +74,7 @@ Ván cốp pha đóng đi đóng lại nhiều lần. Thân càng dày thì lỗ
 nhanh hơn**, số lần tái sử dụng giảm.
 
 Đây là chỗ cần cân nhắc khi thay đinh chì bằng đinh thép trắng: cùng mã 5F, đinh
-thép trắng thân 3.5mm còn đinh chì 2.8mm. Chênh 0.7mm nghe nhỏ nhưng nhân với số
+thép trắng thân 3.5mm còn đinh chì 2.7mm. Chênh 0.8mm nghe nhỏ nhưng nhân với số
 lỗ trên một tấm ván thì khác nhau rõ. Đối chiếu đầy đủ ở bài
 [đinh chì và đinh thép trắng khác nhau thế nào](/kien-thuc/dinh-chi-va-dinh-thep-trang-khac-nhau/).
 

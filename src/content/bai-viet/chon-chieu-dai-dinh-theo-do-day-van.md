@@ -38,7 +38,7 @@ Bảng dưới ghép quy tắc trên với dải quy cách đinh chì nhà máy 
 
 | Độ dày tấm cần đóng | Chiều dài cần (2,5-3 lần) | Quy cách nên chọn | Mã trên bao |
 |---|---|---|---|
-| 10 mm | 25 - 30 mm | Đinh 3 phân (30mm) | 3F |
+| 10 mm | 25 - 30 mm | Đinh 2.5 phân hoặc 3 phân | 2.5F, 3F |
 | 12 mm | 30 - 36 mm | Đinh 3 phân (30mm) | 3F |
 | 15 mm | 38 - 45 mm | Đinh 4 phân (40mm) | 4F |
 | **18 mm** (ván cốp pha phổ biến) | 45 - 54 mm | **Đinh 5 phân (50mm)** | **5F** |
@@ -46,11 +46,12 @@ Bảng dưới ghép quy tắc trên với dải quy cách đinh chì nhà máy 
 | 25 mm | 63 - 75 mm | Đinh 7 phân (70mm) | 7F |
 | 30 mm | 75 - 90 mm | Đinh 8 phân (80mm) | 8F |
 | 40 mm | 100 - 120 mm | Đinh 10 phân hoặc 12 phân | 10F, 12F |
-| 50 mm | 125 - 150 mm | Đinh 12 phân hoặc 15 phân | 12F, 15F |
+| 50 mm | 125 - 150 mm | Đinh 12 phân (120mm) | 12F |
 
 **Lưu ý về bảng này:** cột "chiều dài cần" là tính từ quy tắc nghề mộc, không
 phải số đo của nhà máy. Cột "quy cách nên chọn" là quy cách gần nhất trong dải
-hàng chúng tôi sản xuất. Chiều dài và đường kính từng mã thì là số thật, tra ở
+hàng chúng tôi sản xuất. Riêng ván dày 50mm: theo quy tắc cần từ 125mm, nhỉnh
+hơn cây dài nhất nhà máy làm là 12 phân (120mm). Chiều dài và đường kính từng mã thì là số thật, tra ở
 [trang đinh chì](/san-pham/dinh-chi/) hoặc
 [bảng giá đầy đủ quy cách](/bang-gia-dinh-thep/).
 
@@ -93,18 +94,18 @@ Trong dải đinh chì, đường kính đi kèm chiều dài theo bảng sau:
 
 | Mã | Chiều dài | Đường kính thân |
 |---|---|---|
+| 2.5F | 25 mm | 1.8 mm |
 | 3F | 30 mm | 2.0 mm |
 | 4F | 40 mm | 2.3 mm |
-| 5F | 50 mm | 2.8 mm |
+| 5F | 50 mm | 2.7 mm |
 | 6F | 60 mm | 3.0 mm |
 | 7F | 70 mm | 3.3 mm |
-| 8F | 80 mm | 4.1 mm |
+| 8F | 80 mm | 4.0 mm |
 | 10F | 100 mm | 4.5 mm |
-| 12F | 120 mm | 5.1 mm |
-| 15F | 150 mm | 6.0 mm |
+| 12F | 120 mm | 5.0 mm |
 
 Còn đinh thép trắng thì **giữ nguyên 3.5mm cho cả bốn quy cách 2F đến 5F**. Nghĩa
-là cùng dài 50mm, đinh thép trắng có thân to hơn đinh chì 0,7mm - cứng hơn nhưng
+là cùng dài 50mm, đinh thép trắng có thân to hơn đinh chì 0,8mm - cứng hơn nhưng
 dễ nứt gỗ mỏng hơn. Đối chiếu đầy đủ ở bài
 [đinh chì và đinh thép trắng khác nhau thế nào](/kien-thuc/dinh-chi-va-dinh-thep-trang-khac-nhau/).
 

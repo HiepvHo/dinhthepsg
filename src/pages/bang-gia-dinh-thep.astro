@@ -1,4 +1,6 @@
 ---
+import { noiNhaMay } from '../lib/nha-may';
+import { khoangPhan } from '../lib/quy-cach';
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import anhDauMuc from '../assets/anh/can-dinh-tai-xuong.jpg';
@@ -24,13 +26,13 @@ const nhom = await getCollection('nhomSanPham');
 const buLong = (await getCollection('buLong')).sort(
   (a, b) => parseInt(a.data.d.slice(1)) - parseInt(b.data.d.slice(1)),
 );
-const nhaMay = c.diaDiem[0];
+const [phanMin, phanMax] = khoangPhan(nhom.find((n) => n.id === 'dinh-chi')!.data.quyCach);
 const tong = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
 const thang = String(new Date().getMonth() + 1).padStart(2, '0');
 const nam = new Date().getFullYear();
 
 const tieuDe = catTieuDe(`Bảng giá đinh thép ${thang}/${nam} - ${tong} quy cách`);
-const moTa = catMoTa(`Bảng quy cách và giá đinh thép: đinh chì 2p-15p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. ${tong} quy cách kèm chiều dài và đường kính. Gọi ${c.hotline}.`);
+const moTa = catMoTa(`Bảng quy cách và giá đinh thép: đinh chì ${phanMin}p-${phanMax}p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. ${tong} quy cách kèm chiều dài và đường kính. Gọi ${c.hotline}.`);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -194,7 +196,7 @@ const mucLuc = [
           <h2>Nhận báo giá theo khối lượng</h2>
           <p class="dan-nhap">
             Nói rõ loại đinh, quy cách theo phân hoặc mm, và số lượng theo kg hoặc bao.
-            Nhà máy tại {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
+            Nhà máy tại {noiNhaMay(c.diaDiem)}.
           </p>
         </div>
         <div class="bg__cta-nut">

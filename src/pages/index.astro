@@ -1,4 +1,6 @@
 ---
+import { noiNhaMayNgan, tinhNhaMay, noiVa, cacNhaMay, diaChiDayDu } from '../lib/nha-may';
+import { khoangPhan } from '../lib/quy-cach';
 import { getEntry, getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -57,9 +59,9 @@ const dinhChi = nhom.find((n) => n.id === 'dinh-chi')!;
  *
  * Chon 5 ma phu deu dai: ngan - pho thong - dai.
  */
-const MA_NOI_BAT = ['3F', '5F', '7F', '10F', '15F'];
+const MA_NOI_BAT = ['3F', '5F', '7F', '10F', '12F'];
 const quyCachNoiBat = dinhChi.data.quyCach.filter((q) => MA_NOI_BAT.includes(q.ma));
-const nhaMay = c.diaDiem[0];
+const [phanMin, phanMax] = khoangPhan(dinhChi.data.quyCach);
 /* Tinh tu nam thanh lap CONG TY ME - xem ghi chu trong cong-ty.yaml */
 const soNam = new Date().getFullYear() - c.congTyMe.namThanhLap;
 const tongQuyCach = nhom.reduce((t, n) => t + n.data.quyCach.length, 0);
@@ -112,7 +114,7 @@ const anhBanner = [
     alt: 'Công nhân mặc đồng phục Thép Cường Phát làm việc tại xưởng đinh',
     nhan: `Hơn ${soNam} năm kinh nghiệm`,
     tieuDe: 'Nhà máy sản xuất đinh thép xây dựng',
-    phu: `${tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán thẳng từ xưởng ${nhaMay.quanHuyen}, ${nhaMay.tinhThanh}, không qua trung gian.`,
+    phu: `${tongQuyCach} quy cách đinh chì, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Bán thẳng từ nhà máy ${noiNhaMayNgan(c.diaDiem)}, không qua trung gian.`,
     nut: [
       { chu: 'Xem sản phẩm', duongDan: '/san-pham/', chinh: true },
       { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
@@ -156,7 +158,7 @@ const anhBanner = [
     alt: 'Bao đinh thành phẩm xếp trong kho nhà máy',
     nhan: 'Sẵn hàng tại kho nhà máy',
     tieuDe: 'Nhận đơn số lượng lớn và quy cách riêng',
-    phu: `Nhà máy chạy theo đơn. Giao tận công trình khu vực TP.HCM, ${nhaMay.tinhThanh} và các tỉnh lân cận.`,
+    phu: `Nhà máy chạy theo đơn. Giao tận công trình khu vực ${tinhNhaMay(c.diaDiem).join(', ')} và các tỉnh lân cận.`,
     nut: [
       { chu: 'Gửi yêu cầu báo giá', duongDan: '/lien-he/', chinh: true },
       { chu: `Gọi ${c.hotline}`, duongDan: `tel:${c.hotlineTel}` },
@@ -175,7 +177,7 @@ const anhNhom: Record<string, { src: ImageMetadata; alt: string }> = {
 
 const tieuDe = catTieuDe('Đinh Thép Sài Gòn - Nhà máy sản xuất đinh, dây kẽm');
 const moTa = catMoTa(
-  `Nhà máy sản xuất đinh thép xây dựng: đinh chì 2p đến 15p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`,
+  `Nhà máy sản xuất đinh thép xây dựng: đinh chì ${phanMin}p đến ${phanMax}p, đinh thép trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Bán trực tiếp, gọi ${c.hotline}.`,
 );
 ---
 
@@ -228,11 +230,11 @@ const moTa = catMoTa(
         <p>
           {c.tenPhapDinhHoa} là đơn vị <strong>sản xuất trực tiếp</strong> đinh thép xây dựng
           và lưới thép hàn, thành viên {c.congTyMe.tenPhapDinh} - đơn vị đã làm vật tư kim khí
-          từ năm {c.congTyMe.namThanhLap}, {soNam} năm trong ngành. Nhà máy đặt tại {nhaMay.diaChi}, {nhaMay.quanHuyen}, {nhaMay.tinhThanh}.
+          từ năm {c.congTyMe.namThanhLap}, {soNam} năm trong ngành. Nhà máy sản xuất đặt tại {noiVa(cacNhaMay(c.diaDiem).map(diaChiDayDu))}.
         </p>
         <p>
-          Chúng tôi sản xuất <strong>{tongQuyCach} quy cách</strong>: đinh chì từ 2 phân đến
-          15 phân, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Toàn bộ
+          Chúng tôi sản xuất <strong>{tongQuyCach} quy cách</strong>: đinh chì từ {phanMin} phân đến
+          {phanMax} phân, đinh thép trắng, đinh thép vàng, đinh dù, đinh vít và dây kẽm hấp. Toàn bộ
           thông số chiều dài và đường kính thân được công bố đầy đủ theo phân, cm và mm.
         </p>
         <p>

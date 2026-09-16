@@ -50,6 +50,13 @@ hotline: "0919 288 109"
 hotlineTel: "+84919288109"
 zalo: "0919288109"
 
+# ZALO THU HAI - user xac nhan 16/09/2026 kem anh chup ho so Zalo ten
+# "Nhà Máy Đinh Thép Sg - Cn Cần Thơ". Chi them so DA XAC MINH co tai khoan:
+# `zalo.me/<so>` cua so khong co Zalo ra trang "khong tim thay nguoi dung".
+zaloPhu:
+  - so: "0888343299"
+    nhan: Zalo CN Cần Thơ
+
 # GIO LAM VIEC - user chot 06/09/2026: "de theo gio hanh chinh".
 # [CAN USER XAC NHAN] Da dat theo khung pho bien nhat cua nganh vat tu xay dung
 # o Viet Nam: T2-T6 ca ngay, T7 buoi sang. Neu nha may chay khac (vi du nghi
@@ -119,15 +126,23 @@ thietBi:
     loai: Trục cán
     xuatXu: Italy
 
-# 7 dia diem. Chi 2 CAI DAU thuoc Dinh Thep Sai Gon (nha may dinh + tru so) va
-# CHI 2 cai do vao LocalBusiness schema cua site nay.
-# 5 cai con lai thuoc CONG TY ME, danh dau `thuocCongTyMe: true`: van liet ke o
-# trang He thong de the hien quy mo that, nhung KHONG dua vao schema - nhieu
-# LocalBusiness cho mot phap nhan khac se lam loang tin hieu dia phuong, va
-# khach goi vao xuong tole hoi mua dinh la goi sai cho.
+# 8 dia diem. BON cai mang ten Dinh Thep Sai Gon (thuocCongTyMe: false) va vao
+# LocalBusiness schema: hai nha may dinh, tru so, CN Can Tho.
+#
+# User chot 16/09/2026: cong ty me cung san xuat cho cong ty nay, coi hai ben la
+# MOT he thong chay song song. Nen dia diem nao chinh cong ty dang dung ten Dinh
+# Thep Sai Gon ra ngoai (in tren bao bi, dat ten Zalo) thi tinh la cua Dinh Thep
+# Sai Gon - do la cach khach dang nhin thay no.
+#
+# Bon cai con lai chi la cua cong ty me (xuong tole, van phong Quan 5, nha may
+# Duc Hoa): van liet ke de the hien quy mo that, nhung KHONG vao schema - khach
+# goi vao xuong tole hoi mua dinh la goi sai cho.
+#
+# `sanXuatDinh: true` = noi SAN XUAT DINH. Moi cau "san xuat tai nha may X" tren
+# site doc tu co nay qua `src/lib/nha-may.ts`, KHONG doc `diaDiem[0]` nua.
 diaDiem:
-  # NHA MAY DINH - phai la phan tu DAU TIEN: nhieu cho trong ma dung
-  # `diaDiem[0]` lam "nha may" cho cau "san xuat truc tiep tai nha may X".
+  # NHA MAY DINH NHA BE. Dat dau danh sach vi thu tu o day la thu tu hien thi
+  # khi liet ke nha may.
   #
   # KCN Hiep Phuoc theo BROCHURE (user chot 06/09/2026). Truoc day du lieu ghi
   # Duc Hoa Long An - noi do van con trong danh sach ben duoi, thuoc cong ty me.
@@ -143,6 +158,24 @@ diaDiem:
     tinhThanh: TP. Hồ Chí Minh
     hotline: "0919 288 109"
     lienQuanDenDinh: true
+    sanXuatDinh: true
+
+  # NHA MAY DINH CAN DUOC. Bao bi dinh in dung dia chi nay: "Nhà máy: Đường 826,
+  # Long Trạch, Cần Đước, Long An" kem hotline 0919 288 109 - 088 834 3299.
+  #
+  # CUNG DIA CHI voi `cn-can-duoc` (xuong can tole PU cua cong ty me) ben duoi.
+  # Tach hai muc CO Y chu khong gop: cung mot khu dat nhung la hai viec khac nhau
+  # va HAI SO KHAC NHAU. Gop lai thi so 0931 327 977 cua xuong tole se hien nhu
+  # mot so ban dinh - bao bi chi in hai hotline dinh, khong in so do.
+  - id: nha-may-can-duoc
+    ten: Nhà máy sản xuất đinh Cần Đước
+    vaiTro: Nhà máy sản xuất đinh
+    diaChi: Tỉnh lộ 826, Ấp Xoài Đôi, Xã Long Trạch
+    quanHuyen: Cần Đước
+    tinhThanh: Long An
+    hotline: "0919 288 109"
+    lienQuanDenDinh: true
+    sanXuatDinh: true
 
   # TRU SO cua Dinh Thep Sai Gon, theo brochure.
   # [CAN USER XAC NHAN] Brochure in "P. Tâm Hưng" nhung KDC Him Lam Quan 7 nam
@@ -203,6 +236,7 @@ diaDiem:
     lienQuanDenDinh: false
     thuocCongTyMe: true
 
+  # Xuong tole cua cong ty me. Nha may DINH cung dia chi la `nha-may-can-duoc`.
   - id: cn-can-duoc
     ten: Chi nhánh Cần Đước - Xưởng cán tole PU
     vaiTro: Xưởng cán tole PU
@@ -230,7 +264,9 @@ diaDiem:
     tinhThanh: TP. Cần Thơ
     hotline: "0888 343 299"
     lienQuanDenDinh: true
-    thuocCongTyMe: true
+    # false tu 16/09/2026: chi nhanh nay dung ten Dinh Thep Sai Gon ra ngoai -
+    # Zalo ten "Nhà Máy Đinh Thép Sg - Cn Cần Thơ", bao bi in so cua no.
+    thuocCongTyMe: false
 
 # Doi tac - chep dung khoi "DOI TAC" tren cuongphatsteel.com.vn, user xac nhan
 # 01/09/2026 la "3 doi tac hien tai".

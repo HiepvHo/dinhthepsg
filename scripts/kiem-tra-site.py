@@ -80,6 +80,69 @@ def bo_the(h):
     return re.sub(r'<style[^>]*>.*?</style>', '', h, flags=re.S)
 
 
+# ------------------------------------------------ bang quy cach vs du lieu --
+# VI SAO: bang quy cach duoc GO LAI BANG TAY trong 5 bai viet. Ngay 16/09/2026
+# doi duong kinh 4 ma theo bao bi va bo ma 15F trong YAML - va 5 bai do van ghi
+# so cu, ke ca nhung cau TINH RA tu so cu ("day hon 0.7 mm"). Trang san pham noi
+# 5F than 2.7mm, bai viet noi 2.8mm: hai trang cua cung mot nha may cai nhau.
+#
+# CACH KIEM: moi dong <tr> tren site co mot o DUNG BANG ma quy cach (5F, 2.5F,
+# 1F6...) va co so thap phan kem "mm" thi so do phai la duong kinh THAT cua ma
+# do trong nhom-san-pham.yaml. Chi xet so thap phan vi chieu dai viet so nguyen
+# (50 mm) - va bang dinh du co cot "30 mm (sai 3mm)" co y ghi so sai de so sanh.
+#
+# Mot ma co the thuoc nhieu nhom (2F dinh chi 1.6mm, 2F thep trang 3.5mm) nen
+# so sanh voi TAP gia tri cua ma do tren moi nhom.
+YAML_NHOM = 'src/content/du-lieu/nhom-san-pham.yaml'
+
+
+def doc_duong_kinh():
+    """Doc tu dong `- { ma: 5F, ..., duongKinhMm: 2.7, ... }`. Khong dung PyYAML
+    vi may CI khong cai san - va file nay viet mot kieu co dinh."""
+    bang = defaultdict(set)
+    so_dong = 0
+    for dong in io.open(YAML_NHOM, encoding='utf-8'):
+        m = re.match(r'\s*-\s*\{(.*)\}\s*$', dong)
+        if not m:
+            continue
+        truong = dict(
+            (k.strip(), v.strip()) for k, v in
+            (cap.split(':', 1) for cap in m.group(1).split(',') if ':' in cap)
+        )
+        if 'ma' in truong:
+            so_dong += 1
+            bang[truong['ma']]  # ma khong co duong kinh van la ma CO THAT
+            if 'duongKinhMm' in truong:
+                bang[truong['ma']].add(float(truong['duongKinhMm']))
+    return bang, so_dong
+
+
+def kiem_bang_quy_cach(trang, loi):
+    dk, so_dong = doc_duong_kinh()
+    # Hong o day ro hon im lang: doi cach viet YAML ma regex khong doc duoc thi
+    # hang rao nay thanh vo dung ma khong ai biet. Dem DONG quy cach (24), khong
+    # dem ma: nhieu nhom dung chung ma (2F, 3F...) nen so ma khac nhau chi 17.
+    if so_dong < 20:
+        loi.append('Doc duoc %d dong quy cach tu %s - it bat thuong, kiem lai regex' % (so_dong, YAML_NHOM))
+        return
+    for d, h in sorted(trang.items()):
+        for hang in re.findall(r'<tr[\s>].*?</tr>', h, re.S):
+            o = [re.sub(r'\s+', ' ', bo_the(x)).strip()
+                 for x in re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', hang, re.S)]
+            ma = [x for x in o if re.fullmatch(r'\d+(?:\.\d+)?F\d*', x)]
+            so = [float(x) for c in o for x in re.findall(r'(\d+\.\d+)\s*mm', c)]
+            if len(ma) != 1 or not so:
+                continue
+            ma = ma[0]
+            if ma not in dk:
+                loi.append('%s: bang ghi ma %s - ma nay KHONG co trong %s' % (d, ma, YAML_NHOM))
+                continue
+            for x in so:
+                if x not in dk[ma]:
+                    loi.append('%s: ma %s ghi %.1f mm, du lieu la %s' % (
+                        d, ma, x, ' / '.join('%.1f' % v for v in sorted(dk[ma]))))
+
+
 def main():
     if not os.path.isdir(DIST):
         print('Khong thay thu muc dist/. Chay `npm run build` truoc.')
@@ -154,6 +217,8 @@ def main():
             dich = href.split('#')[0].split('?')[0]
             if dich and dich not in co and dich not in tep_tinh:
                 loi.append('%s: link gay -> %s' % (d, href))
+
+    kiem_bang_quy_cach(trang, loi)
 
     print('So trang            : %d' % len(trang))
     print('So the <img>        : %d' % so_anh)

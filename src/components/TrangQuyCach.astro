@@ -1,4 +1,5 @@
 ---
+import { noiNhaMay, cacNhaMay, diaChiDayDu } from '../lib/nha-may';
 import { getEntry } from 'astro:content';
 import VunBanh from './VunBanh.astro';
 import JsonLd from './JsonLd.astro';
@@ -48,11 +49,11 @@ const cauMoDau = [
   `<strong>${ten}</strong> là ${nhomTen.toLowerCase()} quy cách ${qc.ma}`,
   qd ? `, tương đương <strong>${qd}</strong>` : '',
   qc.duongKinhMm !== undefined ? `, đường kính thân <strong>${qc.duongKinhMm}mm</strong>` : '',
-  `. Sản phẩm do ${c.tenPhapDinh} sản xuất trực tiếp tại nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}.`,
+  `. Sản phẩm do ${c.tenPhapDinh} sản xuất trực tiếp tại nhà máy ${noiNhaMay(c.diaDiem)}.`,
 ].join('');
 
 const tieuDe = `${ten}${qd ? ` (${qc.daiMm}mm)` : ''} - Quy cách, thông số, giá | Đinh Thép Sài Gòn`;
-const moTa = `${ten}${qd ? `: ${qd}` : ''}${qc.duongKinhMm ? `, đường kính thân ${qc.duongKinhMm}mm` : ''}. Sản xuất trực tiếp tại nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}. Gọi ${c.hotline} để báo giá.`;
+const moTa = `${ten}${qd ? `: ${qd}` : ''}${qc.duongKinhMm ? `, đường kính thân ${qc.duongKinhMm}mm` : ''}. Sản xuất trực tiếp tại nhà máy ${noiNhaMay(c.diaDiem)}. Gọi ${c.hotline} để báo giá.`;
 
 /* Thong so tom tat cho khoi dau trang. Bang `dac-ta` ngay duoi van giu day du
    (dung sai, ghi chu...) - giong ho: cot phai co danh sach gach dau dong ngan,
@@ -65,14 +66,15 @@ const thongSo = [
     ? [{ nhan: 'Đường kính thân', giaTri: `${qc.duongKinhMm} mm` }]
     : []),
   ...(qd ? [{ nhan: 'Quy đổi', giaTri: qd }] : []),
-  { nhan: 'Xuất xứ', giaTri: `Nhà máy ${c.diaDiem[0].quanHuyen}, ${c.diaDiem[0].tinhThanh}` },
+  { nhan: 'Xuất xứ', giaTri: `Nhà máy ${noiNhaMay(c.diaDiem)}` },
 ];
 
 const schema = schemaSanPham({
   tenDayDu: ten,
   moTa,
   duongDan,
-  thuongHieu: c.tenThuongHieu,
+  /* Brand = chu IN TREN BAO; manufacturer = cong ty. Dung nghia schema.org. */
+  thuongHieu: c.tenThuongHieuNgan,
   qc,
 });
 ---
@@ -221,8 +223,15 @@ const schema = schemaSanPham({
       <div class="the qc__nha-may">
         <h3>Mua thẳng từ nhà máy</h3>
         <p>
-          {c.tenNhaMay}<br />
-          {c.diaDiem[0].diaChi}, {c.diaDiem[0].quanHuyen}, {c.diaDiem[0].tinhThanh}
+          {c.tenNhaMay}
+          {/* Nhan tung nha may: hai dia chi viet lien nhau thanh mot khoi chu
+              khong thay cho tach (da chup lai de kiem). */}
+          {cacNhaMay(c.diaDiem).map((d) => (
+            <>
+              <br />
+              <strong>{d.quanHuyen}:</strong> {diaChiDayDu(d)}
+            </>
+          ))}
         </p>
         <p class="qc__mst">Thành viên {c.congTyMe.tenPhapDinh} - MST {c.congTyMe.maSoThue}</p>
         <a href="/nha-may/">Xem nhà máy sản xuất</a>

@@ -1,4 +1,5 @@
 ---
+import { noiNhaMayNgan } from '../../lib/nha-may';
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TrangNhom from '../../components/TrangNhom.astro';
@@ -53,15 +54,13 @@ const { loai, nhom, qc } = Astro.props as {
 
 const ct = await getEntry('congTy', 'cong-ty');
 const c = ct!.data;
-const nhaMay = c.diaDiem[0];
 
 const meta =
   loai === 'quy-cach'
     ? metaQuyCach(nhom.ten, qc!, {
         hotline: c.hotline,
         tenPhapDinh: c.tenPhapDinh,
-        quanHuyen: nhaMay.quanHuyen,
-        tinhThanh: nhaMay.tinhThanh,
+        noiNhaMay: noiNhaMayNgan(c.diaDiem),
       })
     : metaNhom(nhom.ten, nhom.quyCach.length, nhom.moTaNgan, { hotline: c.hotline });
 

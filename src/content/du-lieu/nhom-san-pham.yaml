@@ -30,17 +30,31 @@ nhom:
     anh: ../../assets/anh/dinh-tren-nen-trang-01.jpg
     anhAlt: Đinh chì thân trơn do nhà máy Đinh Thép Sài Gòn sản xuất
     anhDungLoai: false
+    # NGUON: bang quy cach IN TREN BAO BI "ĐINH SÀI GÒN" (anh thiet ke bao bi user
+    # gui 16/09/2026). Bao bi la thu khach cam trong tay nen la nguon uu tien,
+    # giong nguyen tac voi brochure trong cong-ty.yaml.
+    #
+    # Doi so voi du lieu cu (lay tu catalogue): 2F 1.7 -> 1.6, 5F 2.8 -> 2.7,
+    # 8F 4.1 -> 4.0, 12F 5.1 -> 5.0. User xac nhan rieng 12F = 120mm, than 5mm.
+    # THEM 2.5F - co tren bao bi.
+    # BO 15F - user xac nhan 16/09/2026 nha may KHONG san xuat 15F. URL cu
+    # /san-pham/dinh-chi-15p/ da duoc Google thu thap nen chuyen 301 ve trang
+    # nhom trong `public/.htaccess`, khong de 404.
+    #
+    # Cac bai viet co bang ghi lai nhung so nay. `scripts/kiem-tra-site.py`
+    # doi chieu moi dong bang tren site voi file nay - sua o day ma quen sua
+    # bai thi build CI hong.
     quyCach:
-      - { ma: 2F,  phan: 2,  daiMm: 20,  duongKinhMm: 1.7, slug: dinh-chi-2p }
-      - { ma: 3F,  phan: 3,  daiMm: 30,  duongKinhMm: 2.0, slug: dinh-chi-3p }
-      - { ma: 4F,  phan: 4,  daiMm: 40,  duongKinhMm: 2.3, slug: dinh-chi-4p }
-      - { ma: 5F,  phan: 5,  daiMm: 50,  duongKinhMm: 2.8, slug: dinh-chi-5p }
-      - { ma: 6F,  phan: 6,  daiMm: 60,  duongKinhMm: 3.0, slug: dinh-chi-6p }
-      - { ma: 7F,  phan: 7,  daiMm: 70,  duongKinhMm: 3.3, slug: dinh-chi-7p }
-      - { ma: 8F,  phan: 8,  daiMm: 80,  duongKinhMm: 4.1, slug: dinh-chi-8p }
-      - { ma: 10F, phan: 10, daiMm: 100, duongKinhMm: 4.5, slug: dinh-chi-10p }
-      - { ma: 12F, phan: 12, daiMm: 120, duongKinhMm: 5.1, slug: dinh-chi-12p }
-      - { ma: 15F, phan: 15, daiMm: 150, duongKinhMm: 6.0, slug: dinh-chi-15p }
+      - { ma: 2F,   phan: 2,   daiMm: 20,  duongKinhMm: 1.6, slug: dinh-chi-2p }
+      - { ma: 2.5F, phan: 2.5, daiMm: 25,  duongKinhMm: 1.8, slug: dinh-chi-2-5p }
+      - { ma: 3F,   phan: 3,   daiMm: 30,  duongKinhMm: 2.0, slug: dinh-chi-3p }
+      - { ma: 4F,   phan: 4,   daiMm: 40,  duongKinhMm: 2.3, slug: dinh-chi-4p }
+      - { ma: 5F,   phan: 5,   daiMm: 50,  duongKinhMm: 2.7, slug: dinh-chi-5p }
+      - { ma: 6F,   phan: 6,   daiMm: 60,  duongKinhMm: 3.0, slug: dinh-chi-6p }
+      - { ma: 7F,   phan: 7,   daiMm: 70,  duongKinhMm: 3.3, slug: dinh-chi-7p }
+      - { ma: 8F,   phan: 8,   daiMm: 80,  duongKinhMm: 4.0, slug: dinh-chi-8p }
+      - { ma: 10F,  phan: 10,  daiMm: 100, duongKinhMm: 4.5, slug: dinh-chi-10p }
+      - { ma: 12F,  phan: 12,  daiMm: 120, duongKinhMm: 5.0, slug: dinh-chi-12p }
 
   # -------------------------------------------------------- dinh thep trang --
   - id: dinh-thep-trang
