@@ -104,6 +104,8 @@ suy từ việc đọc CSS.
 | `/cgi-sys/` không chặn được bằng `.htaccess` | Đó là ScriptAlias ở **cấp máy chủ**, nằm ngoài thư mục web. Chặn bằng `Disallow` trong robots.txt |
 | Ghi chú nội bộ render ra trang công khai | Trường `canXacNhan` trong `nhom-san-pham.yaml` là **sổ ghi nợ dữ liệu của ta**, nhưng đã từng được render thẳng ra trang bảng giá và 4 trang nhóm của site thật: khách đọc được "CẦN XÁC NHẬN GẤP: đinh dù ghi 3F = 33mm... Ảnh hưởng cả URL lẫn nội dung". Không công cụ SEO nào báo lỗi này, chỉ mắt người mới thấy. `kiem-tra-site.py` nay chặn ở CI |
 | `inline-flex` ăn mất dấu cách | Luật tap-target đổi link sang `inline-flex`; flex **cắt khoảng trắng ở đầu và cuối mỗi flex item**, nên `<a>Đinh chì 2p <span>50mm</span></a>` dính thành `Đinh chì 2p50mm` trên 10 trang quy cách ở khổ <=980px. Bản desktop vẫn `inline` nên không lộ. Đổi display của link có nhiều con thì phải kèm `column-gap` |
+| Sắp xếp hoà thì thứ tự do thứ tự nạp quyết định | 7 bài viết đều cùng `ngayDang`, nên sắp theo ngày luôn trả 0 và thứ tự hiển thị phụ thuộc thứ tự nạp collection chứ không phụ thuộc dữ liệu - deploy sinh ra thay đổi HTML không do ai. Dùng `sapBaiMoiTruoc()` trong `src/lib/bai-viet.ts`, đã có id làm trọng tài. Build nay lặp lại được từng byte |
+| `image()` đẩy cả ảnh gốc vào bản build | Ảnh khai bằng `image()` trong content collection thì Astro chép **cả file gốc** vào `dist/_astro/` chứ không chỉ các bản WebP đã resize (+2,1 MB cho 8 ảnh). Hiện ảnh gốc chỉ 960-1280px nên chấp nhận được. Khi khách gửi ảnh gốc độ phân giải cao thì phải xem lại - lúc đó file gốc sẽ công khai tải về được |
 
 ## 7. Trạng thái hiện tại
 
