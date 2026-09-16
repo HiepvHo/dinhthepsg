@@ -18,6 +18,18 @@
 tenPhapDinh: Công ty Đinh Thép Sài Gòn
 tenPhapDinhHoa: CÔNG TY ĐINH THÉP SÀI GÒN
 tenThuongHieu: Đinh Thép Sài Gòn
+
+# CHU TREN BAO BI - khoi do in tren bao dinh ghi "ĐINH SÀI GÒN", con ten cong
+# ty o cuoi bao van la "ĐINH THÉP SÀI GÒN" (anh thiet ke bao bi user gui
+# 16/09/2026). Day la HAI cach goi cua CUNG mot doanh nghiep, khong phai hai
+# ten canh tranh nhau.
+#
+# Vi sao quan trong voi SEO: khach cam bao dinh trong tay se go dung chu ho
+# NHIN THAY tren bao - "dinh sai gon". Ten day du khong bat duoc truy van do.
+# Dat o day de logo, `alternateName` trong schema va noi dung deu dung mot
+# nguon, khong go cung o ba noi roi lech nhau.
+tenThuongHieuNgan: Đinh Sài Gòn
+tenThuongHieuNganHoa: ĐINH SÀI GÒN
 tenNhaMay: Nhà Máy Sản Xuất Đinh Thép Sài Gòn - Lưới Thép Hàn
 
 # [CAN USER CUNG CAP] MST va nam thanh lap RIENG cua Dinh Thep Sai Gon.
@@ -83,6 +95,13 @@ gioLamViec:
 # Email CHINH lay theo brochure - do la dia chi in tren giay khach dang cam.
 # Email cua cong ty me xuong lam email phu.
 email: dinhthepsaigon@gmail.com
+
+# TRANG FACEBOOK chinh thuc, user xac nhan 16/09/2026.
+# Dung dang `/people/<ten>/<id>/`: dang `profile.php?id=` tra 301 ve dang nay.
+# `sameAs` tro vao mot URL chuyen huong la phi mot chang va lam tin hieu doi
+# chieu yeu di. Da bo tham so `mibextid` - do la ma theo doi cua app dien thoai,
+# khong thuoc dia chi trang.
+facebook: https://www.facebook.com/people/%C4%90inh-Th%C3%A9p-S%C3%A0i-G%C3%B2n/61593611463146/
 emailPhu: admin@cuongphatsteel.com.vn
 
 # Cac hang thiet bi chau Au ma cong ty lam dai dien.
@@ -194,15 +213,23 @@ diaDiem:
     lienQuanDenDinh: false
     thuocCongTyMe: true
 
+  # BAO BI IN SO NAY LA HOTLINE BAN DINH ("Hotline: 0919 288 109 - 088 834 3299"),
+  # va user xac nhan 16/09/2026 day la so dung cua CN Can Tho. Nen `lienQuanDenDinh`
+  # doi tu false sang true: truoc day ta suy tu `vaiTro` la kho vat tu kim khi
+  # nen doan khong nhan don dinh - bao bi cho thay suy luan do sai.
+  #
+  # `vaiTro` doi sang "CN Can Tho" vi cot lien he dung truong nay lam nhan nut.
+  # Khach bam nut can biet goi TOI DAU, khong phai kho do chua gi. Vai tro day
+  # du van con o truong `ten`.
   - id: cn-can-tho
     ten: Chi nhánh Cần Thơ - Kho vật tư kim khí
-    vaiTro: Kho vật tư kim khí
+    vaiTro: CN Cần Thơ
     diaChi: 74A Nguyễn Thị Trâm
     phuong: Phường Cái Răng
     quanHuyen: Cái Răng
     tinhThanh: TP. Cần Thơ
     hotline: "0888 343 299"
-    lienQuanDenDinh: false
+    lienQuanDenDinh: true
     thuocCongTyMe: true
 
 # Doi tac - chep dung khoi "DOI TAC" tren cuongphatsteel.com.vn, user xac nhan

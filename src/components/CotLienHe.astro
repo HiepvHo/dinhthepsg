@@ -32,20 +32,15 @@ const soGoi = (s: string) => '+84' + s.replace(/[^0-9]/g, '').replace(/^0/, '');
 
    XEP THEO MUC LIEN QUAN TOI DINH, khong theo thu tu trong file: day la trang
    BAN DINH, ma trong sau dia diem thi bon cai la xuong can tole - goi vao do
-   hoi mua dinh la goi sai cho. Kho vat tu kim khi gan viec hon nen len truoc.
+   hoi mua dinh la goi sai cho.
 
-   [CAN USER XAC NHAN] Day la suy luan tu truong `vaiTro`, khong phai tu ai
-   thuc su nhan don dinh. Neu cong ty muon bon so khac thi doi thu tu o day. */
-const uuTien = (vaiTro: string) => {
-  const v = vaiTro.toLowerCase();
-  if (v.includes('vật tư') || v.includes('kim khí')) return 0;
-  if (v.includes('trụ sở')) return 1;
-  return 2;
-};
-
+   Doc thang `lienQuanDenDinh` chu khong doan tu chu trong `vaiTro` nua. Ban
+   cu do chuoi "vat tu"/"kim khi" - doi nhan CN Can Tho thanh "CN Cần Thơ" la
+   no tut xuong cuoi du bao bi dinh in chinh so do. Doan theo chu thi doi mot
+   chu la hong; co du lieu that thi dung du lieu. */
 const chiNhanh = c.diaDiem
   .filter((d) => d.hotline && d.hotline !== c.hotline)
-  .map((d) => ({ so: d.hotline as string, nhan: d.vaiTro, uu: uuTien(d.vaiTro) }))
+  .map((d) => ({ so: d.hotline as string, nhan: d.vaiTro, uu: d.lienQuanDenDinh ? 0 : 1 }))
   .sort((a, b) => a.uu - b.uu)
   .slice(0, 3)
   .map(({ so, nhan }) => ({ so, nhan }));

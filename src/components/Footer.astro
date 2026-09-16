@@ -38,7 +38,8 @@ function telHref(s: string) {
   <div class="khung">
     <div class="chan__luoi">
       <div class="chan__hieu">
-        <span class="chan__ten">ĐINH THÉP SÀI GÒN</span>
+        {/* Giong bao bi: khoi chu thuong hieu o tren, ten phap dinh ngay duoi. */}
+        <span class="chan__ten">{c.tenThuongHieuNganHoa}</span>
         <p class="chan__phap-nhan">{c.tenPhapDinhHoa}</p>
         <p class="chan__mo-ta">
           Nhà máy sản xuất đinh thép xây dựng và lưới thép hàn. Thành viên
@@ -52,6 +53,15 @@ function telHref(s: string) {
           Website công ty mẹ:
           <a href={c.congTyMe.website} rel="noopener">cuongphatsteel.com.vn</a>
         </p>
+        {/* Link that toi trang Facebook, khong chi khai trong JSON-LD. `sameAs`
+            manh hon khi tren trang co dung duong dan do de Google di theo. */}
+        {
+          c.facebook && (
+            <p class="chan__mo-ta">
+              Facebook: <a href={c.facebook} rel="noopener">{c.tenThuongHieu}</a>
+            </p>
+          )
+        }
       </div>
 
       <nav class="chan__cot" aria-labelledby="chan-sp">

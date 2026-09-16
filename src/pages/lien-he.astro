@@ -70,7 +70,11 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
 ---
 
 <BaseLayout tieuDe={tieuDe} moTa={moTa} duongDan="/lien-he/">
-  {dinh.map((d) => <JsonLd schema={schemaDiaDiem(c, d)} />)}
+  {/* LocalBusiness CHI cho dia diem cua CHINH phap nhan nay. Hai dieu kien
+      tung trung nhau nen chi can `lienQuanDenDinh`, nay thi khong: CN Can Tho
+      co ban dinh (bao bi in so cua no) nhung thuoc cong ty me. Khai LocalBusiness
+      cho no duoi ten Dinh Thep Sai Gon la nhan mot dia diem cua phap nhan khac. */}
+  {dinh.filter((d) => !d.thuocCongTyMe).map((d) => <JsonLd schema={schemaDiaDiem(c, d)} />)}
 
   <DauMuc
     nhan="Liên hệ"

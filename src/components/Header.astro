@@ -105,7 +105,16 @@ const navSau = [
     <div class="dau-trang__trong">
     {/* Lockup thuong hieu: DAU HIEU + chu. Cong ty chua co file logo nao, ma mot
         dong chu dam khong doc ra la logo. Dau hieu la dung hinh cay dinh trong
-        favicon - mot tai san, dung o hai cho, khong ve them cai moi. */}
+        favicon - mot tai san, dung o hai cho, khong ve them cai moi.
+
+        CHU LON LA "ĐINH SÀI GÒN" chu khong phai ten day du: do dung la khoi chu
+        in tren bao dinh (anh thiet ke bao bi user gui 16/09/2026). Khach cam bao
+        trong tay thi thu ho nhin thay phai khop voi thu ho thay tren web - day
+        la cung mot phep doi chieu ma Google lam khi noi thuc the.
+
+        Dong phu GIU NGUYEN "Nhà máy sản xuất - Cường Phát Steel" (user chot
+        16/09/2026). Ten phap dinh day du van co mat tren moi trang qua chan
+        trang va qua JSON-LD, nen khong mat tin hieu gi. */}
     <a class="hieu vat vat--phai" href="/" aria-label={`${c.tenThuongHieu} - trang chủ`}>
       <span class="hieu__dau" aria-hidden="true">
         <svg viewBox="0 0 48 48">
@@ -114,7 +123,7 @@ const navSau = [
         </svg>
       </span>
       <span class="hieu__chu">
-        <span class="hieu__ten">ĐINH THÉP SÀI GÒN</span>
+        <span class="hieu__ten">{c.tenThuongHieuNganHoa}</span>
         <span class="hieu__phu">Nhà máy sản xuất - Cường Phát Steel</span>
       </span>
     </a>

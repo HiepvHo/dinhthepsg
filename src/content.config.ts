@@ -53,6 +53,9 @@ const congTy = defineCollection({
     tenPhapDinh: z.string(),
     tenPhapDinhHoa: z.string(),
     tenThuongHieu: z.string(),
+    /** Chu in tren bao bi - "Đinh Sài Gòn". Dung lam logo va alternateName. */
+    tenThuongHieuNgan: z.string(),
+    tenThuongHieuNganHoa: z.string(),
     tenNhaMay: z.string(),
     /**
      * MST va nam thanh lap CUA CHINH cong ty nay. CA HAI DEU OPTIONAL vi Dinh
@@ -127,6 +130,8 @@ const congTy = defineCollection({
       )
       .default([]),
     zalo: z.string(),
+    /** Trang Facebook chinh thuc - vao `sameAs` cua Organization schema. */
+    facebook: z.string().url().optional(),
     email: z.string().email(),
     emailPhu: z.string().email(),
     thietBi: z.array(z.object({ ten: z.string(), loai: z.string(), xuatXu: z.string() })),

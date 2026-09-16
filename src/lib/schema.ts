@@ -47,6 +47,8 @@ type Khung = { ngay: readonly string[]; mo: string; dong: string };
 type CongTy = {
   tenPhapDinh: string;
   tenThuongHieu: string;
+  tenThuongHieuNgan: string;
+  facebook?: string;
   maSoThue?: string;
   namThanhLap?: number;
   congTyMe: CongTyMe;
@@ -80,7 +82,11 @@ export function schemaToChuc(ct: CongTy) {
     '@type': 'Organization',
     '@id': `${GOC}/#to-chuc`,
     name: ct.tenPhapDinh,
-    alternateName: ct.tenThuongHieu,
+    /* HAI ten thay cho mot: ten thuong hieu day du VA chu in tren bao bi.
+       Khach cam bao dinh trong tay go dung chu ho nhin thay ("dinh sai gon"),
+       khong go ten day du. Khai ca hai o day de Google biet hai chuoi do tro
+       toi CUNG mot thuc the, thay vi coi "Đinh Sài Gòn" la doanh nghiep khac. */
+    alternateName: [ct.tenThuongHieu, ct.tenThuongHieuNgan],
     url: GOC,
     /* `logo` la dieu kien de Google dung duoc anh dai dien trong Knowledge
        Panel. Toi thieu 112x112; file nay 180x180. */
@@ -142,10 +148,9 @@ export function schemaToChuc(ct: CongTy) {
     /* `sameAs` la tin hieu thuc the manh nhat: no khai "website nay va cac ho
        so kia la CUNG MOT doanh nghiep", de Google doi chieu qua nhieu nguon
        doc lap.
-       [CAN USER CUNG CAP] hien chi co website cong ty me. Can them: Google
-       Business Profile, Facebook, Zalo OA, trang danh ba nganh. Moi ho so
-       them vao la mot nguon doi chieu nua. */
-    sameAs: [ct.congTyMe.website],
+       [CAN USER CUNG CAP] con thieu: Google Business Profile, Zalo OA, trang
+       danh ba nganh. Moi ho so them vao la mot nguon doi chieu nua. */
+    sameAs: [ct.congTyMe.website, ...(ct.facebook ? [ct.facebook] : [])],
   };
 }
 
