@@ -98,8 +98,15 @@ export function metaNhom(
   // HOTLINE TRUOC mo ta ngan. Ban cu de hotline cuoi cau, dai 160+ ky tu nen
   // bi catMoTa cat dung vao so dien thoai - thu duy nhat tren doan trich nguoi
   // ta co the bam goi ngay. Neu con bi cat thi mat duoi mo ta ngan, khong mat so.
+  // Chi noi "du chieu dai / duong kinh" khi du lieu THAT SU co. Ban truoc ghi
+  // cung cho moi nhom: dinh du khong co duong kinh, day kem khong co chieu dai
+  // (daiMm: 0) - mo ta khang dinh mot thu ma chinh bang thong so tren trang
+  // khong co.
+  const coDai = quyCach.some((q) => q.daiMm > 0);
+  const coDk = quyCach.some((q) => q.duongKinhMm !== undefined);
+  const thongSo = [coDai && 'chiều dài', coDk && 'đường kính thân'].filter(Boolean).join(' và ');
   const moTa = moTaVua(
-    `${ten}: ${soQuyCach} quy cách, đủ chiều dài và đường kính thân, sản xuất tại nhà máy. Gọi ${ctx.hotline}.`,
+    `${ten}: ${soQuyCach} quy cách${thongSo ? `, đủ ${thongSo}` : ''}, sản xuất tại nhà máy. Gọi ${ctx.hotline}.`,
     moTaNgan,
   );
   return { tieuDe, moTa };

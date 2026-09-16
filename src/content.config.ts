@@ -139,15 +139,16 @@ const congTy = defineCollection({
     /** Zalo thu hai tro di - CHI so da xac minh co tai khoan Zalo. */
     zaloPhu: z.array(z.object({ so: z.string(), nhan: z.string() })).default([]),
     /**
-     * Du kien ban hang - xem `src/lib/ban-hang.ts`. Moi truong optional; `min(1)`
-     * de mot chuoi rong lo tay bi build chan, thay vi hien mot dong trong.
+     * Du kien ban hang - xem `src/lib/ban-hang.ts`. Moi truong optional;
+     * `trim().min(1)` de chuoi rong HOAC chi co khoang trang bi build chan - CMS
+     * hay luu o da xoa thanh "" - thay vi hien mot dong trong tren 16 trang.
      */
     banHang: z
       .object({
-        dongBao: z.string().min(1).optional(),
-        donToiThieu: z.string().min(1).optional(),
-        khuVucGiao: z.string().min(1).optional(),
-        phiGiao: z.string().min(1).optional(),
+        dongBao: z.string().trim().min(1).optional(),
+        donToiThieu: z.string().trim().min(1).optional(),
+        khuVucGiao: z.string().trim().min(1).optional(),
+        phiGiao: z.string().trim().min(1).optional(),
       })
       .default({}),
     /** Cac trang Facebook chinh thuc. Tat ca vao `sameAs`; trang DAU hien cho khach. */
@@ -311,7 +312,7 @@ const baiViet = defineCollection({
      * cuoi mat han khoi the title - ma the title la tin hieu xep hang. Viet
      * mot ban ngan co nghia thay vi chat ngang.
      */
-    tieuDeSeo: z.string().max(60).optional(),
+    tieuDeSeo: z.string().trim().min(10).max(60).optional(),
     // 160 chu khong 165: `catMoTa` cat o 160, khai 165 thi 161-165 ky tu lot
     // qua schema roi bi cat mat duoi - thuong la mat so hotline o cuoi.
     moTa: z.string().min(50).max(160, 'Meta description dai qua 160 ky tu se bi cat'),

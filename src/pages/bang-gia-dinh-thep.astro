@@ -37,7 +37,7 @@ const nam = new Date().getFullYear();
 const coGiaNao = nhom.some((n) => n.data.quyCach.some(coGia));
 const chuBang = coGiaNao ? 'Bảng giá' : 'Báo giá';
 const tieuDe = catTieuDe(`${chuBang} đinh thép ${thang}/${nam} - ${tong} quy cách`);
-const moTa = catMoTa(`${chuBang} đinh thép ${thang}/${nam}, ${tong} quy cách kèm chiều dài và đường kính: đinh chì ${phanMin}p-${phanMax}p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Gọi ${c.hotline}.`);
+const moTa = catMoTa(`${chuBang} đinh thép ${thang}/${nam}, ${tong} quy cách kèm thông số: đinh chì ${phanMin}p-${phanMax}p, đinh trắng, đinh vàng, đinh dù, đinh vít, dây kẽm. Gọi ${c.hotline}.`);
 
 const schema = {
   '@context': 'https://schema.org',

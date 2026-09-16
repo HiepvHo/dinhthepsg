@@ -175,6 +175,18 @@ def main():
             if cum.lower() in sach.lower():
                 loi.append('%s: GHI CHU NOI BO lot ra trang -> "%s"' % (d, cum))
 
+        # --- title qua dai hoac bi tu cat ---
+        # Site tung tu cat title o ky tu 57 kem '...' tren 6 bai viet ma khong
+        # ai thay. Them nhom co trang quy cach rieng (dinh thep trang 2p...) la
+        # title vuot 60 va bi cat lai y het - chan o day.
+        mt = re.search(r'<title>(.*?)</title>', h, re.S)
+        if mt:
+            tt = mt.group(1).strip()
+            if len(tt) > 60:
+                loi.append('%s: title dai %d ky tu (> 60)' % (d, len(tt)))
+            if tt.endswith('...'):
+                loi.append('%s: title bi cat ngang: %s' % (d, tt))
+
         # --- H1 ---
         n = len(re.findall(r'<h1[\s>]', h))
         if n != 1:

@@ -63,8 +63,6 @@ const thongSo = [
   ...dongBanHang(c.banHang),
 ];
 
-const tieuDe = `${ten} - ${quyCach.length} quy cách, thông số đầy đủ | Đinh Thép Sài Gòn`;
-const moTa = `${ten}: ${quyCach.length} quy cách${coPhan ? ` từ ${Math.min(...quyCach.filter((q) => q.phan).map((q) => q.phan!))} phân` : ''}. ${moTaNgan} Nhà máy sản xuất trực tiếp, gọi ${c.hotline}.`;
 
 const schema = schemaNhomSanPham({
   ten,
@@ -72,9 +70,13 @@ const schema = schemaNhomSanPham({
   duongDan,
   /* Brand = chu IN TREN BAO; manufacturer = cong ty. Dung nghia schema.org. */
   thuongHieu: c.tenThuongHieuNgan,
+  // Nhom KHONG tach trang quy cach (dinh du, dinh vit...) thi khong co trang
+  // /san-pham/<slug>/ - tro bien the ve chinh trang nhom. Ban truoc luon tro ve
+  // trang quy cach: an vi chua co gia, nhung dien gia cho dinh du la schema tro
+  // toi URL 404.
   bienThe: quyCach.map((q) => ({
     ten: tenChinh(ten, q),
-    duongDan: `/san-pham/${q.slug}/`,
+    duongDan: tachTrangQuyCach ? `/san-pham/${q.slug}/` : duongDan,
     qc: q,
   })),
 });
