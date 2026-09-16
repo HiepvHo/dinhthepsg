@@ -14,6 +14,7 @@
 import { SITE_URL } from './moi-truong';
 
 import { schemaGio } from './gio-lam-viec';
+import { coGia } from './quy-cach';
 
 const GOC = SITE_URL;
 
@@ -223,8 +224,13 @@ type QuyCachSchema = {
 /**
  * Product + Offer cho mot trang quy cach.
  *
- * Chi sinh `offers` khi CO gia that. Neu chua co gia thi bo han khoi schema -
- * khai Offer rong hoac gia 0 la sai du lieu, te hon la khong khai.
+ * CHUA CO GIA THI KHONG PHAT PRODUCT - tra `null`.
+ * Ban cu van phat Product, chi bo `offers`. GSC 16/09/2026 bao tren trang 5p:
+ * "Doan trich ve san pham - Phai chi dinh offers, review hoac aggregateRating".
+ * Google khong cho hien doan trich san pham neu thieu ca ba, nen mot Product
+ * khong gia la mot muc KHONG HOP LE tren 24 trang, khong dem lai gi.
+ * Khong khai Offer rong, gia 0 hay gia tam: sai du lieu te hon khong khai.
+ * Dien `gia` + `donViGia` vao YAML la Product tu bat lai, khong sua code.
  *
  * `priceValidUntil` phai duoc gia han. Doi thu trungnamcons de het han tu
  * 2025-10-10 ma van con hien gia tren SERP - la hygiene, khong phai don bay,
@@ -240,6 +246,7 @@ export function schemaSanPham(opts: {
   hanGia?: string;
 }) {
   const { tenDayDu, moTa, duongDan, thuongHieu, qc, anh, hanGia } = opts;
+  if (!coGia(qc)) return null;
 
   const thuocTinh: Record<string, unknown>[] = [
     { '@type': 'PropertyValue', name: 'Chiều dài', value: `${qc.daiMm} mm`, unitCode: 'MMT' },
@@ -254,8 +261,6 @@ export function schemaSanPham(opts: {
   }
   thuocTinh.push({ '@type': 'PropertyValue', name: 'Mã quy cách', value: qc.ma });
 
-  const coGia = qc.gia !== undefined && qc.donViGia !== undefined;
-
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -268,20 +273,16 @@ export function schemaSanPham(opts: {
     manufacturer: { '@id': `${GOC}/#to-chuc` },
     ...(anh && anh.length ? { image: anh.map(tuyetDoi) } : {}),
     additionalProperty: thuocTinh,
-    ...(coGia
-      ? {
-          offers: {
-            '@type': 'Offer',
-            price: qc.gia,
-            priceCurrency: 'VND',
-            availability: 'https://schema.org/InStock',
-            itemCondition: 'https://schema.org/NewCondition',
-            url: tuyetDoi(duongDan),
-            ...(hanGia ? { priceValidUntil: hanGia } : {}),
-            seller: { '@id': `${GOC}/#to-chuc` },
-          },
-        }
-      : {}),
+    offers: {
+      '@type': 'Offer',
+      price: qc.gia,
+      priceCurrency: 'VND',
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+      url: tuyetDoi(duongDan),
+      ...(hanGia ? { priceValidUntil: hanGia } : {}),
+      seller: { '@id': `${GOC}/#to-chuc` },
+    },
   };
 }
 
@@ -298,6 +299,11 @@ export function schemaNhomSanPham(opts: {
   bienThe: { ten: string; duongDan: string; qc: QuyCachSchema }[];
 }) {
   const { ten, moTa, duongDan, thuongHieu, bienThe } = opts;
+  /* Cung ly do voi schemaSanPham: bien the khong gia la mot Product khong hop
+     le. Chi dua bien the CO gia; khong bien the nao co gia -> khong phat
+     ProductGroup (mot nhom khong co san pham hop le nao la vo nghia). */
+  const coGiaBT = bienThe.filter((v) => coGia(v.qc));
+  if (coGiaBT.length === 0) return null;
   return {
     '@context': 'https://schema.org',
     '@type': 'ProductGroup',
@@ -308,23 +314,19 @@ export function schemaNhomSanPham(opts: {
     manufacturer: { '@id': `${GOC}/#to-chuc` },
     productGroupID: duongDan.replace(/\//g, ''),
     variesBy: ['https://schema.org/size'],
-    hasVariant: bienThe.map((v) => ({
+    hasVariant: coGiaBT.map((v) => ({
       '@type': 'Product',
       name: v.ten,
       url: tuyetDoi(v.duongDan),
       sku: v.qc.slug,
       mpn: v.qc.ma,
-      ...(v.qc.gia !== undefined && v.qc.donViGia !== undefined
-        ? {
-            offers: {
-              '@type': 'Offer',
-              price: v.qc.gia,
-              priceCurrency: 'VND',
-              availability: 'https://schema.org/InStock',
-              url: tuyetDoi(v.duongDan),
-            },
-          }
-        : {}),
+      offers: {
+        '@type': 'Offer',
+        price: v.qc.gia,
+        priceCurrency: 'VND',
+        availability: 'https://schema.org/InStock',
+        url: tuyetDoi(v.duongDan),
+      },
     })),
   };
 }

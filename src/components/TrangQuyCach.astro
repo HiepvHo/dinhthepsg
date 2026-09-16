@@ -86,7 +86,7 @@ const schema = schemaSanPham({
     { ten, duongDan },
   ]}
 />
-<JsonLd schema={schema} />
+{schema && <JsonLd schema={schema} />}
 
 <article class="section qc">
   <div class="khung">

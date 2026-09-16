@@ -89,7 +89,7 @@ export function dinhDangGia(qc: QuyCach): string {
 }
 
 /** Da co du du lieu de hien gia va sinh Offer schema chua */
-export function coGia(qc: QuyCach): boolean {
+export function coGia(qc: Pick<QuyCach, 'gia' | 'donViGia'>): boolean {
   return qc.gia !== undefined && qc.donViGia !== undefined;
 }
 

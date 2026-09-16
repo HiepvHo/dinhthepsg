@@ -120,6 +120,7 @@ suy từ việc đọc CSS.
 | Sắp xếp hoà thì thứ tự do thứ tự nạp quyết định | 7 bài viết đều cùng `ngayDang`, nên sắp theo ngày luôn trả 0 và thứ tự hiển thị phụ thuộc thứ tự nạp collection chứ không phụ thuộc dữ liệu - deploy sinh ra thay đổi HTML không do ai. Dùng `sapBaiMoiTruoc()` trong `src/lib/bai-viet.ts`, đã có id làm trọng tài. Build nay lặp lại được từng byte |
 | `image()` đẩy cả ảnh gốc vào bản build | Ảnh khai bằng `image()` trong content collection thì Astro chép **cả file gốc** vào `dist/_astro/` chứ không chỉ các bản WebP đã resize (+2,1 MB cho 8 ảnh). Hiện ảnh gốc chỉ 960-1280px nên chấp nhận được. Khi khách gửi ảnh gốc độ phân giải cao thì phải xem lại - lúc đó file gốc sẽ công khai tải về được |
 | Bảng quy cách gõ tay trong bài viết | 5 bài có bảng chép lại số từ `nhom-san-pham.yaml`. Đổi số ở YAML mà quên bài thì trang sản phẩm và bài viết nói hai số khác nhau. `kiem-tra-site.py` đối chiếu mọi dòng `<tr>` có mã quy cách với YAML và chặn deploy. Nhớ cả các câu **tính ra** từ số ("dày hơn 0.8 mm") - hàng rào không bắt được loại đó |
+| Product schema không có giá | GSC báo "Phải chỉ định offers, review hoặc aggregateRating" trên cả 24 trang. `schemaSanPham()` / `schemaNhomSanPham()` nay trả `null` khi chưa có giá; điền `gia` + `donViGia` vào YAML là tự bật. **Đừng** khai Offer rỗng, giá 0 hay giá tạm |
 
 ## 7. Trạng thái hiện tại
 
