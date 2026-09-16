@@ -1,0 +1,42 @@
+---
+import { dongBanHang, type BanHang } from '../lib/ban-hang';
+
+/**
+ * Khoi "Dieu kien mua hang" cho trang bang gia va trang lien he.
+ * Trang quy cach va trang nhom KHONG dung khoi nay: o do cac dong nay noi
+ * thang vao danh sach thong so dau trang (`thongSo` cua DauSanPham), cho nam
+ * trong phan dau trang - noi AI hay trich nhat.
+ *
+ * Khong co du kien nao -> khong render gi, ke ca tieu de.
+ */
+interface Props {
+  banHang: BanHang;
+}
+const dong = dongBanHang(Astro.props.banHang);
+---
+
+{
+  dong.length > 0 && (
+    <div class="khoi-mua">
+      <h2 class="khoi-mua__dau">Điều kiện mua hàng</h2>
+      <dl class="dac-ta">
+        {dong.map((d) => (
+          <div class="dac-ta__hang">
+            <dt>{d.nhan}</dt>
+            <dd>{d.giaTri}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
+<style>
+  .khoi-mua {
+    margin-top: var(--k7);
+    max-width: var(--do-doc);
+  }
+  .khoi-mua__dau {
+    margin-bottom: var(--k3);
+  }
+</style>

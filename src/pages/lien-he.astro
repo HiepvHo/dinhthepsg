@@ -1,4 +1,5 @@
 ---
+import KhoiMuaHang from '../components/KhoiMuaHang.astro';
 import { noiNhaMayNgan } from '../lib/nha-may';
 import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -108,6 +109,8 @@ const nhungMap = `https://maps.google.com/maps?q=${encodeURIComponent(diaChiMap)
           Gửi email
         </a>
       </div>
+
+      <KhoiMuaHang banHang={c.banHang} />
 
       <h2 id="mua-dinh">Nơi liên hệ mua đinh</h2>
       <div class="luoi luoi--2 lh__luoi">

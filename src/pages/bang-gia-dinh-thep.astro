@@ -1,4 +1,5 @@
 ---
+import KhoiMuaHang from '../components/KhoiMuaHang.astro';
 import { noiNhaMay } from '../lib/nha-may';
 import { khoangPhan } from '../lib/quy-cach';
 import { getCollection, getEntry } from 'astro:content';
@@ -210,6 +211,7 @@ const mucLuc = [
           </a>
         </div>
       </div>
+      <KhoiMuaHang banHang={c.banHang} />
     </div>
   </article>
 </BaseLayout>

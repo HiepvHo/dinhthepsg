@@ -1,4 +1,5 @@
 ---
+import { dongBanHang } from '../lib/ban-hang';
 import { noiNhaMay, cacNhaMay, diaChiDayDu } from '../lib/nha-may';
 import { getEntry } from 'astro:content';
 import VunBanh from './VunBanh.astro';
@@ -67,6 +68,8 @@ const thongSo = [
     : []),
   ...(qd ? [{ nhan: 'Quy đổi', giaTri: qd }] : []),
   { nhan: 'Xuất xứ', giaTri: `Nhà máy ${noiNhaMay(c.diaDiem)}` },
+  // Du kien ban hang o DAU trang, canh thong so - trong thi khong them dong nao.
+  ...dongBanHang(c.banHang),
 ];
 
 const schema = schemaSanPham({

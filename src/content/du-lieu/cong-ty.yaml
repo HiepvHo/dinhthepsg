@@ -57,6 +57,18 @@ zaloPhu:
   - so: "0888343299"
     nhan: Zalo CN Cần Thơ
 
+# DU KIEN BAN HANG - hien o dau trang quy cach va trang nhom, va thanh khoi
+# "Dieu kien mua hang" o bang gia, lien he. Xem src/lib/ban-hang.ts.
+#
+# [CAN USER CUNG CAP] User xac nhan 16/09/2026 cong bo duoc 4 muc duoi day
+# nhung CHUA gui so. De trong = khong hien gi. KHONG dien so tam.
+# Khi co so: bo `{}` va viet tung truong, moi truong la mot cau ngan:
+#   dongBao      - quy cach dong bao (so kg moi bao)
+#   donToiThieu  - don toi thieu (le / si)
+#   khuVucGiao   - khu vuc co giao hang
+#   phiGiao      - phi giao hang
+banHang: {}
+
 # GIO LAM VIEC - user chot 06/09/2026: "de theo gio hanh chinh".
 # [CAN USER XAC NHAN] Da dat theo khung pho bien nhat cua nganh vat tu xay dung
 # o Viet Nam: T2-T6 ca ngay, T7 buoi sang. Neu nha may chay khac (vi du nghi

@@ -138,6 +138,18 @@ const congTy = defineCollection({
     zalo: z.string(),
     /** Zalo thu hai tro di - CHI so da xac minh co tai khoan Zalo. */
     zaloPhu: z.array(z.object({ so: z.string(), nhan: z.string() })).default([]),
+    /**
+     * Du kien ban hang - xem `src/lib/ban-hang.ts`. Moi truong optional; `min(1)`
+     * de mot chuoi rong lo tay bi build chan, thay vi hien mot dong trong.
+     */
+    banHang: z
+      .object({
+        dongBao: z.string().min(1).optional(),
+        donToiThieu: z.string().min(1).optional(),
+        khuVucGiao: z.string().min(1).optional(),
+        phiGiao: z.string().min(1).optional(),
+      })
+      .default({}),
     /** Cac trang Facebook chinh thuc. Tat ca vao `sameAs`; trang DAU hien cho khach. */
     facebook: z.array(z.object({ ten: z.string(), url: z.string().url() })).default([]),
     email: z.string().email(),
