@@ -1,6 +1,6 @@
 ---
 import { getEntry, getCollection } from 'astro:content';
-import { tenChinh, nhan } from '../lib/quy-cach';
+import { tenChinh, nhanMm } from '../lib/quy-cach';
 
 /**
  * Header 2 tang, hoc cau truc baogiathep.net (do 01/09/2026):
@@ -150,7 +150,7 @@ const navSau = [
                         {n.data.quyCach.map((q) => (
                           <li>
                             <a href={`/san-pham/${q.slug}/`}>
-                              {tenChinh(n.data.ten, q)} <span class="mega__mm">{nhan(q)}</span>
+                              {tenChinh(n.data.ten, q)} <span class="mega__mm">{nhanMm(q)}</span>
                             </a>
                           </li>
                         ))}

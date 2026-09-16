@@ -57,6 +57,15 @@ export function nhan(qc: QuyCach): string {
   return qc.phan !== undefined ? `${qc.phan}p (${qc.daiMm}mm)` : `${qc.ma} (${qc.daiMm}mm)`;
 }
 
+/**
+ * Chi phan mm. Dung khi NGAY BEN CANH da co `tenChinh()` in ra so phan roi -
+ * luc do `nhan()` se thanh "Đinh chì 2p 2p (20mm)", lap lai "2p" hai lan.
+ * Vi du "20mm"
+ */
+export function nhanMm(qc: QuyCach): string {
+  return `${qc.daiMm}mm`;
+}
+
 /** Chuoi quy doi day du, dung cho bang tra va cau tra loi AI. */
 export function quyDoi(qc: QuyCach): string | null {
   if (qc.phan === undefined) return null;

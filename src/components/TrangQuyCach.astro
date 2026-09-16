@@ -5,7 +5,7 @@ import JsonLd from './JsonLd.astro';
 import DauSanPham from './DauSanPham.astro';
 import { schemaSanPham } from '../lib/schema';
 import { anhCuaNhom } from '../lib/anh-nhom';
-import { tenChinh, nhan, quyDoi, coGia, dinhDangGia, lienKe, type QuyCach } from '../lib/quy-cach';
+import { tenChinh, nhanMm, quyDoi, coGia, dinhDangGia, lienKe, type QuyCach } from '../lib/quy-cach';
 
 /**
  * Trang MOT quy cach - trang tien chinh cua site.
@@ -180,14 +180,14 @@ const schema = schemaSanPham({
               <a href={`/san-pham/${truoc.slug}/`}>
                 <span>Nhỏ hơn</span>
                 <strong>{tenChinh(nhomTen, truoc)}</strong>
-                <span class="qc__lk-mm">{nhan(truoc)}</span>
+                <span class="qc__lk-mm">{nhanMm(truoc)}</span>
               </a>
             )}
             {sau && (
               <a href={`/san-pham/${sau.slug}/`}>
                 <span>Lớn hơn</span>
                 <strong>{tenChinh(nhomTen, sau)}</strong>
-                <span class="qc__lk-mm">{nhan(sau)}</span>
+                <span class="qc__lk-mm">{nhanMm(sau)}</span>
               </a>
             )}
           </nav>
@@ -235,7 +235,7 @@ const schema = schemaSanPham({
             anhChiEm.map((q) => (
               <li>
                 <a href={`/san-pham/${q.slug}/`} aria-current={q.slug === qc.slug ? 'page' : undefined}>
-                  {tenChinh(nhomTen, q)} <span class="qc__lk-mm">{nhan(q)}</span>
+                  {tenChinh(nhomTen, q)} <span class="qc__lk-mm">{nhanMm(q)}</span>
                 </a>
               </li>
             ))

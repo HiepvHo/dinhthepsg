@@ -883,6 +883,14 @@ figcaption {
     display: inline-flex;
     align-items: center;
     min-height: 32px;
+    /* BAY: doi mot link tu `inline` sang `inline-flex` lam FLEX CAT khoang
+       trang o dau va cuoi moi flex item. Moi link kieu
+       `<a>Đinh chì 2p <span>50mm</span></a>` bi dinh chu thanh
+       "Đinh chì 2p50mm" - dung tren 10 trang quy cach ma khong ai thay, vi
+       ban desktop van `inline` nen do duoc. `column-gap` tra lai dau cach do.
+       Khong dung `gap` (viet tat ca hai chieu) de khong dung toi nhung link
+       icon + chu tu dat khoang cach rieng. */
+    column-gap: 0.3em;
   }
   /* SO DIEN THOAI duoc nong len KE CA khi nam trong cau van - day la ngoai le
      duy nhat cua luat "khong dung vao link inline" o tren.
